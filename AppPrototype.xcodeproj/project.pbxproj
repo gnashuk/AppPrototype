@@ -7,13 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C0B9E2020C36EEF00F90353 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0B9E1F20C36EEF00F90353 /* Alerts.swift */; };
+		7C3F480620B1E2D400416A91 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3F480520B1E2D400416A91 /* User.swift */; };
 		7CA2246E20B0952900052F74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2246D20B0952900052F74 /* AppDelegate.swift */; };
-		7CA2247020B0952900052F74 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2246F20B0952900052F74 /* ViewController.swift */; };
 		7CA2247320B0952900052F74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247120B0952900052F74 /* Main.storyboard */; };
 		7CA2247520B0952B00052F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247420B0952B00052F74 /* Assets.xcassets */; };
 		7CA2247820B0952B00052F74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247620B0952B00052F74 /* LaunchScreen.storyboard */; };
 		7CA2248320B0952B00052F74 /* AppPrototypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2248220B0952B00052F74 /* AppPrototypeTests.swift */; };
 		7CA2248E20B0952C00052F74 /* AppPrototypeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2248D20B0952C00052F74 /* AppPrototypeUITests.swift */; };
+		7CA2249E20B09C7800052F74 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2249D20B09C7800052F74 /* LoginViewController.swift */; };
+		7CA224A020B09CCB00052F74 /* UserChannelsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2249F20B09CCB00052F74 /* UserChannelsTableViewController.swift */; };
+		7CA224A320B09D7000052F74 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA224A220B09D7000052F74 /* ChatViewController.swift */; };
+		7CA224A720B0A15900052F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7CA224A620B0A15900052F74 /* GoogleService-Info.plist */; };
+		7CA224A920B0C56700052F74 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA224A820B0C56700052F74 /* Channel.swift */; };
+		7CA224AC20B0CF1D00052F74 /* FirebaseReferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA224AB20B0CF1D00052F74 /* FirebaseReferences.swift */; };
+		7CA224AF20B1B54100052F74 /* JoinChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA224AE20B1B54100052F74 /* JoinChannelViewController.swift */; };
+		7CA224B120B1B5DA00052F74 /* CreateChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA224B020B1B5DA00052F74 /* CreateChannelViewController.swift */; };
+		7CB636B120D6870700583578 /* QuizCreatorQuestionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636B020D6870700583578 /* QuizCreatorQuestionsTableViewController.swift */; };
+		7CB636B320D6997900583578 /* QuizCreatorMainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636B220D6997900583578 /* QuizCreatorMainTableViewController.swift */; };
+		7CB636B520D6A21000583578 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636B420D6A21000583578 /* Quiz.swift */; };
+		7CD86A6420C4641800A37C1D /* GeneralUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD86A6320C4641800A37C1D /* GeneralUtils.swift */; };
+		7CE6BC0A20D59A1900764E91 /* PhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */; };
+		7CE6BC0C20D5A38000764E91 /* ChannelMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE6BC0B20D5A38000764E91 /* ChannelMenuTableViewController.swift */; };
+		C4D2D8ABC89C895DF0E0E619 /* Pods_AppPrototype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B8A42E4A2CDDB4E9083A767 /* Pods_AppPrototype.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +50,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AAE3126EF7DDBE8B71F8383 /* Pods-AppPrototype.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppPrototype.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype.debug.xcconfig"; sourceTree = "<group>"; };
+		4B8A42E4A2CDDB4E9083A767 /* Pods_AppPrototype.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppPrototype.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0B9E1E20C082C700F90353 /* AppPrototype.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppPrototype.entitlements; sourceTree = "<group>"; };
+		7C0B9E1F20C36EEF00F90353 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		7C3F480520B1E2D400416A91 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7CA2246A20B0952900052F74 /* AppPrototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppPrototype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA2246D20B0952900052F74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7CA2246F20B0952900052F74 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7CA2247220B0952900052F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7CA2247420B0952B00052F74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7CA2247720B0952B00052F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +67,21 @@
 		7CA2248920B0952C00052F74 /* AppPrototypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppPrototypeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA2248D20B0952C00052F74 /* AppPrototypeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrototypeUITests.swift; sourceTree = "<group>"; };
 		7CA2248F20B0952C00052F74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7CA2249D20B09C7800052F74 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7CA2249F20B09CCB00052F74 /* UserChannelsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChannelsTableViewController.swift; sourceTree = "<group>"; };
+		7CA224A220B09D7000052F74 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		7CA224A620B0A15900052F74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7CA224A820B0C56700052F74 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		7CA224AB20B0CF1D00052F74 /* FirebaseReferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseReferences.swift; sourceTree = "<group>"; };
+		7CA224AE20B1B54100052F74 /* JoinChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinChannelViewController.swift; sourceTree = "<group>"; };
+		7CA224B020B1B5DA00052F74 /* CreateChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChannelViewController.swift; sourceTree = "<group>"; };
+		7CB636B020D6870700583578 /* QuizCreatorQuestionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizCreatorQuestionsTableViewController.swift; sourceTree = "<group>"; };
+		7CB636B220D6997900583578 /* QuizCreatorMainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizCreatorMainTableViewController.swift; sourceTree = "<group>"; };
+		7CB636B420D6A21000583578 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
+		7CD86A6320C4641800A37C1D /* GeneralUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralUtils.swift; sourceTree = "<group>"; };
+		7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewer.swift; sourceTree = "<group>"; };
+		7CE6BC0B20D5A38000764E91 /* ChannelMenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelMenuTableViewController.swift; sourceTree = "<group>"; };
+		C1081EB5FF8268241490A58A /* Pods-AppPrototype.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppPrototype.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4D2D8ABC89C895DF0E0E619 /* Pods_AppPrototype.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +110,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32523BE8B76B1A0646C9FEBC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4B8A42E4A2CDDB4E9083A767 /* Pods_AppPrototype.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7CA2246120B0952900052F74 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +125,8 @@
 				7CA2248120B0952B00052F74 /* AppPrototypeTests */,
 				7CA2248C20B0952C00052F74 /* AppPrototypeUITests */,
 				7CA2246B20B0952900052F74 /* Products */,
+				B6A7C7F7297B23E2B50D476B /* Pods */,
+				32523BE8B76B1A0646C9FEBC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,12 +143,15 @@
 		7CA2246C20B0952900052F74 /* AppPrototype */ = {
 			isa = PBXGroup;
 			children = (
-				7CA2246D20B0952900052F74 /* AppDelegate.swift */,
-				7CA2246F20B0952900052F74 /* ViewController.swift */,
+				7C0B9E1E20C082C700F90353 /* AppPrototype.entitlements */,
 				7CA2247120B0952900052F74 /* Main.storyboard */,
-				7CA2247420B0952B00052F74 /* Assets.xcassets */,
-				7CA2247620B0952B00052F74 /* LaunchScreen.storyboard */,
+				7CA2246D20B0952900052F74 /* AppDelegate.swift */,
+				7CA2249B20B0965500052F74 /* Controllers */,
+				7CA224AA20B0C56C00052F74 /* Model */,
+				7CA224AD20B0D02D00052F74 /* Utilities */,
+				7CA2249C20B096E500052F74 /* Supporting Files */,
 				7CA2247920B0952B00052F74 /* Info.plist */,
+				7CA224A620B0A15900052F74 /* GoogleService-Info.plist */,
 			);
 			path = AppPrototype;
 			sourceTree = "<group>";
@@ -125,6 +174,60 @@
 			path = AppPrototypeUITests;
 			sourceTree = "<group>";
 		};
+		7CA2249B20B0965500052F74 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7CA2249D20B09C7800052F74 /* LoginViewController.swift */,
+				7CA2249F20B09CCB00052F74 /* UserChannelsTableViewController.swift */,
+				7CA224A220B09D7000052F74 /* ChatViewController.swift */,
+				7CE6BC0B20D5A38000764E91 /* ChannelMenuTableViewController.swift */,
+				7CB636B220D6997900583578 /* QuizCreatorMainTableViewController.swift */,
+				7CB636B020D6870700583578 /* QuizCreatorQuestionsTableViewController.swift */,
+				7CA224AE20B1B54100052F74 /* JoinChannelViewController.swift */,
+				7CA224B020B1B5DA00052F74 /* CreateChannelViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7CA2249C20B096E500052F74 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7CA2247620B0952B00052F74 /* LaunchScreen.storyboard */,
+				7CA2247420B0952B00052F74 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7CA224AA20B0C56C00052F74 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7CA224A820B0C56700052F74 /* Channel.swift */,
+				7C3F480520B1E2D400416A91 /* User.swift */,
+				7CB636B420D6A21000583578 /* Quiz.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7CA224AD20B0D02D00052F74 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7CA224AB20B0CF1D00052F74 /* FirebaseReferences.swift */,
+				7C0B9E1F20C36EEF00F90353 /* Alerts.swift */,
+				7CD86A6320C4641800A37C1D /* GeneralUtils.swift */,
+				7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		B6A7C7F7297B23E2B50D476B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1AAE3126EF7DDBE8B71F8383 /* Pods-AppPrototype.debug.xcconfig */,
+				C1081EB5FF8268241490A58A /* Pods-AppPrototype.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +235,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7CA2249220B0952C00052F74 /* Build configuration list for PBXNativeTarget "AppPrototype" */;
 			buildPhases = (
+				E4184D6317092FA34821F239 /* [CP] Check Pods Manifest.lock */,
 				7CA2246620B0952900052F74 /* Sources */,
 				7CA2246720B0952900052F74 /* Frameworks */,
 				7CA2246820B0952900052F74 /* Resources */,
+				6E4A2E7C38032877FA0A7096 /* [CP] Embed Pods Frameworks */,
+				2BEDAEFE50CDFAA733D55C17 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,6 +299,11 @@
 				TargetAttributes = {
 					7CA2246920B0952900052F74 = {
 						CreatedOnToolsVersion = 9.3;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					7CA2247D20B0952B00052F74 = {
 						CreatedOnToolsVersion = 9.3;
@@ -230,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CA2247820B0952B00052F74 /* LaunchScreen.storyboard in Resources */,
+				7CA224A720B0A15900052F74 /* GoogleService-Info.plist in Resources */,
 				7CA2247520B0952B00052F74 /* Assets.xcassets in Resources */,
 				7CA2247320B0952900052F74 /* Main.storyboard in Resources */,
 			);
@@ -251,13 +363,140 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2BEDAEFE50CDFAA733D55C17 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseFacebookAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseTwitterAuthUI.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterShareExtensionUIResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseFacebookAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebasePhoneAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseTwitterAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterShareExtensionUIResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6E4A2E7C38032877FA0A7096 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/JSQMessagesViewController/JSQMessagesViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework",
+				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQMessagesViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQSystemSoundPlayer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4184D6317092FA34821F239 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AppPrototype-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7CA2246620B0952900052F74 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CA2247020B0952900052F74 /* ViewController.swift in Sources */,
+				7CA224B120B1B5DA00052F74 /* CreateChannelViewController.swift in Sources */,
+				7CA2249E20B09C7800052F74 /* LoginViewController.swift in Sources */,
+				7CA224AF20B1B54100052F74 /* JoinChannelViewController.swift in Sources */,
+				7CA224A920B0C56700052F74 /* Channel.swift in Sources */,
+				7CA224AC20B0CF1D00052F74 /* FirebaseReferences.swift in Sources */,
+				7C3F480620B1E2D400416A91 /* User.swift in Sources */,
+				7CE6BC0C20D5A38000764E91 /* ChannelMenuTableViewController.swift in Sources */,
+				7C0B9E2020C36EEF00F90353 /* Alerts.swift in Sources */,
 				7CA2246E20B0952900052F74 /* AppDelegate.swift in Sources */,
+				7CB636B320D6997900583578 /* QuizCreatorMainTableViewController.swift in Sources */,
+				7CE6BC0A20D59A1900764E91 /* PhotoViewer.swift in Sources */,
+				7CA224A320B09D7000052F74 /* ChatViewController.swift in Sources */,
+				7CB636B120D6870700583578 /* QuizCreatorQuestionsTableViewController.swift in Sources */,
+				7CA224A020B09CCB00052F74 /* UserChannelsTableViewController.swift in Sources */,
+				7CB636B520D6A21000583578 /* Quiz.swift in Sources */,
+				7CD86A6420C4641800A37C1D /* GeneralUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,16 +667,19 @@
 		};
 		7CA2249320B0952C00052F74 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AAE3126EF7DDBE8B71F8383 /* Pods-AppPrototype.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppPrototype/AppPrototype.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NR9LZ3ALZE;
 				INFOPLIST_FILE = AppPrototype/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg.AppPrototype;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -446,16 +688,19 @@
 		};
 		7CA2249420B0952C00052F74 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C1081EB5FF8268241490A58A /* Pods-AppPrototype.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppPrototype/AppPrototype.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NR9LZ3ALZE;
 				INFOPLIST_FILE = AppPrototype/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg.AppPrototype;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

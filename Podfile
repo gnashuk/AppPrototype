@@ -9,5 +9,5 @@ target 'AppPrototype' do
     pod 'JSQMessagesViewController'
     pod 'CryptoSwift'
     pod 'NYTPhotoViewer'
-
+    pod 'BEMCheckBox'
 end

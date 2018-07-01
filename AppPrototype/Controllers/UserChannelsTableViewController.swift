@@ -57,10 +57,6 @@ class UserChannelsTableViewController: UITableViewController {
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -130,8 +126,12 @@ class UserChannelsTableViewController: UITableViewController {
     private func observeChannels() -> DatabaseHandle {
         return allChannelsReference.observe(.childAdded) { [weak self] snapshot in
             if let channelData = snapshot.value as? [String: Any] {
-                if let title = channelData["title"] as? String, let ownerId = channelData["ownerId"] as? String, let description = channelData["description"] as? String, !title.isEmpty {
-                    self?.allChannels.append(Channel(id: snapshot.key, title: title, ownerId: ownerId, description: description))
+                if let title = channelData["title"] as? String, let ownerId = channelData["ownerId"] as? String, let description = channelData["description"] as? String, let isPrivate = channelData["isPrivate"] as? Bool, !title.isEmpty {
+                    var channel = Channel(id: snapshot.key, title: title, ownerId: ownerId, description: description, isPrivate: isPrivate)
+                    if let userIds = channelData["userIds"] as? [String] {
+                        channel.userIds = userIds
+                    }
+                    self?.allChannels.append(channel)
                     self?.tableView.reloadData()
                 }
             }
@@ -198,6 +198,12 @@ class UserChannelsTableViewController: UITableViewController {
                         }
                     })
                 }
+            }
+        } else {
+            if let displayName = Auth.auth().currentUser?.displayName {
+                let initials = GeneralUtils.getInitials(for: displayName)
+                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+                profileImageView.image = image
             }
         }
 

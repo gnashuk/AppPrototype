@@ -16,12 +16,14 @@ class JoinChannelTableViewController: UITableViewController {
     var users = [User]()
     
     private lazy var availableChannels = {
-        return allChannels.filter({ !userChannelIds.contains($0.id) })
+        return allChannels.filter({ !userChannelIds.contains($0.id) && $0.ownerId != userId && !$0.isPrivate })
     }()
     private var filteredChannels = [Channel]()
     
     private let userId = Auth.auth().currentUser!.uid
     private lazy var usersReference = FirebaseReferences.usersReference
+    
+    private lazy var channelsReference = FirebaseReferences.channelsReference
 
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -33,6 +35,7 @@ class JoinChannelTableViewController: UITableViewController {
         tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
         tabBarController?.tabBar.isHidden = true
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
     @IBAction func cancelChannelCreation(bySegue: UIStoryboardSegue) {
@@ -83,6 +86,12 @@ class JoinChannelTableViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] action in
             self?.userChannelIds.append(channel.id)
             self?.usersReference.child((self?.userId)!).child("channelIds").setValue(self?.userChannelIds)
+            
+            if let userId = self?.userId {
+                var userIds = channel.userIds ?? []
+                userIds.append(userId)
+                self?.channelsReference.child(channel.id).child("userIds").setValue(userIds)
+            }
             self?.performSegue(withIdentifier: "Subscription Done", sender: nil)
         })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct User: Hashable {
+struct User: Hashable, CustomStringConvertible {
     var hashValue: Int {
         return userId.hashValue
     }
@@ -16,6 +16,10 @@ struct User: Hashable {
     var userId: String
     var userName: String
     var profileImageURL: String?
+    
+    var description: String {
+        return "userId: \(userId)\nuserName: \(userName)\nprofileImageURL: \(String(describing: profileImageURL))"
+    }
     
     init(userId: String, userName: String, profileImageURL: String? = nil) {
         self.userId = userId

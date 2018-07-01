@@ -7,85 +7,324 @@
 //
 
 import UIKit
+import Firebase
+import BEMCheckBox
 
-class QuizCreatorQuestionsTableViewController: UITableViewController {
+protocol QuizBackButtonDelegate {
+    func resetQuiz()
+}
+
+class QuizCreatorQuestionsTableViewController: UITableViewController, CollapsibleTableViewHeaderDelegate, ExpandableCellDelegate, AnswerCellDelegate {
     
-    private var questionCount = 0 {
-        didSet {
-            questionCountLabel.text = "Question Count: \(questionCount)"
-        }
-    }
+    private lazy var usersQuizesReference = FirebaseReferences.usersReference.child(userId).child("quizes")
+    private let userId = Auth.auth().currentUser!.uid
     
-    @IBOutlet weak var quizTitleTextField: UITextField!
-    @IBOutlet weak var questionCountLabel: UILabel!
+    var quiz: Quiz?
+    var channel: Channel?
     
-    @IBAction func quizTypeChanged(_ sender: UISegmentedControl) {
-    }
+    private var expandedCellIndices: [IndexPath: CGFloat] = [:]
+    private var checkBoxesGrouped: [Int: BEMCheckBoxGroup] = [:]
     
-    @IBAction func questionCountChanged(_ sender: UIStepper) {
-        questionCount = Int(sender.value)
-    }
+    var backDelegate: QuizBackButtonDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.estimatedRowHeight = 200
+        tableView.rowHeight = UITableViewAutomaticDimension
+        let headerNib = UINib.init(nibName: "CollapsibleTableViewHeader", bundle: Bundle.main)
+        tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "CollapsibleTableViewHeader")
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(QuizCreatorQuestionsTableViewController.back(sender:)))
+        self.navigationItem.leftBarButtonItem = newBackButton
+        
+        quiz = Quiz(title: "Test Title", type: .singleChoice, timeLimit: .minutes(1), numberOfQuestions: 0)
+        for i in 0..<5 {
+            let question = QuizQuestion()
+            question.title = "Question\(i + 1)"
+            for j in 0..<3 {
+                let answer = QuizAnswer(text: "Answer_\(i + 1).\(j + 1) AppPrototype[3094:36783] [App] if we're in the real pre-commit handler we can't actually add any new fences due to CA restriction", correct: false)
+                question.answers.append(answer)
+            }
+            quiz?.questions.append(question)
+        }
+    }
+    
+    @objc func back(sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Save Progress", message: "Do you want to keep the draft?", preferredStyle: .alert)
+        let keepAction = UIAlertAction(title: "Keep", style: .default) { [weak self] action in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        let discardAction = UIAlertAction(title: "Discard", style: .destructive) { [weak self] action in
+            self?.backDelegate?.resetQuiz()
+            self?.navigationController?.popViewController(animated: true)
+        }
+        alert.addAction(keepAction)
+        alert.addAction(discardAction)
+        present(alert, animated: true)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    @IBAction func donePressed(_ sender: UIBarButtonItem) {
+        if verifyQuiz(), let quiz = quiz {
+            let alert = UIAlertController(title: "Finish Creation", message: "Choose the action.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self] handler in
+                _ = self?.saveQuizToFirebase(quiz: quiz)
+                self?.performSegue(withIdentifier: "Creation Done", sender: nil)
+            })
+            
+            alert.addAction(UIAlertAction(title: "Save and Post", style: .default) { [weak self] handler in
+                if let quizId = self?.saveQuizToFirebase(quiz: quiz) {
+                    self?.postQuizInChannel(quizId: quizId)
+                    self?.performSegue(withIdentifier: "Creation Done", sender: nil)
+                }
+            })
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+        }
     }
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 0
+        return quiz?.questions.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let question = quiz?.questions[section], !question.collapsed {
+            let minRowCount = 2
+            return question.answers.count + minRowCount
+        }
         return 0
     }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CollapsibleTableViewHeader") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "CollapsibleTableViewHeader")
 
-    /*
+        header.titleLabel.text = "Question #\(section + 1)"
+        header.setCollapsed(quiz?.questions[section].collapsed ?? false)
+
+        header.section = section
+        header.delegate = self
+        
+        return header
+    }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+        let row = indexPath.row
+        let section = indexPath.section
+        
+        switch row {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Question Cell", for: indexPath) as! QuestionTitleTableViewCell
+            cell.quiz = quiz
+            cell.tableView = tableView
+            cell.indexPath = indexPath
+            cell.expandableCellDelegate = self
+            if let title = quiz?.questions[section].title, !title.isEmpty {
+                cell.questionTextArea.text = title
+                cell.questionTextArea.textColor = UIColor.black
+            }
+            return cell
+        case getLastIndex(in: section):
+            let cell = tableView.dequeueReusableCell(withIdentifier: "New Answer Cell", for: indexPath) as! NewQuizAnswerTableViewCell
+            cell.quiz = quiz
+            cell.tableView = tableView
+            cell.indexPath = indexPath
+            cell.addButton.isEnabled = false
+            cell.expandableCellDelegate = self
+            cell.answerCellDelegate = self
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Answer Cell", for: indexPath) as! QuizAnswerTableViewCell
+            cell.quiz = quiz
+            cell.indexPath = indexPath
+            if let quiz = quiz {
+                let answer = quiz.questions[section].answers[row - 1]
+                let answerText = NSMutableAttributedString(string: answer.text)
+                let attributedText = NSMutableAttributedString(
+                    string: "\(Array("abcdefghijklmnopqrstuvwxyz".characters)[row - 1])) ",
+                    attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 17)]
+                )
+                attributedText.append(answerText)
+                cell.answerLabel?.attributedText = attributedText
+                
+                if quiz.type == .singleChoice {
+                    cell.checkBox.boxType = .circle
+                    if let boxGroup = checkBoxesGrouped[section] {
+                        boxGroup.addCheckBox(toGroup: cell.checkBox)
+                    } else {
+                        checkBoxesGrouped[section] = BEMCheckBoxGroup(checkBoxes: [cell.checkBox])
+                    }
+                } else {
+                    cell.checkBox.boxType = .square
+                }
+                cell.checkBox.on = answer.correct
+            }
+            return cell
+        }
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? QuizAnswerTableViewCell {
+            cell.didSelectCell()
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+    
+    private func getLastIndex(in section: Int) -> Int {
+        return quiz!.questions[section].answers.count + 1
+    }
+    
+    private func verifyQuiz() -> Bool {
+        if let questions = quiz?.questions {
+            if questions.filter({ $0.title.isEmpty }).count > 0 {
+                let alert = Alerts.createSingleActionAlert(title: "Missing Titles", message: "Please provide all question titles.")
+                present(alert, animated: true)
+                return false
+            }
+            
+            let uniqueQuestionTitles = Set(questions.map { $0.title.lowercased() } )
+            if uniqueQuestionTitles.count < questions.count {
+                let alert = Alerts.createSingleActionAlert(title: "Duplicate Questions", message: "Quiz contains duplicated question titles.")
+                present(alert, animated: true)
+                return false
+            }
+            
+            for question in questions {
+                if question.answers.count == 0 {
+                    let alert = Alerts.createSingleActionAlert(title: "Missing Answers", message: "Some questions don't have any answers.")
+                    present(alert, animated: true)
+                    return false
+                }
+                
+                if question.answers.filter({ $0.correct == true }).isEmpty {
+                    let alert = Alerts.createSingleActionAlert(title: "Missing Corrert Answers", message: "Some questions don't have any answers marked as correct.")
+                    present(alert, animated: true)
+                    return false
+                }
+            }
+        }
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let height = expandedCellIndices[indexPath] {
+            return height
+        } else if indexPath.row > 0 && indexPath.row < getLastIndex(in: indexPath.section) {
+            return UITableViewAutomaticDimension
+        }
+        return 44
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
-    */
+    
+    func toggleSection(_ header: CollapsibleTableViewHeader, section: Int) {
+        if var questions = quiz?.questions {
+            let collapsed = !questions[section].collapsed
+      
+            questions[section].collapsed = collapsed
+            header.setCollapsed(collapsed)
 
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+            tableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
+        }
     }
-    */
+
+    func updateCell(at indexPath: IndexPath, height: CGFloat?) {
+        expandedCellIndices[indexPath] = height
+    }
+    
+    func presentAlert(title: String, message: String) {
+        let alert = Alerts.createSingleActionAlert(title: title, message: message)
+        present(alert, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        if indexPath.row > 0 && indexPath.row < getLastIndex(in: indexPath.section) {
+            let editAction = UITableViewRowAction(style: .normal, title: "Edit") { [weak self] (action, indexPath) in
+                if let answer = self?.deleteAnswerCell(at: indexPath), let row = self?.getLastIndex(in: indexPath.section), let cell = tableView.cellForRow(at: IndexPath(item: row, section: indexPath.section)) as? NewQuizAnswerTableViewCell {
+                    cell.answerText = answer
+                }
+            }
+            
+            let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
+                _ = self?.deleteAnswerCell(at: indexPath)
+            }
+            return [deleteAction, editAction]
+        }
+        
+        return nil
+    }
+    
+    private func deleteAnswerCell(at indexPath: IndexPath) -> String? {
+        if let question = self.quiz?.questions[indexPath.section] {
+            let answer = question.answers.remove(at: indexPath.row - 1)
+            if #available(iOS 11.0, *) {
+                tableView.performBatchUpdates({
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                })
+            } else {
+                tableView.reloadData()
+            }
+            return answer.text
+        }
+        return nil
+    }
+    
+    private func postQuizInChannel(quizId: String) {
+        let user = Auth.auth().currentUser
+        if let channelId = channel?.id, let uid = user?.uid, let displayName = user?.displayName {
+            let messagesRef = FirebaseReferences.channelsReference.child(channelId).child("messages")
+            let newMessageRef = messagesRef.childByAutoId()
+            
+            let messageValue: [String: Any] = [
+                "senderId": uid,
+                "senderName": displayName,
+                "quizId": quizId,
+                "date": Date().customString
+            ]
+            
+            newMessageRef.setValue(messageValue)
+        }
+    }
+    
+    private func saveQuizToFirebase(quiz: Quiz) -> String {
+        let newQuizReference = usersQuizesReference.childByAutoId()
+        let quizValue: [String: Any] = [
+            "title": quiz.title,
+            "type": String(describing: quiz.type),
+            "timeLimit": quiz.timeLimit.description
+        ]
+        
+        newQuizReference.setValue(quizValue)
+        saveQuestionsToFirebase(reference: newQuizReference, questions: quiz.questions)
+        
+        return newQuizReference.key
+    }
+    
+    private func saveQuestionsToFirebase(reference: DatabaseReference, questions: [QuizQuestion]) {
+        let questionsReference = reference.child("questions")
+        for question in questions {
+            let newQuestionReference = questionsReference.childByAutoId()
+            let questionValue = [
+                "title": question.title
+            ]
+            newQuestionReference.setValue(questionValue)
+            saveAnswersToFirebase(reference: newQuestionReference, answers: question.answers)
+        }
+        
+    }
+    
+    private func saveAnswersToFirebase(reference: DatabaseReference, answers: [QuizAnswer]) {
+        let answersReference = reference.child("answers")
+        for answer in answers {
+            let newAnswerReference = answersReference.childByAutoId()
+            let answerValue: [String: Any] = [
+                "text": answer.text,
+                "correct": answer.correct
+            ]
+            newAnswerReference.setValue(answerValue)
+        }
+    }
 
     /*
     // MARK: - Navigation

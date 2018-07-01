@@ -11,6 +11,7 @@ import UIKit
 class ChannelMenuTableViewController: UITableViewController {
     
     var ownerOptions: Bool = false
+    var channel: Channel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +19,12 @@ class ChannelMenuTableViewController: UITableViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let height = 2 * 44
+        var height = 44
+        if ownerOptions {
+            height *= 2
+        } else {
+            
+        }
         preferredContentSize = CGSize(width: 300, height: height)
     }
 
@@ -33,16 +39,50 @@ class ChannelMenuTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Option Cell", for: indexPath)
 
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = ownerOptions ? "Manage Channel" : "Show Channel Info"
-        case 1:
-            cell.textLabel?.text = "Create Quiz"
-        default:
-            break
+        if ownerOptions {
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Manage Channel"
+            case 1:
+                cell.textLabel?.text = "Create Quiz"
+            default:
+                break
+            }
+        } else {
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Show Channel Info"
+            default:
+                break
+            }
         }
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if ownerOptions {
+            switch indexPath.row {
+            case 0:
+                break
+            case 1:
+                performSegue(withIdentifier: "Show Quiz Creator", sender: nil)
+                presentingViewController?.popoverPresentationController?.sourceView?.isHidden = true
+            default:
+                break
+            }
+        } else {
+            switch indexPath.row {
+            case 0:
+                break
+            default:
+                break
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 
     /*
@@ -80,14 +120,12 @@ class ChannelMenuTableViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "Show Quiz Creator" {
+            if let destination = segue.destination.contents as? QuizCreatorMainTableViewController {
+                destination.channel = channel
+            }
+        }
     }
-    */
 
 }

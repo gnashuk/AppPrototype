@@ -7,6 +7,68 @@
 //
 
 import Foundation
+import UIKit
+
+class GeneralUtils {
+    static func getInitials(for userName: String) -> String {
+        let words = userName.split(separator: " ", maxSplits: 2)
+        switch words.count {
+        case 2:
+            return words.map( { $0.prefix(1) }).joined()
+        default:
+            return String(userName.prefix(2))
+        }
+    }
+    
+    static func createLabeledImage(width: CGFloat, height: CGFloat, text: String, fontSize: CGFloat, labelBackgroundColor: UIColor, labelTextColor: UIColor) -> UIImage? {
+        let rect = CGRect(x: 0, y: 0, width: width, height: height)
+        let label = UILabel(frame: rect)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.text = text
+        label.font = UIFont.boldSystemFont(ofSize: fontSize)
+        label.backgroundColor = labelBackgroundColor
+        label.textColor = labelTextColor
+        UIGraphicsBeginImageContext(rect.size)
+        if let currentContext = UIGraphicsGetCurrentContext() {
+            label.layer.render(in: currentContext)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            return image
+        }
+        return nil
+    }
+    
+    static func fetchImage(from url: URL, completion: @escaping (UIImage) -> ()) {
+        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60)
+        if let response = URLCache.shared.cachedResponse(for: request) {
+            if let image = UIImage(data: response.data) {
+                completion(image)
+            }
+        } else {
+            let session = URLSession(configuration: .cached)
+            let dataTask = session.dataTask(with: request) { (data, response, error) in
+                if let err = error {
+                    print("Error occured: \(err)")
+                } else {
+                    if (response as? HTTPURLResponse) != nil {
+                        if let imageData = data, let image = UIImage(data: imageData) {
+                            completion(image)
+                        } else {
+                            print("Image file is corrupted")
+                        }
+                    } else {
+                        print("No response from server")
+                    }
+                }
+                if data != nil && response != nil {
+                    let cachedResponse = CachedURLResponse(response: response!, data: data!)
+                    URLCache.shared.storeCachedResponse(cachedResponse, for: request)
+                }
+            }
+            dataTask.resume()
+        }
+    }
+}
 
 extension URLSessionConfiguration {
     open class var `cached`: URLSessionConfiguration {
@@ -16,3 +78,5 @@ extension URLSessionConfiguration {
         return configuration
     }
 }
+
+

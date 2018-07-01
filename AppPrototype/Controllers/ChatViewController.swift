@@ -14,6 +14,9 @@ import NYTPhotoViewer
 
 class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
     
+    private let refreshControl = UIRefreshControl()
+    private var queryLimit = 50
+    
     let currentUser = Auth.auth().currentUser
     
     var channel: Channel?
@@ -26,6 +29,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private var newMessagesHandle: DatabaseHandle?
     
     private var messages = [JSQMessage]()
+    private var messagesFirebaseKeys: Set<String> = Set<String>()
     private var photoMediaItemsBySenderId = [String: JSQPhotoMediaItem]()
     private var userProfileImages: [User: UIImage] = [:]
     
@@ -57,6 +61,8 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         newMessagesHandle = observeNewMessages()
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(didPressBarButton))
         tabBarController?.tabBar.isHidden = true
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(fetchPreviousMessages(_:)), for: .valueChanged)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -65,21 +71,20 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     private func observeNewMessages() -> DatabaseHandle? {
-        let query = messagesReference.queryLimited(toLast: 50)
+        let query = messagesReference.queryLimited(toLast: UInt(queryLimit))
         
         return query.observe(.childAdded, with: { [weak self] (snapshot) in
-            if let messageContent = snapshot.value as? [String: Any] {
+            if let messageContent = snapshot.value as? [String: Any] , let messageKeys = self?.messagesFirebaseKeys, !messageKeys.contains(snapshot.key) {
+                self?.messagesFirebaseKeys.insert(snapshot.key)
                 if let id = messageContent["senderId"] as? String, let senderName = messageContent["senderName"] as? String, let dateString = messageContent["date"] as? String {
                     let messageDate = self?.convertToMessageDateFormat(dateString: dateString)
                     if let messageText = messageContent["text"] as? String, !messageText.isEmpty {
                         self?.appendMessage(senderId: id, senderName: senderName, date: messageDate, text: messageText)
                         self?.finishSendingMessage()
                     } else if let imageURL = messageContent["imageURL"] as? String {
-                        if let sentMediaItem = self?.photoMediaItemsBySenderId[snapshot.key] {
-//                            self?.appendImageMessage(senderId: id, senderName: senderName, date: messageDate, mediaItem: sentMediaItem)
+                        if let _ = self?.photoMediaItemsBySenderId[snapshot.key] {
                         } else if let newMediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self?.senderId) {
                             self?.appendImageMessage(senderId: id, senderName: senderName, date: messageDate, mediaItem: newMediaItem)
-                            
                             if imageURL.hasPrefix("gs://") {
                                 let imageStorageRef = Storage.storage().reference(forURL: imageURL)
                                 imageStorageRef.downloadURL { url, error in
@@ -94,6 +99,32 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                                 }
                             }
                         }
+                    } else if let quizId = messageContent["quizId"] as? String, let ownderId = self?.channel?.ownerId {
+                        let quizReference = FirebaseReferences.usersReference.child(ownderId).child("quizes").child(quizId)
+                        let query = quizReference.queryOrderedByKey()
+                        query.observe(.value, with: { [weak self] snapshot in
+                            if let quizContent = snapshot.value as? [String: Any] {
+                                if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
+                                if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
+                                    let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
+                                    for (_, value) in questions {
+                                        if let questionContent = value as? [String: Any] , let answers = questionContent["answers"] as? [String: Any], let questionTitle = questionContent["title"] as? String {
+                                            let question = QuizQuestion()
+                                            question.title = questionTitle
+                                            for (_, value) in answers {
+                                                if let answerContent = value as? [String: Any], let text = answerContent["text"] as? String, let correct = answerContent["correct"] as? Bool {
+                                                    let answer = QuizAnswer(text: text, correct: correct)
+                                                    question.answers.append(answer)
+                                                }
+                                            }
+                                            quiz.questions.append(question)
+                                        }
+                                    }
+                                    self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
+                                    }}
+                                
+                            }
+                        })
                     }
                     if let user = self?.users.filter({ $0.userId == id }).first, let keys = self?.userProfileImages.keys {
                         if !keys.contains(user) {
@@ -132,13 +163,22 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private func appendMessage(senderId id: String, senderName: String, date: Date?, text: String) {
         if let message = JSQMessage(senderId: id, senderDisplayName: senderName, date: date, text: text) {
             messages.append(message)
+            messages.sort { $0.date < $1.date }
         }
     }
     
     private func appendImageMessage(senderId id: String, senderName: String, date: Date?, mediaItem: JSQPhotoMediaItem) {
         if let message = JSQMessage(senderId: id, senderDisplayName: senderName, date: date, media: mediaItem) {
             messages.append(message)
+            messages.sort { $0.date < $1.date }
             collectionView.reloadData()
+        }
+    }
+    
+    private func appendQuizMessage(senderId id: String, senderName: String, date: Date?, quiz: Quiz) {
+        if let image = GeneralUtils.createLabeledImage(width: 200, height: 200, text: quiz.title, fontSize: 14, labelBackgroundColor: .lightGray, labelTextColor: .white) {
+            let mediaItem = QuizMediaItem(image: image, quiz: quiz)
+            appendImageMessage(senderId: id, senderName: senderName, date: date, mediaItem: mediaItem)
         }
     }
     
@@ -199,7 +239,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             }
         }
         return JSQMessagesAvatarImageFactory.avatarImage(
-            withUserInitials: getAvatarInitials(for: message.senderDisplayName),
+            withUserInitials: GeneralUtils.getInitials(for: message.senderDisplayName),
             backgroundColor: UIColor.jsq_messageBubbleLightGray(),
             textColor: UIColor.gray,
             font: UIFont.systemFont(ofSize: 18.0),
@@ -226,12 +266,12 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         
         return cell
     }
-
+    
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         if !text.isEmpty {
             let newRef = messagesReference.childByAutoId()
             
-            let messageValue: [String:Any] = [
+            let messageValue: [String: Any] = [
                 "senderId": senderId,
                 "senderName": senderDisplayName,
                 "text": text,
@@ -295,7 +335,9 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
         print("didTapMessageBubbleAt: \(indexPath.item)")
         let message = messages[indexPath.item]
-        if let photoMedia = message.media as? JSQPhotoMediaItem, let image = photoMedia.image {
+        if let quizMediaItem = message.media as? QuizMediaItem, let quiz = quizMediaItem.quiz {
+            performSegue(withIdentifier: "Show Quiz Session", sender: quiz)
+        } else if let photoMedia = message.media as? JSQPhotoMediaItem, let image = photoMedia.image {
             let photoProvider = PhotoProvider(image: image)
             let photosViewController = photoProvider.photoViewer
             present(photosViewController, animated: true)
@@ -313,16 +355,6 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private func setupIncomingBubble() -> JSQMessagesBubbleImage {
         return JSQMessagesBubbleImageFactory().incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true)
@@ -360,13 +392,49 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         if segue.identifier == "Show Menu" {
             if let destination = segue.destination.contents as? ChannelMenuTableViewController {
                 destination.ownerOptions = channel?.ownerId == senderId
+                destination.channel = channel
                 if let ppc = destination.popoverPresentationController {
                     ppc.delegate = self
                 }
             }
+        } else if segue.identifier == "Show Quiz Session" {
+            if let destination = segue.destination.contents as? QuizSessionTableViewController {
+                if let quiz = sender as? Quiz {
+                    destination.quiz = quiz
+                }
+            }
         }
     }
+    
+    @IBAction func quizCreationDone(bySegue: UIStoryboardSegue) {
+    }
+    
+    @objc private func fetchPreviousMessages(_ sender: Any) {
+        queryLimit += 25
+        if let handle = newMessagesHandle {
+            messagesReference.removeObserver(withHandle: handle)
+        }
+        newMessagesHandle = observeNewMessages()
+        refreshControl.endRefreshing()
+    }
 
+    @IBAction func appentTest(_ sender: UIBarButtonItem) {
+        if let image = GeneralUtils.createLabeledImage(width: 200, height: 200, text: "Test #1\nTest #1\nTest #1", fontSize: 14, labelBackgroundColor: .lightGray, labelTextColor: .white) {
+            let quiz = Quiz(title: "Test Title", type: .singleChoice, timeLimit: .minutes(1), numberOfQuestions: 0)
+            for i in 0..<5 {
+                let question = QuizQuestion()
+                question.title = "Question\(i + 1)"
+                for j in 0..<3 {
+                    let answer = QuizAnswer(text: "Answer_\(i + 1).\(j + 1) AppPrototype[3094:36783] [App] if we're in the real pre-commit handler we can't actually add any new fences due to CA restriction", correct: false)
+                    question.answers.append(answer)
+                }
+                quiz.questions.append(question)
+            }
+            let mediaItem = QuizMediaItem(image: image, quiz: quiz)
+            appendImageMessage(senderId: "test", senderName: "test", date: Date(), mediaItem: mediaItem)
+            scrollToBottom(animated: true)
+        }
+    }
 }
 
 extension ChatViewController {
@@ -434,5 +502,22 @@ extension ChatViewController {
         }
     }
 
+}
+
+class QuizMediaItem: JSQPhotoMediaItem {
+    var quiz: Quiz?
+    
+    init(image: UIImage, quiz: Quiz?) {
+        super.init(image: image)
+        self.quiz = quiz
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init!(maskAsOutgoing: Bool) {
+        super.init(maskAsOutgoing: maskAsOutgoing)
+    }
 }
 

@@ -9,20 +9,25 @@
 import UIKit
 import Firebase
 
-class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var channels: [Channel]?
     var userChannelIds = [String]()
+    var allUsers = [User]()
+    var selectedUsers = [User]()
     
     private lazy var channelsReference = FirebaseReferences.channelsReference
     private lazy var usersReference = FirebaseReferences.usersReference
     private var userChannelsHandle: DatabaseHandle?
+    private var usersHandle: DatabaseHandle?
     
     private let userId = Auth.auth().currentUser!.uid
     private let descriptionPlaceholder = "Description (Optional)"
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet weak var privateSwitch: UISwitch!
+    @IBOutlet weak var inviteesCollectionView: UICollectionView!
     
     private lazy var nonUniqueTitleAlert: UIAlertController = {
         let alert = UIAlertController(
@@ -48,8 +53,10 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
         if let handle = userChannelsHandle {
             usersReference.removeObserver(withHandle: handle)
         }
+        if let handle = usersHandle {
+            usersReference.removeObserver(withHandle: handle)
+        }
     }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,8 +66,38 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
         descriptionTextView.textColor = UIColor.lightGray
         descriptionTextView.layer.cornerRadius = 5.0
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
-        self.view.addGestureRecognizer(tapGesture)
+        view.addGestureRecognizer(tapGesture)
         userChannelsHandle = observeUserChannels()
+        usersHandle = observeUsers()
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return selectedUsers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = inviteesCollectionView.dequeueReusableCell(withReuseIdentifier: "User Image Cell", for: indexPath)
+        
+        if let userCell = cell as? UserImageCollectionViewCell {
+            let user = selectedUsers[indexPath.item]
+            if let imageURL = user.profileImageURL, let url = URL(string: imageURL) {
+                GeneralUtils.fetchImage(from: url) { image in
+                    DispatchQueue.main.async {
+                        userCell.profileImageView.image = image
+                    }
+                }
+            } else {
+                let initials = GeneralUtils.getInitials(for: user.userName)
+                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+                userCell.profileImageView.image = image
+            }
+        }
+        
+        return cell
     }
     
     @IBAction func done(_ sender: UIBarButtonItem) {
@@ -68,10 +105,11 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
             if isChannelTitleUnique(title: title) {
                 let newChannelReference = channelsReference.childByAutoId()
                 
-                let channelValue = [
+                let channelValue: [String: Any] = [
                     "title" : title,
                     "ownerId": userId,
-                    "description": channelDescription
+                    "description": channelDescription,
+                    "isPrivate": privateSwitch.isOn
                 ]
                 newChannelReference.setValue(channelValue)
                 
@@ -84,6 +122,9 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
         } else {
             present(emptyUniqueTitleAlert, animated: true)
         }
+    }
+    
+    @IBAction func userSelectionDone(bySegue: UIStoryboardSegue) {
     }
     
     private var channelDescription: String {
@@ -101,9 +142,27 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
         }
     }
     
-    // MARK: - Navigation
+    private func observeUsers() -> DatabaseHandle {
+        return usersReference.observe(.childAdded) { [weak self] snapshot in
+            if let userData = snapshot.value as? [String: Any] {
+                if let userName = userData["userName"] as? String {
+                    var user = User(userId: snapshot.key, userName: userName)
+                    if let profileImageURL = userData["profileImageURL"] as? String {
+                        user.profileImageURL = profileImageURL
+                    }
+                    self?.allUsers.append(user)
+                }
+            }
+        }
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Invite Users" {
+            if let destination = segue.destination.contents as? UserInvitationsTableViewController {
+                destination.allUsers = allUsers
+                destination.selectedUsers = selectedUsers
+            }
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

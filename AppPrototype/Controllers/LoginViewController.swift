@@ -77,7 +77,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         } else {
             let alert = UIAlertController(
                 title: "Empty Login Field",
-                message: "Email and password fields can't empty.",
+                message: "Email and password fields can't be empty.",
                 preferredStyle: .alert
             )
             present(alert, animated: true)
@@ -160,7 +160,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         if let userId = authDataResult?.user.uid, isNewUser(userId: userId) {
             let newUserReference = usersReference.child(userId)
             let userName = authDataResult?.user.displayName
-            var userValue: [String:Any] = [
+            var userValue: [String: Any] = [
                 "userName": userName ?? authDataResult!.user.email!
             ]
             if let profileImageURL = authDataResult?.user.photoURL?.absoluteString {
@@ -182,21 +182,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     }
     
     private func presentChannelsViewControler(userDisplayName: String?) {
-        if let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController {
-            if let userChannelsTVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController {
-                if let navigationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Navigation VC") as? UINavigationController {
-                    let newVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "New VC")
-                    userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
-                    newVC.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(named: "bell"), tag: 1)
-                    tabBarController.setViewControllers([navigationVC, newVC], animated: true)
+        if let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController,
+           let userChannelsTVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
+           let channelsNavigationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
+           let notificationsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
+           let notificationsNavigationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController {
+                userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
+                notificationsVC.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(named: "bell"), tag: 1)
+                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC], animated: true)
+            
+                userChannelsTVC.senderName = emailTextField?.text
+                userChannelsTVC.senderName = userDisplayName
+                channelsNavigationVC.viewControllers = [userChannelsTVC]
+                notificationsNavigationVC.viewControllers = [notificationsVC]
+                present(tabBarController, animated: true, completion: nil)
                     
-                    userChannelsTVC.senderName = emailTextField?.text
-                    userChannelsTVC.senderName = userDisplayName
-                    navigationVC.viewControllers = [userChannelsTVC]
-                    present(tabBarController, animated: true, completion: nil)
-                    
-                }
-            }
+            
+            
         }
     }
     

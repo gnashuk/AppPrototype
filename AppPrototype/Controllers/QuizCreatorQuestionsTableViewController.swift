@@ -22,6 +22,8 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     var quiz: Quiz?
     var channel: Channel?
     
+    private let user = Auth.auth().currentUser!
+    
     private var expandedCellIndices: [IndexPath: CGFloat] = [:]
     private var checkBoxesGrouped: [Int: BEMCheckBoxGroup] = [:]
     
@@ -36,17 +38,6 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
         self.navigationItem.hidesBackButton = true
         let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(QuizCreatorQuestionsTableViewController.back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
-        
-        quiz = Quiz(title: "Test Title", type: .singleChoice, timeLimit: .minutes(1), numberOfQuestions: 0)
-        for i in 0..<5 {
-            let question = QuizQuestion()
-            question.title = "Question\(i + 1)"
-            for j in 0..<3 {
-                let answer = QuizAnswer(text: "Answer_\(i + 1).\(j + 1) AppPrototype[3094:36783] [App] if we're in the real pre-commit handler we can't actually add any new fences due to CA restriction", correct: false)
-                question.answers.append(answer)
-            }
-            quiz?.questions.append(question)
-        }
     }
     
     @objc func back(sender: UIBarButtonItem) {
@@ -139,10 +130,7 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
             if let quiz = quiz {
                 let answer = quiz.questions[section].answers[row - 1]
                 let answerText = NSMutableAttributedString(string: answer.text)
-                let attributedText = NSMutableAttributedString(
-                    string: "\(Array("abcdefghijklmnopqrstuvwxyz".characters)[row - 1])) ",
-                    attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 17)]
-                )
+                let attributedText = GeneralUtils.createBoldAttributedString(string: "\(Array("abcdefghijklmnopqrstuvwxyz".characters)[row - 1])) ", fontSize: 17)
                 attributedText.append(answerText)
                 cell.answerLabel?.attributedText = attributedText
                 
@@ -271,19 +259,39 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     }
     
     private func postQuizInChannel(quizId: String) {
-        let user = Auth.auth().currentUser
-        if let channelId = channel?.id, let uid = user?.uid, let displayName = user?.displayName {
+        if let channelId = channel?.id, let displayName = user.displayName {
             let messagesRef = FirebaseReferences.channelsReference.child(channelId).child("messages")
             let newMessageRef = messagesRef.childByAutoId()
             
             let messageValue: [String: Any] = [
-                "senderId": uid,
+                "senderId": user.uid,
                 "senderName": displayName,
                 "quizId": quizId,
-                "date": Date().customString
+                "date": Date().longString
             ]
             
             newMessageRef.setValue(messageValue)
+            sendUserNotifications(quizId: quizId)
+        }
+    }
+    
+    private func sendUserNotifications(quizId: String) {
+        if let channelId = channel?.id, let channelTitle = channel?.title, let userIds = channel?.userIds, let quizTitle = quiz?.title {
+            for userId in userIds where userId != user.uid {
+                let notificationsRef = FirebaseReferences.usersReference.child(userId).child("notifications")
+                let newNotificationRef = notificationsRef.childByAutoId()
+                
+                let notificationValue: [String: Any] = [
+                    "date": Date().shortString,
+                    "channelId": channelId,
+                    "channelTitle": channelTitle,
+                    "quizId": quizId,
+                    "quizTitle": quizTitle,
+                    "senderId": user.uid
+                ]
+                
+                newNotificationRef.setValue(notificationValue)
+            }
         }
     }
     

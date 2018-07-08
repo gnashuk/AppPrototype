@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 struct User: Hashable, CustomStringConvertible {
     var hashValue: Int {
@@ -16,6 +17,7 @@ struct User: Hashable, CustomStringConvertible {
     var userId: String
     var userName: String
     var profileImageURL: String?
+    var channelIds: [String]?
     
     var description: String {
         return "userId: \(userId)\nuserName: \(userName)\nprofileImageURL: \(String(describing: profileImageURL))"
@@ -25,5 +27,14 @@ struct User: Hashable, CustomStringConvertible {
         self.userId = userId
         self.userName = userName
         self.profileImageURL = profileImageURL
+    }
+    
+    static func createFrom(dataSnapshot: DataSnapshot) -> User? {
+        if let usersContent = dataSnapshot.value as? [String: Any] {
+            if let userName = usersContent["userName"] as? String {
+                return User(userId: dataSnapshot.key, userName: userName)
+            }
+        }
+        return nil
     }
 }

@@ -38,6 +38,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         return authUI
     }()
     
+    private var mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+    
     deinit {
         print("LoginViewCOntroller deinit")
         if let handle = usersHandle {
@@ -129,10 +131,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     
     private func observeUsers() -> DatabaseHandle {
         return usersReference.observe(.childAdded) { [weak self] snapshot in
-            if let usersContent = snapshot.value as? [String:Any] {
-                if let userName = usersContent["userName"] as? String {
-                    self?.users.append(User(userId: snapshot.key, userName: userName))
-                }
+            if let user = User.createFrom(dataSnapshot: snapshot) {
+                self?.users.append(user)
             }
         }
     }
@@ -182,19 +182,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     }
     
     private func presentChannelsViewControler(userDisplayName: String?) {
-        if let tabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController,
-           let userChannelsTVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
-           let channelsNavigationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
-           let notificationsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
-           let notificationsNavigationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController {
+        if let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController,
+           let userChannelsTVC = mainStoryboard.instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
+           let channelsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
+           let notificationsVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
+           let notificationsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController,
+           let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings VC") as? SettingsTableViewController,
+           let settingsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings Navigation VC") as? UINavigationController {
                 userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
-                notificationsVC.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(named: "bell"), tag: 1)
-                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC], animated: true)
+                notificationsVC.tabBarItem = UITabBarItem(title: "Alerts", image: UIImage(named: "bell"), tag: 1)
+                settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named: "settings"), tag: 2)
+                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC, settingsNavigationVC], animated: true)
             
                 userChannelsTVC.senderName = emailTextField?.text
                 userChannelsTVC.senderName = userDisplayName
                 channelsNavigationVC.viewControllers = [userChannelsTVC]
                 notificationsNavigationVC.viewControllers = [notificationsVC]
+                settingsNavigationVC.viewControllers = [settingsVC]
                 present(tabBarController, animated: true, completion: nil)
                     
             
@@ -251,21 +255,5 @@ extension UIViewController {
         } else {
             return self
         }
-    }
-}
-
-extension Date {
-    var customString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE MMM dd, HH:mm"
-        return dateFormatter.string(from: self)
-    }
-}
-
-extension String {
-    func convertToDate() -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE MMM dd, HH:mm"
-        return dateFormatter.date(from: self)
     }
 }

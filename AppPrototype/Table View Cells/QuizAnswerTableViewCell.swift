@@ -11,6 +11,7 @@ import BEMCheckBox
 
 class QuizAnswerTableViewCell: UITableViewCell, BEMCheckBoxDelegate {
 
+    @IBOutlet weak var answerBackgroundView: UIView!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var checkBox: BEMCheckBox! {
         didSet {

@@ -45,8 +45,6 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private lazy var typingUserReference: DatabaseReference = channelReference!.child("typingUsers").child(self.senderId)
     private lazy var typingUsersQuery: DatabaseQuery = channelReference!.child("typingUsers").queryOrderedByKey()
     private var typingUsersHandle: DatabaseHandle?
-
-//    var image: UIImage?
     
     private let queue = DispatchQueue.global(qos: .background)
     private var userStoppedTypingWorkItem: DispatchWorkItem?
@@ -59,7 +57,6 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         automaticallyScrollsToMostRecentMessage = true
         senderId = Auth.auth().currentUser?.uid
         newMessagesHandle = observeNewMessages()
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(didPressBarButton))
         tabBarController?.tabBar.isHidden = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(fetchPreviousMessages(_:)), for: .valueChanged)
@@ -103,27 +100,31 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                         let quizReference = FirebaseReferences.usersReference.child(ownderId).child("quizes").child(quizId)
                         let query = quizReference.queryOrderedByKey()
                         query.observe(.value, with: { [weak self] snapshot in
-                            if let quizContent = snapshot.value as? [String: Any] {
-                                if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
-                                if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
-                                    let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
-                                    for (_, value) in questions {
-                                        if let questionContent = value as? [String: Any] , let answers = questionContent["answers"] as? [String: Any], let questionTitle = questionContent["title"] as? String {
-                                            let question = QuizQuestion()
-                                            question.title = questionTitle
-                                            for (_, value) in answers {
-                                                if let answerContent = value as? [String: Any], let text = answerContent["text"] as? String, let correct = answerContent["correct"] as? Bool {
-                                                    let answer = QuizAnswer(text: text, correct: correct)
-                                                    question.answers.append(answer)
-                                                }
-                                            }
-                                            quiz.questions.append(question)
-                                        }
-                                    }
-                                    self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
-                                    }}
-                                
+                            if let quiz = Quiz.createFrom(dataSnapshot: snapshot) {
+                                self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
                             }
+//                            if let quizContent = snapshot.value as? [String: Any] {
+//                                if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
+//                                if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
+//                                    let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
+//                                    quiz.id = quizId
+//                                    for (_, value) in questions {
+//                                        if let questionContent = value as? [String: Any] , let answers = questionContent["answers"] as? [String: Any], let questionTitle = questionContent["title"] as? String {
+//                                            let question = QuizQuestion()
+//                                            question.title = questionTitle
+//                                            for (_, value) in answers {
+//                                                if let answerContent = value as? [String: Any], let text = answerContent["text"] as? String, let correct = answerContent["correct"] as? Bool {
+//                                                    let answer = QuizAnswer(text: text, correct: correct)
+//                                                    question.answers.append(answer)
+//                                                }
+//                                            }
+//                                            quiz.questions.append(question)
+//                                        }
+//                                    }
+//                                    self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
+//                                    }
+//                                }
+//                            }
                         })
                     }
                     if let user = self?.users.filter({ $0.userId == id }).first, let keys = self?.userProfileImages.keys {
@@ -187,7 +188,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             "senderId": senderId!,
             "imageURL": url,
             "senderName": senderDisplayName,
-            "date": Date().customString
+            "date": Date().longString
         ]
         
         reference.setValue(messageValue)
@@ -226,7 +227,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.item]
         if isEarliest(message: message, index: indexPath.item, timeUnit: .day) {
-            return NSAttributedString(string: message.date.customString)
+            return NSAttributedString(string: message.date.longString)
         }
         return nil
     }
@@ -275,7 +276,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                 "senderId": senderId,
                 "senderName": senderDisplayName,
                 "text": text,
-                "date": Date().customString
+                "date": Date().longString
             ]
             
             newRef.setValue(messageValue)
@@ -336,7 +337,11 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         print("didTapMessageBubbleAt: \(indexPath.item)")
         let message = messages[indexPath.item]
         if let quizMediaItem = message.media as? QuizMediaItem, let quiz = quizMediaItem.quiz {
-            performSegue(withIdentifier: "Show Quiz Session", sender: quiz)
+            if let ownerId = channel?.ownerId, let userId = currentUser?.uid, ownerId == userId {
+                performSegue(withIdentifier: "Show Quiz Results", sender: quiz)
+            } else {
+                performSegue(withIdentifier: "Show Quiz Session", sender: quiz)
+            }
         } else if let photoMedia = message.media as? JSQPhotoMediaItem, let image = photoMedia.image {
             let photoProvider = PhotoProvider(image: image)
             let photosViewController = photoProvider.photoViewer
@@ -389,7 +394,8 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Show Menu" {
+        switch segue.identifier {
+        case "Show Menu":
             if let destination = segue.destination.contents as? ChannelMenuTableViewController {
                 destination.ownerOptions = channel?.ownerId == senderId
                 destination.channel = channel
@@ -397,12 +403,23 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                     ppc.delegate = self
                 }
             }
-        } else if segue.identifier == "Show Quiz Session" {
+        case "Show Quiz Session":
             if let destination = segue.destination.contents as? QuizSessionTableViewController {
                 if let quiz = sender as? Quiz {
+                    quiz.resetAnswers()
                     destination.quiz = quiz
+                    destination.channelOwnerId = channel?.ownerId
                 }
             }
+        case "Show Quiz Results":
+            if let destination = segue.destination.contents as? QuizResultsTableViewController {
+                if let quiz = sender as? Quiz {
+                    destination.quiz = quiz
+                    destination.users = users
+                }
+            }
+        default:
+            break
         }
     }
     
@@ -417,36 +434,9 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         newMessagesHandle = observeNewMessages()
         refreshControl.endRefreshing()
     }
-
-    @IBAction func appentTest(_ sender: UIBarButtonItem) {
-        if let image = GeneralUtils.createLabeledImage(width: 200, height: 200, text: "Test #1\nTest #1\nTest #1", fontSize: 14, labelBackgroundColor: .lightGray, labelTextColor: .white) {
-            let quiz = Quiz(title: "Test Title", type: .singleChoice, timeLimit: .minutes(1), numberOfQuestions: 0)
-            for i in 0..<5 {
-                let question = QuizQuestion()
-                question.title = "Question\(i + 1)"
-                for j in 0..<3 {
-                    let answer = QuizAnswer(text: "Answer_\(i + 1).\(j + 1) AppPrototype[3094:36783] [App] if we're in the real pre-commit handler we can't actually add any new fences due to CA restriction", correct: false)
-                    question.answers.append(answer)
-                }
-                quiz.questions.append(question)
-            }
-            let mediaItem = QuizMediaItem(image: image, quiz: quiz)
-            appendImageMessage(senderId: "test", senderName: "test", date: Date(), mediaItem: mediaItem)
-            scrollToBottom(animated: true)
-        }
-    }
 }
 
 extension ChatViewController {
-    private func convertToMessageDateFormat(dateString: String) -> Date? {
-        if let messageDate = dateString.convertToDate() {
-            var timeInterval = DateComponents()
-            timeInterval.day = 1
-            return Calendar.current.date(byAdding: timeInterval, to: messageDate)
-        }
-        return nil
-    }
-    
     private func isEarliest(message: JSQMessage, index: Int, timeUnit: Calendar.Component) -> Bool {
         let calendar = NSCalendar.current
         if index == 0 {
@@ -501,6 +491,15 @@ extension ChatViewController {
             dataTask.resume()
         }
     }
+    
+    private func convertToMessageDateFormat(dateString: String) -> Date? {
+        if let messageDate = dateString.convertToLongDate() {
+            var timeInterval = DateComponents()
+            timeInterval.day = 1
+            return Calendar.current.date(byAdding: timeInterval, to: messageDate)
+        }
+        return nil
+    }
 
 }
 
@@ -520,4 +519,3 @@ class QuizMediaItem: JSQPhotoMediaItem {
         super.init(maskAsOutgoing: maskAsOutgoing)
     }
 }
-

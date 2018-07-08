@@ -12,7 +12,7 @@ class UserImageCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
-            profileImageView.layer.cornerRadius = 20
+            profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
             profileImageView.layer.masksToBounds = true
         }
     }

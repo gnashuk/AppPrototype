@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import Firebase
 
 class Quiz: CustomStringConvertible {
+    var id: String?
     var title: String
     var type: QuizType
     var timeLimit: TimeLimit
@@ -35,6 +37,38 @@ class Quiz: CustomStringConvertible {
     
     var description: String {
         return "<Quiz: title = \(title); type = \(type); timeLimit = \(timeLimit); question = \(questions)>"
+    }
+    
+    func resetAnswers() {
+        questions.forEach { (question) in
+            question.answers.forEach({ $0.correct = false })
+        }
+    }
+    
+    static func createFrom(dataSnapshot: DataSnapshot) -> Quiz? {
+        if let quizContent = dataSnapshot.value as? [String: Any] {
+            if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
+                if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
+                    let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
+                    quiz.id = dataSnapshot.key
+                    for (_, value) in questions {
+                        if let questionContent = value as? [String: Any] , let answers = questionContent["answers"] as? [String: Any], let questionTitle = questionContent["title"] as? String {
+                            let question = QuizQuestion()
+                            question.title = questionTitle
+                            for (_, value) in answers {
+                                if let answerContent = value as? [String: Any], let text = answerContent["text"] as? String, let correct = answerContent["correct"] as? Bool {
+                                    let answer = QuizAnswer(text: text, correct: correct)
+                                    question.answers.append(answer)
+                                }
+                            }
+                            quiz.questions.append(question)
+                        }
+                    }
+                    return quiz
+                }
+            }
+        }
+        return nil
     }
 }
 

@@ -8,27 +8,45 @@
 
 import UIKit
 import BEMCheckBox
+import Firebase
 
 class QuizSessionTableViewController: UITableViewController, CollapsibleTableViewHeaderDelegate {
+    
     @IBOutlet weak var timerView: UIView!
     @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var submitButton: UIBarButtonItem!
     
     var quiz: Quiz?
+    var channelOwnerId: String?
+    var quizResult: QuizResult? {
+        didSet {
+            submitButton.isEnabled = false
+            navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.clear
+            tableView.allowsSelection = false
+        }
+    }
+    var launchedFromNotification = false
+    
+    private lazy var usersReference = FirebaseReferences.usersReference
+    let currentUser = Auth.auth().currentUser
+    
     private var checkBoxesGrouped: [Int: BEMCheckBoxGroup] = [:]
     
     private var countdownTimer: Timer?
     private var timerSecondsCount = 0
+    
+    private var backgroundColorByIndexPath = [IndexPath: UIColor]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         let headerNib = UINib.init(nibName: "CollapsibleTableViewHeader", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "CollapsibleTableViewHeader")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         setTimer()
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return quiz?.questions.count ?? 0
@@ -56,11 +74,10 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
             cell.quiz = quiz
             cell.indexPath = indexPath
             if let quiz = quiz {
-                let answerText = NSMutableAttributedString(string: quiz.questions[section].answers[row - 1].text)
-                let attributedText = NSMutableAttributedString(
-                    string: "\(Array("abcdefghijklmnopqrstuvwxyz".characters)[row - 1])) ",
-                    attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 17)]
-                )
+                let question = quiz.questions[section]
+                let answer = question.answers[row - 1]
+                let answerText = NSMutableAttributedString(string: answer.text)
+                let attributedText = GeneralUtils.createBoldAttributedString(string: "\(Array("abcdefghijklmnopqrstuvwxyz".characters)[row - 1])) ", fontSize: 17)
                 attributedText.append(answerText)
                 cell.answerLabel?.attributedText = attributedText
                 
@@ -73,6 +90,17 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
                     }
                 } else {
                     cell.checkBox.boxType = .square
+                }
+                if let quizResult = quizResult {
+                    if let userAnswers = quizResult.answers[question.title] {
+                        cell.answerBackgroundView.backgroundColor = getBackgroundColor(for: indexPath, quizAnswer: answer, userAnswers: userAnswers)
+                        cell.checkBox.on = userAnswers.contains(answer.text)
+                    } else {
+                        cell.checkBox.on = false
+                    }
+                    cell.checkBox.isEnabled = false
+                } else {
+                    cell.checkBox.on = answer.correct
                 }
             }
             return cell
@@ -119,13 +147,17 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
     }
     
     private func setTimer() {
-        if let timeLimit = quiz?.timeLimit {
-            switch timeLimit {
-            case .none:
-                timerLabel.text = nil
-            case .minutes(let minutes):
-                timerSecondsCount = minutes * 60
-                countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(tick(timer:)), userInfo: nil, repeats: true)
+        if quizResult != nil {
+            timerLabel.isHidden = true
+        } else {
+            if let timeLimit = quiz?.timeLimit {
+                switch timeLimit {
+                case .none:
+                    timerLabel.text = nil
+                case .minutes(let minutes):
+                    timerSecondsCount = minutes * 60
+                    countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(tick(timer:)), userInfo: nil, repeats: true)
+                }
             }
         }
     }
@@ -142,49 +174,63 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
         }
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    @IBAction func didPressSubmit(_ sender: UIBarButtonItem) {
+        if let quiz = quiz {
+            let alert = UIAlertController(title: "Finish Quiz", message: "Are you sure you want to complete the quiz?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] handler in
+                self?.saveQuizResultToFirebase(quiz: quiz)
+                if let launchedFromNotification = self?.launchedFromNotification, launchedFromNotification {
+                    self?.performSegue(withIdentifier: "Back to Notifications", sender: nil)
+                } else {
+                    self?.performSegue(withIdentifier: "Quiz Submitted", sender: nil)
+                }
+            })
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+        }
+        
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    private func saveQuizResultToFirebase(quiz: Quiz) {
+        if let channelOwnerId = channelOwnerId, let quizId = quiz.id {
+            let quizResultsRef = usersReference.child(channelOwnerId).child("quizes").child(quizId).child("results")
+            let newResultRef = quizResultsRef.childByAutoId()
+            
+            var results = [String: Any]()
+            for question in quiz.questions {
+                let selectedAnswers = question.answers.filter({ $0.correct }).map({ $0.text })
+                if !selectedAnswers.isEmpty {
+                    results[question.title] = selectedAnswers
+                }
+            }
+            
+            let resultValue: [String: Any] = [
+                "senderId": currentUser!.uid,
+                "senderName": currentUser!.displayName!,
+                "date": Date().shortString,
+                "answers": results
+            ]
+            
+            newResultRef.setValue(resultValue)
+        }
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    private func getBackgroundColor(for indexPath: IndexPath, quizAnswer: QuizAnswer, userAnswers: [String]) -> UIColor {
+        if let color = backgroundColorByIndexPath[indexPath] {
+            return color
+        } else {
+            if quizAnswer.correct {
+                backgroundColorByIndexPath[indexPath] = UIColor.green
+                return backgroundColorByIndexPath[indexPath]!
+            } else {
+                if userAnswers.contains(quizAnswer.text) {
+                    backgroundColorByIndexPath[indexPath] = UIColor.red
+                    return backgroundColorByIndexPath[indexPath]!
+                }
+            }
+        }
+        return UIColor.white
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

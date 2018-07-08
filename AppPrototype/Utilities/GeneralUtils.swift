@@ -68,6 +68,13 @@ class GeneralUtils {
             dataTask.resume()
         }
     }
+    
+    static func createBoldAttributedString(string: String, fontSize: CGFloat) -> NSMutableAttributedString {
+        return NSMutableAttributedString(
+            string: string,
+            attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: fontSize)]
+        )
+    }
 }
 
 extension URLSessionConfiguration {
@@ -76,6 +83,38 @@ extension URLSessionConfiguration {
         let configuration = URLSessionConfiguration.default
         configuration.urlCache = URLCache(memoryCapacity: 100 * mb, diskCapacity: 100 * mb, diskPath: "images")
         return configuration
+    }
+}
+
+extension Date {
+    var longString: String {
+        return makeString(dateFormat: "EEE MMM dd, HH:mm")
+    }
+    
+    var shortString: String {
+        return makeString(dateFormat: "MMM dd, yyyy")
+    }
+    
+    private func makeString(dateFormat: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = dateFormat
+        return dateFormatter.string(from: self)
+    }
+}
+
+extension String {
+    func convertToLongDate() -> Date? {
+        return convertToDate(dateFormat: "EEE MMM dd, HH:mm")
+    }
+    
+    func convertToShortDate() -> Date? {
+        return convertToDate(dateFormat: "MMM dd, yyyy")
+    }
+    
+    private func convertToDate(dateFormat: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = dateFormat
+        return dateFormatter.date(from: self)
     }
 }
 

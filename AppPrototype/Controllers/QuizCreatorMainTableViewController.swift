@@ -105,11 +105,6 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
         }
     }
     
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        quizTitleTextField.setBorder(color: UIColor.lightGray, width: 0.25)
-//        quizTitleTextField.textColor = UIColor.black
-//    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let text = textField.text {
             quiz?.title = text

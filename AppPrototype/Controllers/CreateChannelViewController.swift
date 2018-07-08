@@ -21,7 +21,7 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     private var userChannelsHandle: DatabaseHandle?
     private var usersHandle: DatabaseHandle?
     
-    private let userId = Auth.auth().currentUser!.uid
+    private let user = Auth.auth().currentUser!
     private let descriptionPlaceholder = "Description (Optional)"
 
     @IBOutlet weak var titleTextField: UITextField!
@@ -107,20 +107,37 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
                 
                 let channelValue: [String: Any] = [
                     "title" : title,
-                    "ownerId": userId,
+                    "ownerId": user.uid,
                     "description": channelDescription,
                     "isPrivate": privateSwitch.isOn
                 ]
                 newChannelReference.setValue(channelValue)
                 
                 userChannelIds.append(newChannelReference.key)
-                usersReference.child(userId).child("channelIds").setValue(userChannelIds)
+                usersReference.child(user.uid).child("channelIds").setValue(userChannelIds)
+                sendUserInvitation(channelId: newChannelReference.key, channelTitle: title)
                 performSegue(withIdentifier: "Creation Done", sender: sender)
             } else {
                 present(nonUniqueTitleAlert, animated: true)
             }
         } else {
             present(emptyUniqueTitleAlert, animated: true)
+        }
+    }
+    
+    private func sendUserInvitation(channelId: String, channelTitle: String) {
+        for selectedUser in selectedUsers {
+            let notificationsRef = FirebaseReferences.usersReference.child(selectedUser.userId).child("notifications")
+            let newNotificationRef = notificationsRef.childByAutoId()
+            
+            let notificationValue: [String: Any] = [
+                "date": Date().shortString,
+                "channelId": channelId,
+                "channelTitle": channelTitle,
+                "senderName": user.displayName!
+            ]
+            
+            newNotificationRef.setValue(notificationValue)
         }
     }
     
@@ -135,7 +152,7 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     }
     
     private func observeUserChannels() -> DatabaseHandle {
-        return usersReference.child(userId).child("channelIds").observe(.childAdded) { [weak self] snapshot in
+        return usersReference.child(user.uid).child("channelIds").observe(.childAdded) { [weak self] snapshot in
             if let channelIds = snapshot.value as? String {
                 self?.userChannelIds.append(channelIds)
             }
@@ -145,11 +162,8 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     private func observeUsers() -> DatabaseHandle {
         return usersReference.observe(.childAdded) { [weak self] snapshot in
             if let userData = snapshot.value as? [String: Any] {
-                if let userName = userData["userName"] as? String {
-                    var user = User(userId: snapshot.key, userName: userName)
-                    if let profileImageURL = userData["profileImageURL"] as? String {
-                        user.profileImageURL = profileImageURL
-                    }
+                if var user = User.createFrom(dataSnapshot: snapshot) {
+                    user.profileImageURL = userData["profileImageURL"] as? String
                     self?.allUsers.append(user)
                 }
             }

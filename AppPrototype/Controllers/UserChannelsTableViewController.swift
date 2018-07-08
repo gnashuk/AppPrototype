@@ -13,7 +13,7 @@ class UserChannelsTableViewController: UITableViewController {
     
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
-            profileImageView.layer.cornerRadius = 20
+            profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
             profileImageView.layer.masksToBounds = true
             fetchProfileImage()
         }
@@ -84,41 +84,6 @@ class UserChannelsTableViewController: UITableViewController {
         let channel = userChannels[indexPath.row]
         performSegue(withIdentifier: "Show Chat", sender: channel)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
     
     @IBAction func creationDone(bySegue: UIStoryboardSegue) {
     }
@@ -141,9 +106,10 @@ class UserChannelsTableViewController: UITableViewController {
     private func observeUsers() -> DatabaseHandle {
         return usersReference.observe(.childAdded) { [weak self] snapshot in
             if let usersContent = snapshot.value as? [String: Any] {
-                if let userName = usersContent["userName"] as? String {
+                if var user = User.createFrom(dataSnapshot: snapshot) {
                     let profileImageURL = usersContent["profileImageURL"] as? String
-                    self?.users.append(User(userId: snapshot.key, userName: userName, profileImageURL: profileImageURL))
+                    user.profileImageURL = profileImageURL
+                    self?.users.append(user)
                 }
             }
         }
@@ -182,30 +148,43 @@ class UserChannelsTableViewController: UITableViewController {
     }
 
     private func fetchProfileImage() {
-        let photoURL = Auth.auth().currentUser?.photoURL
-        struct last {
-            static var photoURL: URL? = nil
-        }
-        last.photoURL = photoURL
-        if let photoURL = photoURL {
-            DispatchQueue.global(qos: .default).async {
-                let data = try? Data(contentsOf: photoURL)
-                if let data = data {
-                    let image = UIImage(data: data)
-                    DispatchQueue.main.async(execute: {
-                        if photoURL == last.photoURL {
-                            self.profileImageView?.image = image
-                        }
-                    })
+//        let photoURL = Auth.auth().currentUser?.photoURL
+//        struct last {
+//            static var photoURL: URL? = nil
+//        }
+//        last.photoURL = photoURL
+//        if let photoURL = photoURL {
+//            DispatchQueue.global(qos: .default).async {
+//                let data = try? Data(contentsOf: photoURL)
+//                if let data = data {
+//                    let image = UIImage(data: data)
+//                    DispatchQueue.main.async(execute: {
+//                        if photoURL == last.photoURL {
+//                            self.profileImageView?.image = image
+//                        }
+//                    })
+//                }
+//            }
+//        } else {
+//            if let displayName = Auth.auth().currentUser?.displayName {
+//                let initials = GeneralUtils.getInitials(for: displayName)
+//                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+//                profileImageView.image = image
+//            }
+//        }
+
+        if let url = Auth.auth().currentUser?.photoURL {
+            GeneralUtils.fetchImage(from: url) { image in
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
                 }
             }
         } else {
             if let displayName = Auth.auth().currentUser?.displayName {
                 let initials = GeneralUtils.getInitials(for: displayName)
                 let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
-                profileImageView.image = image
+                self.profileImageView.image = image
             }
         }
-
     }
 }

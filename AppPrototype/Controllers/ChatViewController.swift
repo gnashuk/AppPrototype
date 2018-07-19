@@ -8,9 +8,12 @@
 
 import UIKit
 import Photos
-import Firebase
+import FirebaseDatabase
+import FirebaseStorage
+import FirebaseAuth
 import JSQMessagesViewController
 import NYTPhotoViewer
+import MobileCoreServices
 
 class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
     
@@ -49,7 +52,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private let queue = DispatchQueue.global(qos: .background)
     private var userStoppedTypingWorkItem: DispatchWorkItem?
     
-    private lazy var storageReference: StorageReference = Storage.storage().reference(forURL: "gs://appprototype-9cf29.appspot.com")
+    private let storageReference = FirebaseReferences.storageReference
     private let placeholderImageURL = "placeholderImageURL"
     
     override func viewDidLoad() {
@@ -86,7 +89,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                                 let imageStorageRef = Storage.storage().reference(forURL: imageURL)
                                 imageStorageRef.downloadURL { url, error in
                                     if url != nil {
-                                        self?.fetchImage(from: url!) { image in
+                                        GeneralUtils.fetchImage(from: url!) { image, error in
                                             DispatchQueue.main.async {
                                                 newMediaItem.image = image
                                                 self?.collectionView.reloadData()
@@ -103,37 +106,17 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                             if let quiz = Quiz.createFrom(dataSnapshot: snapshot) {
                                 self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
                             }
-//                            if let quizContent = snapshot.value as? [String: Any] {
-//                                if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
-//                                if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
-//                                    let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
-//                                    quiz.id = quizId
-//                                    for (_, value) in questions {
-//                                        if let questionContent = value as? [String: Any] , let answers = questionContent["answers"] as? [String: Any], let questionTitle = questionContent["title"] as? String {
-//                                            let question = QuizQuestion()
-//                                            question.title = questionTitle
-//                                            for (_, value) in answers {
-//                                                if let answerContent = value as? [String: Any], let text = answerContent["text"] as? String, let correct = answerContent["correct"] as? Bool {
-//                                                    let answer = QuizAnswer(text: text, correct: correct)
-//                                                    question.answers.append(answer)
-//                                                }
-//                                            }
-//                                            quiz.questions.append(question)
-//                                        }
-//                                    }
-//                                    self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
-//                                    }
-//                                }
-//                            }
                         })
                     }
                     if let user = self?.users.filter({ $0.userId == id }).first, let keys = self?.userProfileImages.keys {
                         if !keys.contains(user) {
                             if let absolutePath = user.profileImageURL, let url = URL(string: absolutePath) {
-                                self?.fetchImage(from: url) { image in
-                                    DispatchQueue.main.async { [weak self] in
-                                        self?.userProfileImages[user] = image
-                                        self?.collectionView.reloadData()
+                                GeneralUtils.fetchImage(from: url) { image, error in
+                                    if image != nil && error == nil {
+                                        DispatchQueue.main.async { [weak self] in
+                                            self?.userProfileImages[user] = image
+                                            self?.collectionView.reloadData()
+                                        }
                                     }
                                 }
                             }
@@ -177,9 +160,11 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     private func appendQuizMessage(senderId id: String, senderName: String, date: Date?, quiz: Quiz) {
-        if let image = GeneralUtils.createLabeledImage(width: 200, height: 200, text: quiz.title, fontSize: 14, labelBackgroundColor: .lightGray, labelTextColor: .white) {
-            let mediaItem = QuizMediaItem(image: image, quiz: quiz)
-            appendImageMessage(senderId: id, senderName: senderName, date: date, mediaItem: mediaItem)
+        if let image = GeneralUtils.createLabeledImage(width: 200, height: 200, text: quiz.title, fontSize: 14, labelBackgroundColor: .lightGray, labelTextColor: .white), let senderId = self.senderId {
+            let mediaItem = QuizMediaItem(maskAsOutgoing: id == senderId)
+            mediaItem?.image = image
+            mediaItem?.quiz = quiz
+            appendImageMessage(senderId: id, senderName: senderName, date: date, mediaItem: mediaItem!)
         }
     }
     
@@ -249,11 +234,19 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAt indexPath: IndexPath!) -> CGFloat {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault
+        let message = messages[indexPath.row]
+        if isEarliest(message: message, index: indexPath.item, timeUnit: .day) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        }
+        return 0
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault
+        let message = messages[indexPath.row]
+        if isEarliest(message: message, index: indexPath.item, timeUnit: .day) {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        }
+        return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -305,9 +298,46 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             imagePicker.sourceType = .photoLibrary
             self?.present(imagePicker, animated: true)
         }
+        let documentPickerAction = UIAlertAction(title: "Send File", style: .default) { [weak self] action in
+            let documentMenu = UIDocumentMenuViewController(documentTypes: [String(kUTTypePDF)], in: .import)
+            documentMenu.delegate = self
+            documentMenu.modalPresentationStyle = .formSheet
+            self?.present(documentMenu, animated: true)
+        }
+        let fileAction = UIAlertAction(title: "Send File Mock", style: .default) { (action) in
+            let rect = CGRect(x: 0, y: 0, width: 200, height: 200)
+            let label = self.createLabel(rect, text: "pdf", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.blue)
+            let topView = UIView(frame: rect)
+            topView.backgroundColor = UIColor(red: 232/255, green: 232/255, blue: 232/255, alpha: 1)
+            UIGraphicsBeginImageContext(rect.size)
+            if let currentContext = UIGraphicsGetCurrentContext() {
+                let fileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 85, height: 85))
+                fileImageView.image = UIImage(named: "file")
+                label.center = fileImageView.center
+                fileImageView.addSubview(label)
+                fileImageView.center = CGPoint(x: topView.center.x, y: topView.center.y - 10)
+                
+                let titleLabel = self.createLabel(rect, text: "file.pdf", font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
+                titleLabel.center = CGPoint(x: topView.center.x, y: topView.center.y + 40)
+                
+                let sizeLabel = self.createLabel(rect, text: "32.0 KB", font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
+                sizeLabel.center = CGPoint(x: titleLabel.center.x, y: titleLabel.center.y + 15)
+                
+                topView.addSubview(fileImageView)
+                topView.addSubview(titleLabel)
+                topView.addSubview(sizeLabel)
+                topView.layer.render(in: currentContext)
+                let image = UIGraphicsGetImageFromCurrentImageContext()
+                
+                let media = JSQPhotoMediaItem(image: image)
+                self.appendImageMessage(senderId: self.senderId, senderName: self.senderDisplayName, date: Date(), mediaItem: media!)
+            }
+        }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         actionSheet.addAction(cameraAction)
         actionSheet.addAction(photoLibraryAction)
+        actionSheet.addAction(documentPickerAction)
+        actionSheet.addAction(fileAction)
         actionSheet.addAction(cancelAction)
         present(actionSheet, animated: true)
     }
@@ -334,7 +364,6 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
-        print("didTapMessageBubbleAt: \(indexPath.item)")
         let message = messages[indexPath.item]
         if let quizMediaItem = message.media as? QuizMediaItem, let quiz = quizMediaItem.quiz {
             if let ownerId = channel?.ownerId, let userId = currentUser?.uid, ownerId == userId {
@@ -364,7 +393,6 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true)
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            if let key = saveImageMessage() {
             let newRef = messagesReference.childByAutoId()
             let mediaItem = JSQPhotoMediaItem(image: image)
             photoMediaItemsBySenderId[newRef.key] = mediaItem
@@ -380,12 +408,10 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                         return
                     }
                     if let storageRef = self?.storageReference, let path = metadata?.path {
-//                            self?.messagesReference.child(key).updateChildValues(["imageURL": path])
                         self?.saveImageMessage(at: storageRef.child(path).description, reference: newRef)
                     }
                 }
             }
-//            }
         }
     }
     
@@ -461,37 +487,6 @@ extension ChatViewController {
         }
     }
     
-    private func fetchImage(from url: URL, completion: @escaping (UIImage) -> ()) {
-        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60)
-        if let response = sharedCache.cachedResponse(for: request) {
-            if let image = UIImage(data: response.data) {
-                completion(image)
-            }
-        } else {
-            let session = URLSession(configuration: .cached)
-            let dataTask = session.dataTask(with: request) { (data, response, error) in
-                if let err = error {
-                    print("Error occured: \(err)")
-                } else {
-                    if (response as? HTTPURLResponse) != nil {
-                        if let imageData = data, let image = UIImage(data: imageData) {
-                            completion(image)
-                        } else {
-                            print("Image file is corrupted")
-                        }
-                    } else {
-                        print("No response from server")
-                    }
-                }
-                if data != nil && response != nil {
-                    let cachedResponse = CachedURLResponse(response: response!, data: data!)
-                    self.sharedCache.storeCachedResponse(cachedResponse, for: request)
-                }
-            }
-            dataTask.resume()
-        }
-    }
-    
     private func convertToMessageDateFormat(dateString: String) -> Date? {
         if let messageDate = dateString.convertToLongDate() {
             var timeInterval = DateComponents()
@@ -500,7 +495,30 @@ extension ChatViewController {
         }
         return nil
     }
+    
+    private func createLabel(_ rect: CGRect, text: String, font: UIFont, textColor: UIColor) -> UILabel {
+        let label = UILabel(frame: rect)
+        label.textAlignment = .center
+        label.text = text
+        label.font = font
+        label.textColor = textColor
+        return label
+    }
+}
 
+extension ChatViewController: UIDocumentMenuDelegate, UIDocumentPickerDelegate {
+    func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
+        documentPicker.delegate = self
+        present(documentPicker, animated: true)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        print("didPickDocumentAtUrl: \(url)")
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        dismiss(animated: true)
+    }
 }
 
 class QuizMediaItem: JSQPhotoMediaItem {

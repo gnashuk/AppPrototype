@@ -6,7 +6,8 @@
 //  Copyright © 2018 Oleg Gnashuk. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
+import FirebaseStorage
 
 class FirebaseReferences {
     static var channelsReference: DatabaseReference {
@@ -15,5 +16,9 @@ class FirebaseReferences {
     
     static var usersReference: DatabaseReference {
         return Database.database().reference().child("users")
+    }
+    
+    static var storageReference: StorageReference {
+        return Storage.storage().reference(forURL: "gs://appprototype-9cf29.appspot.com")
     }
 }

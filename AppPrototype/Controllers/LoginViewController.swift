@@ -41,7 +41,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     private var mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
     
     deinit {
-        print("LoginViewCOntroller deinit")
+        print("LoginViewController deinit")
         if let handle = usersHandle {
             usersReference.removeObserver(withHandle: handle)
         }
@@ -58,6 +58,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         passwordTextField.text = "O1eg@Stefan"
         usersHandle = observeUsers()
         fixFbButtonAppearance()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let user = Auth.auth().currentUser {
+            presentChannelsViewControler(userDisplayName: user.displayName)
+        }
     }
     
     override var shouldAutorotate: Bool {
@@ -77,11 +84,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
                 }
             }
         } else {
-            let alert = UIAlertController(
-                title: "Empty Login Field",
-                message: "Email and password fields can't be empty.",
-                preferredStyle: .alert
-            )
+            let alert = Alerts.createSingleActionAlert(title: "Empty Login Field", message: "Email and password fields can't be empty.")
             present(alert, animated: true)
         }
     }
@@ -138,11 +141,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     }
     
     func firebaseLogin(_ credential: AuthCredential) {
-//        if let user = Auth.auth().currentUser {
-//            presentChannelsViewControler(userDisplayName: user.displayName)
-//        } else {
-        let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: "Working", message: "Please wait...", delegate: nil, cancelButtonTitle: nil)
-        loadingAlert.show()
+        if let user = Auth.auth().currentUser {
+            presentChannelsViewControler(userDisplayName: user.displayName)
+        } else {
+            let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: "Working", message: "Please wait...", delegate: nil, cancelButtonTitle: nil)
+            loadingAlert.show()
             Auth.auth().signInAndRetrieveData(with: credential) { [weak self] (authResult, error) in
                 if let error = error {
                     self?.presentLoginFailedAlert(error)
@@ -153,7 +156,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
                 loadingAlert.dismiss(withClickedButtonIndex: 0, animated: true)
                 self?.presentChannelsViewControler(userDisplayName: authResult?.user.displayName)
             }
-//        }
+        }
     }
     
     private func saveNewUserInFirebase(authDataResult: AuthDataResult?) {
@@ -170,8 +173,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         }
     }
     
-    // MARK: - Navigation
-    
     func authUI(_ authUI: FUIAuth, didSignInWith authDataResult: AuthDataResult?, error: Error?) {
         if let error = error {
             presentLoginFailedAlert(error)
@@ -179,6 +180,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         }
         saveNewUserInFirebase(authDataResult: authDataResult)
         presentChannelsViewControler(userDisplayName: authDataResult?.user.displayName)
+    }
+    
+    @IBAction func loggedOut(bySegue: UIStoryboardSegue) {
     }
     
     private func presentChannelsViewControler(userDisplayName: String?) {
@@ -226,7 +230,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         facebookLoginButton.layer.cornerRadius = 4
         fbButtonVerticalSpacingContraint.constant = 12
     }
-
 }
 
 extension LoginViewController: FBSDKLoginButtonDelegate {
@@ -242,8 +245,9 @@ extension LoginViewController: FBSDKLoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         do {
             try Auth.auth().signOut()
-        } catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
+        } catch let error as NSError {
+            let alert = Alerts.createSingleActionAlert(title: "Logout Failed", message: error.localizedDescription)
+            present(alert, animated: true)
         }
     }
 }

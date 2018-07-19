@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 
 class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, QuizBackButtonDelegate {
     
@@ -19,7 +20,7 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
     var quiz: Quiz?
     var channel: Channel?
     
-    private let pickerData = ["none", "1 minute", "2 minutes", "5 minutes", "10 minutes", "15 minutes"]
+    private let pickerData = ["none", "1 minute", "2 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes", "25  minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes", "75 minutes", "90 minutes", "105 minutes", "120 minutes"]
     
     private var questionCount = 0 {
         didSet {

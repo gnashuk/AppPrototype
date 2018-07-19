@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
 
 class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -28,26 +30,6 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var privateSwitch: UISwitch!
     @IBOutlet weak var inviteesCollectionView: UICollectionView!
-    
-    private lazy var nonUniqueTitleAlert: UIAlertController = {
-        let alert = UIAlertController(
-            title: "Non-unique Channel Title",
-            message: "Channel with such title already exists.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        return alert
-    }()
-    
-    private lazy var emptyUniqueTitleAlert: UIAlertController = {
-        let alert = UIAlertController(
-            title: "Empty Channel Title",
-            message: "Please provide a channel title.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        return alert
-    }()
     
     deinit {
         if let handle = userChannelsHandle {
@@ -84,17 +66,7 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
         
         if let userCell = cell as? UserImageCollectionViewCell {
             let user = selectedUsers[indexPath.item]
-            if let imageURL = user.profileImageURL, let url = URL(string: imageURL) {
-                GeneralUtils.fetchImage(from: url) { image in
-                    DispatchQueue.main.async {
-                        userCell.profileImageView.image = image
-                    }
-                }
-            } else {
-                let initials = GeneralUtils.getInitials(for: user.userName)
-                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
-                userCell.profileImageView.image = image
-            }
+            fetchProfileImage(userCell: userCell, user: user)
         }
         
         return cell
@@ -118,10 +90,12 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
                 sendUserInvitation(channelId: newChannelReference.key, channelTitle: title)
                 performSegue(withIdentifier: "Creation Done", sender: sender)
             } else {
-                present(nonUniqueTitleAlert, animated: true)
+                let alert = Alerts.createSingleActionAlert(title: "Non-unique Channel Title", message: "Channel with such title already exists.")
+                present(alert, animated: true)
             }
         } else {
-            present(emptyUniqueTitleAlert, animated: true)
+            let alert = Alerts.createSingleActionAlert(title: "Empty Channel Title", message: "Please provide a channel title.")
+            present(alert, animated: true)
         }
     }
     
@@ -162,7 +136,7 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     private func observeUsers() -> DatabaseHandle {
         return usersReference.observe(.childAdded) { [weak self] snapshot in
             if let userData = snapshot.value as? [String: Any] {
-                if var user = User.createFrom(dataSnapshot: snapshot) {
+                if var user = User.createFrom(dataSnapshot: snapshot), user.userId != self!.user.uid {
                     user.profileImageURL = userData["profileImageURL"] as? String
                     self?.allUsers.append(user)
                 }
@@ -212,5 +186,45 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
             }
         }
         return true
+    }
+    
+    private func fetchProfileImage(userCell cell: UserImageCollectionViewCell, user: User) {
+        if let imageURL = user.profileImageURL, let url = URL(string: imageURL) {
+            let urlString = url.absoluteString
+            if urlString.hasPrefix("gs://") {
+                let imageStorageRef = Storage.storage().reference(forURL: urlString)
+                imageStorageRef.downloadURL { url, error in
+                    if url != nil {
+                        GeneralUtils.fetchImage(from: url!) { image, error in
+                            DispatchQueue.main.async {
+                                if image != nil && error == nil {
+                                    cell.profileImageView.image = image
+                                } else {
+                                    self.setPlaceholderProfileImage(userCell: cell, user: user)
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                GeneralUtils.fetchImage(from: url) { image, error in
+                    DispatchQueue.main.async {
+                        if image != nil && error == nil {
+                            cell.profileImageView.image = image
+                        } else {
+                            self.setPlaceholderProfileImage(userCell: cell, user: user)
+                        }
+                    }
+                }
+            }
+        } else {
+            setPlaceholderProfileImage(userCell: cell, user: user)
+        }
+    }
+    
+    private func setPlaceholderProfileImage(userCell cell: UserImageCollectionViewCell, user: User) {
+        let initials = GeneralUtils.getInitials(for: user.userName)
+        let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+        cell.profileImageView.image = image
     }
 }

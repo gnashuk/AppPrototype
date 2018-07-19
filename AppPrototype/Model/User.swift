@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
 
 struct User: Hashable, CustomStringConvertible {
     var hashValue: Int {

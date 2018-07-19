@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
 
 class UserChannelsTableViewController: UITableViewController {
     
@@ -35,12 +37,14 @@ class UserChannelsTableViewController: UITableViewController {
     private lazy var usersReference = FirebaseReferences.usersReference
     private var usersHandle: DatabaseHandle?
     private var userChannelIdsHandle: DatabaseHandle?
+    private var userProfileImageURLHandler: DatabaseHandle?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         channelsHandle = observeChannels()
         userChannelIdsHandle = observeUserChannelIds()
         usersHandle = observeUsers()
+        userProfileImageURLHandler = observeProfileImageChange()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -115,6 +119,12 @@ class UserChannelsTableViewController: UITableViewController {
         }
     }
     
+    private func observeProfileImageChange() -> DatabaseHandle {
+        return usersReference.child(userId).child("profileImageURL").observe(.value) { [weak self] snapshot in
+//            self?.fetchProfileImage()
+        }
+    }
+    
     private func observeUserChannelIds() -> DatabaseHandle {
         return usersReference.child(userId).child("channelIds").observe(.childAdded) { [weak self] snapshot in
             if let channelIds = snapshot.value as? String {
@@ -123,8 +133,6 @@ class UserChannelsTableViewController: UITableViewController {
             }
         }
     }
-
-    // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
@@ -148,43 +156,44 @@ class UserChannelsTableViewController: UITableViewController {
     }
 
     private func fetchProfileImage() {
-//        let photoURL = Auth.auth().currentUser?.photoURL
-//        struct last {
-//            static var photoURL: URL? = nil
-//        }
-//        last.photoURL = photoURL
-//        if let photoURL = photoURL {
-//            DispatchQueue.global(qos: .default).async {
-//                let data = try? Data(contentsOf: photoURL)
-//                if let data = data {
-//                    let image = UIImage(data: data)
-//                    DispatchQueue.main.async(execute: {
-//                        if photoURL == last.photoURL {
-//                            self.profileImageView?.image = image
-//                        }
-//                    })
-//                }
-//            }
-//        } else {
-//            if let displayName = Auth.auth().currentUser?.displayName {
-//                let initials = GeneralUtils.getInitials(for: displayName)
-//                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
-//                profileImageView.image = image
-//            }
-//        }
-
         if let url = Auth.auth().currentUser?.photoURL {
-            GeneralUtils.fetchImage(from: url) { image in
-                DispatchQueue.main.async {
-                    self.profileImageView.image = image
+            let urlString = url.absoluteString
+            if urlString.hasPrefix("gs://") {
+                let imageStorageRef = Storage.storage().reference(forURL: urlString)
+                imageStorageRef.downloadURL { url, error in
+                    if url != nil {
+                        GeneralUtils.fetchImage(from: url!) { image, error in
+                            DispatchQueue.main.async {
+                                if image != nil && error == nil {
+                                    self.profileImageView.image = image
+                                } else {
+                                    self.setPlaceholderProfileImage()
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                GeneralUtils.fetchImage(from: url) { image, error in
+                    DispatchQueue.main.async {
+                        if image != nil && error == nil {
+                            self.profileImageView.image = image
+                        } else {
+                            self.setPlaceholderProfileImage()
+                        }
+                    }
                 }
             }
         } else {
-            if let displayName = Auth.auth().currentUser?.displayName {
-                let initials = GeneralUtils.getInitials(for: displayName)
-                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
-                self.profileImageView.image = image
-            }
+            setPlaceholderProfileImage()
+        }
+    }
+    
+    private func setPlaceholderProfileImage() {
+        if let displayName = Auth.auth().currentUser?.displayName {
+            let initials = GeneralUtils.getInitials(for: displayName)
+            let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+            self.profileImageView.image = image
         }
     }
 }

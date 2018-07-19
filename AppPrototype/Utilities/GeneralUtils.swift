@@ -38,21 +38,21 @@ class GeneralUtils {
         return nil
     }
     
-    static func fetchImage(from url: URL, completion: @escaping (UIImage) -> ()) {
+    static func fetchImage(from url: URL, completion: @escaping (UIImage?, Error?) -> ()) {
         let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60)
         if let response = URLCache.shared.cachedResponse(for: request) {
             if let image = UIImage(data: response.data) {
-                completion(image)
+                completion(image, nil)
             }
         } else {
             let session = URLSession(configuration: .cached)
             let dataTask = session.dataTask(with: request) { (data, response, error) in
                 if let err = error {
-                    print("Error occured: \(err)")
+                    completion(nil, err)
                 } else {
                     if (response as? HTTPURLResponse) != nil {
                         if let imageData = data, let image = UIImage(data: imageData) {
-                            completion(image)
+                            completion(image, nil)
                         } else {
                             print("Image file is corrupted")
                         }

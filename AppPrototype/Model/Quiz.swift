@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseDatabase
 
 class Quiz: CustomStringConvertible {
     var id: String?
@@ -15,6 +15,7 @@ class Quiz: CustomStringConvertible {
     var type: QuizType
     var timeLimit: TimeLimit
     var questions: [QuizQuestion] = []
+    var results: [QuizResult] = []
     
     init(title: String, type: QuizType, timeLimit: TimeLimit, numberOfQuestions: Int) {
         self.title = title

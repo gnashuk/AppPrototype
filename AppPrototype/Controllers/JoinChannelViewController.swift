@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class JoinChannelTableViewController: UITableViewController {
+class JoinChannelTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     var allChannels = [Channel]()
     var userChannelIds = [String]()
@@ -79,8 +79,8 @@ class JoinChannelTableViewController: UITableViewController {
             channel = availableChannels[indexPath.row]
         }
         let alert = UIAlertController(
-            title: "Confirm subscription",
-            message: "Do you want to join the channel \(channel.title)",
+            title: "Confirm Subscription",
+            message: "Do you want to join the channel \(channel.title)?",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] action in
@@ -100,7 +100,29 @@ class JoinChannelTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        print("accessoryButtonTappedForRowWith \(indexPath)")
+        let channel: Channel
+        if filteringChannels {
+            channel = filteredChannels[indexPath.row]
+        } else {
+            channel = availableChannels[indexPath.row]
+        }
+        
+        if let channelDetailsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Channel Details VC") as? ChannelDetailsPopoverViewController {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                let accessoryButton = findDisclosureButton(in: cell)
+                channelDetailsVC.modalPresentationStyle = .popover
+                channelDetailsVC.popoverPresentationController?.delegate = self
+                channelDetailsVC.popoverPresentationController?.sourceView = accessoryButton
+                channelDetailsVC.popoverPresentationController?.sourceRect = accessoryButton!.frame
+                
+                channelDetailsVC.channel = channel
+                present(channelDetailsVC, animated: true)
+            }
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
     }
     
     private func filterChannelsFor(_ searchText: String) {
@@ -114,6 +136,21 @@ class JoinChannelTableViewController: UITableViewController {
     
     private var filteringChannels: Bool {
         return searchController.isActive && !searchBarIsEmpty
+    }
+    
+    private func findDisclosureButton(in view: UIView) -> UIButton? {
+        if let button = view as? UIButton {
+            return button
+        } else {
+            if view.subviews.count > 0 {
+                for subview in view.subviews {
+                    if let result = findDisclosureButton(in: subview) {
+                        return result
+                    }
+                }
+            }
+        }
+        return nil;
     }
 
     // MARK: - Navigation

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseDatabase
 
 class ChannelInvitationNotification: Notification {
     var id: String

@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
 
 class QuizResultsTableViewController: UITableViewController {
     
@@ -44,17 +46,7 @@ class QuizResultsTableViewController: UITableViewController {
 
         if let resultCell = cell as? QuizResultTableViewCell {
             let quizResult = quizResults[indexPath.row]
-            if let profileImageUrl = users.filter({ $0.userId == quizResult.senderId }).first?.profileImageURL, let url = URL(string: profileImageUrl) {
-                GeneralUtils.fetchImage(from: url) { image in
-                    DispatchQueue.main.async {
-                        resultCell.profileImageView.image = image
-                    }
-                }
-            } else {
-                let initials = GeneralUtils.getInitials(for: quizResult.senderName)
-                let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
-                resultCell.profileImageView.image = image
-            }
+            fetchProfileImage(resultCell: resultCell, quizResult: quizResult)
             resultCell.userNameLabel.text = quizResult.senderName
             resultCell.dateLabel.text = quizResult.date.shortString
             resultCell.resultLabel.text = createResultString(for: quizResult, in: quiz)
@@ -97,40 +89,45 @@ class QuizResultsTableViewController: UITableViewController {
         return "\(score)/\(maxPoints)"
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    private func fetchProfileImage(resultCell cell: QuizResultTableViewCell, quizResult: QuizResult) {
+        if let profileImageUrl = users.filter({ $0.userId == quizResult.senderId }).first?.profileImageURL, let url = URL(string: profileImageUrl) {
+            let urlString = url.absoluteString
+            if urlString.hasPrefix("gs://") {
+                let imageStorageRef = Storage.storage().reference(forURL: urlString)
+                imageStorageRef.downloadURL { url, error in
+                    if url != nil {
+                        GeneralUtils.fetchImage(from: url!) { image, error in
+                            DispatchQueue.main.async {
+                                if image != nil && error == nil {
+                                    cell.profileImageView.image = image
+                                } else {
+                                    self.setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                GeneralUtils.fetchImage(from: url) { image, error in
+                    DispatchQueue.main.async {
+                        if image != nil && error == nil {
+                            cell.profileImageView.image = image
+                        } else {
+                            self.setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
+                        }
+                    }
+                }
+            }
+        } else {
+            setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
+        }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    private func setPlaceholderProfileImage(resultCell cell: QuizResultTableViewCell, quizResult: QuizResult) {
+        let initials = GeneralUtils.getInitials(for: quizResult.senderName)
+        let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
+        cell.profileImageView.image = image
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Show Detailed Results" {

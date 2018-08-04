@@ -10,6 +10,8 @@ import FirebaseDatabase
 import FirebaseStorage
 
 class FirebaseReferences {
+    static let storageUrl = "gs://appprototype-9cf29.appspot.com"
+    
     static var channelsReference: DatabaseReference {
         return Database.database().reference().child("channels")
     }
@@ -19,6 +21,6 @@ class FirebaseReferences {
     }
     
     static var storageReference: StorageReference {
-        return Storage.storage().reference(forURL: "gs://appprototype-9cf29.appspot.com")
+        return Storage.storage().reference(forURL: storageUrl)
     }
 }

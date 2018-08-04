@@ -1,105 +1,113 @@
-/* 
-  Localizable.strings
-  AppPrototype
-
-  Created by Oleg Gnashuk on 7/16/18.
-  Copyright © 2018 Oleg Gnashuk. All rights reserved.
-*/
+/*
+ Localizable.strings
+ AppPrototype
+ 
+ Created by Oleg Gnashuk on 7/16/18.
+ Copyright © 2018 Oleg Gnashuk. All rights reserved.
+ */
 
 // Alert Titles
-"Working" = "Working";
-"Empty Login Field" = "Empty Login Field";
-"Account Password Reset" = "Account Password Reset";
+"Working" = "Arbeiten";
+"Empty Login Field" = "Leeres Login-Feld";
+"Account Password Reset" = "Account Passwort Zurücksetzen";
 "Error" = "Error";
-"Message Sent" = "Message Sent";
-"Login Failed" = "Login Failed";
-"Logout Failed" = "Logout Failed";
-"Duplicate Title" = "Duplicate Title";
-"Insufficient Question Count" = "Insufficient Question Count";
-"Save Progress" = "Save Progress";
-"Finish Creation" = "Finish Creation";
-"Missing Titles" = "Missing Titles";
-"Duplicate Questions" = "Duplicate Questions";
-"Missing Answers" = "Missing Answers";
-"Missing Corrert Answers" = "Missing Corrert Answers";
-"Confirm Subscription" = "Confirm Subscription";
-"Non-unique Channel Title" = "Non-unique Channel Title";
-"Empty Channel Title" = "Empty Channel Title";
-"Begin Quiz" = "Begin Quiz";
-"Clear All" = "Clear All";
-"Finish Quiz" = "Finish Quiz";
-"Remove Profile Image" = "Remove Profile Image";
-"Error Occured" = "Error Occured";
-"Change Saved" = "Change Saved";
-"Empty Name Field" = "Empty Name Field";
-"Log Out Error" = "Log Out Error";
-"Duplicate Answer" = "Duplicate Answer";
+"Message Sent" = "Nachricht Gesendet";
+"Login Failed" = "Anmeldung Fehlgeschlagen";
+"Logout Failed" = "Abmeldung Fehlgeschlagen";
+"Duplicate Title" = "Titel Duplizieren";
+"Insufficient Question Count" = "Unzureichende Anzahl der Fragen";
+"Save Progress" = "Fortschritt Speichern";
+"Finish Creation" = "Beende die Kreation";
+"Missing Titles" = "Fehlende Titel";
+"Duplicate Questions" = "Doppelte Fragen";
+"Missing Answers" = "Fehlende Antworten";
+"Missing Corrert Answers" = "Fehlende Richtige Antworten";
+"Confirm Subscription" = "Bestätige Abonnement";
+"Non-unique Channel Title" = "Nicht eindeutiger Kanaltitel";
+"Empty Channel Title" = "Leerer Kanaltitel";
+"Begin Quiz" = "Beginnen Sie Quiz";
+"Clear All" = "Alles Löschen";
+"Finish Quiz" = "Fertig Quiz";
+"Remove Profile Image" = "Entfernen Sie das Profilbild";
+"Error Occured" = "Fehler Aufgetreten";
+"Change Saved" = "Gespeichert ändern";
+"Empty Name Field" = "Leeres Namensfeld";
+"Log Out Error" = "Fehler Beim Abmelden";
+"Duplicate Answer" = "Doppelte Antwort";
+"Quiz Over" = "Quiz ist vorbei";
+"Download File" = "Download Datei";
+"Account Deletion" = "Löschung des Kontos";
+"Confirm Removal" = "Bestätigung der Entfernung";
 
 // Alert Messages
-"Please wait..." = "Please wait...";
-"Email and password fields can't be empty." = "Email and password fields can't be empty.";
-"Enter the email associated with account." = "Enter the email associated with account.";
-"Password reset link was sent to the specified email." = "Password reset link was sent to the specified email.";
-"Quiz with selected title already exists in user's repository." = "Quiz with selected title already exists in user's repository.";
-"To create a quiz add at least one question." = "To create a quiz add at least one question.";
-"Do you want to keep the draft?" = "Do you want to keep the draft?";
-"Choose the action." = "Choose the action.";
-"Please provide all question titles." = "Please provide all question titles.";
-"Quiz contains duplicated question titles." = "Quiz contains duplicated question titles.";
-"Some questions don't have any answers." = "Some questions don't have any answers.";
-"Some questions don't have any answers marked as correct." = "Some questions don't have any answers marked as correct.";
-"Do you want to join the channel %s?" = "Do you want to join the channel %s?";
-"Channel with such title already exists." = "Channel with such title already exists.";
-"Please provide a channel title." = "Please provide a channel title.";
-"Do you want to start quiz %s now?" = "Do you want to start quiz %s now?";
-"Are you sure you want to delete all notifications?" = "Are you sure you want to delete all notifications?";
-"Are you sure you want to complete the quiz?" = "Are you sure you want to complete the quiz?";
-"Profile image was succesfully deleted." = "Profile image was succesfully deleted.";
-"User display name was successfuly changed to %s." = "User display name was successfuly changed to %s.";
-"User profile image was successfuly changed." = "User profile image was successfuly changed.";
-"User name field can't be empty." = "User name field can't be empty.";
-"The answer repeats an existing." = "The answer repeats an existing.";
+"Please wait..." = "Warten Sie mal...";
+"Email and password fields can't be empty." = "E-Mail- und Passwortfelder dürfen nicht leer sein.";
+"Enter the email associated with account." = "Geben Sie die mit dem Konto verknüpfte E-Mail ein.";
+"Password reset link was sent to the specified email." = "Der Link zum Zurücksetzen des Passworts wurde an die angegebene E-Mail gesendet.";
+"Quiz with selected title already exists in user's repository." = "Quiz mit ausgewähltem Titel existiert bereits im Repository des Benutzers.";
+"To create a quiz add at least one question." = "Um ein Quiz zu erstellen, füge mindestens eine Frage hinzu.";
+"Do you want to keep the draft?" = "Willst du den Entwurf behalten?";
+"Choose the action." = "Wählen Sie die Aktion.";
+"Please provide all question titles." = "Bitte geben Sie alle Fragetitel an.";
+"Quiz contains duplicated question titles." = "Quiz enthält doppelte Fragetitel.";
+"Some questions don't have any answers." = "Einige Fragen haben keine Antworten.";
+"Some questions don't have any answers marked as correct." = "Einige Fragen haben keine als richtig markierten Antworten.";
+"Do you want to join the channel %s?" = "Möchtest du dem Kanal beitreten? %s?";
+"Channel with such title already exists." = "Kanal mit einem solchen Titel existiert bereits.";
+"Please provide a channel title." = "Bitte gib einen Kanaltitel an.";
+"Do you want to start quiz %s now?" = "Möchtest du jetzt Quiz %s starten?";
+"Are you sure you want to delete all notifications?" = "Möchten Sie wirklich alle Benachrichtigungen löschen?";
+"Are you sure you want to complete the quiz?" = "Möchtest du das Quiz wirklich abschließen?";
+"Profile image was succesfully deleted." = "Profilbild wurde erfolgreich gelöscht.";
+"User display name was successfuly changed to %s." = "Der Anzeigename des Benutzers wurde erfolgreich in %s geändert.";
+"User profile image was successfuly changed." = "Benutzerprofilbild wurde erfolgreich geändert.";
+"User name field can't be empty." = "Das Benutzernamefeld darf nicht leer sein.";
+"The answer repeats an existing." = "Die Antwort wiederholt ein existierendes.";
+"Time is up. Your current progress will be submitted automatically." = "Die Zeit ist abgelaufen. Ihr aktueller Fortschritt wird automatisch übermittelt.";
+"Do you want to download file %s?" = "Möchten Sie die Datei herunterladen %s?";
+"Do you want to delete this user account?" = "Möchten Sie dieses Benutzerkonto löschen?";
+"Are you sure you want to permanently remove user account?" = "Sind Sie sicher, dass Sie das Benutzerkonto dauerhaft entfernen möchten?";
 
 // Alert Actions
-"OK" = "OK";
-"Hide" = "Hide";
-"Cancel" = "Cancel";
-"Keep" = "Keep";
-"Discard" = "Discard";
-"Save" = "Save";
-"Save and Post" = "Save and Post";
-"Confirm" = "Confirm";
-"Camera" = "Camera";
-"Photo Library" = "Photo Library";
-"View Image" = "View Image";
-"Remove Image" = "Remove Image";
+"OK" = "in Ordnung";
+"Hide" = "Verbergen";
+"Cancel" = "Stornieren";
+"Keep" = "Behalten";
+"Discard" = "Verwerfen";
+"Save" = "Sparen";
+"Save and Post" = "Speichern und posten";
+"Confirm" = "Bestätigen";
+"Camera" = "Kamera";
+"Photo Library" = "Foto-Bibliothek";
+"View Image" = "Bild Ansehen";
+"Remove Image" = "Entferne Bild";
 
 // Navigation Bar Item Titles
-"Back" = "Back";
+"Back" = "Zurück";
 
 // Tab Bar Item Titles
 "Chats" = "Chats";
-"Alerts" = "Alerts";
-"Settings" = "Settings";
+"Alerts" = "Benachrichtigungen";
+"Settings" = "Die Einstellungen";
 
 // Label Texts
-"Manage Channel" = "Manage Channel";
-"Create Quiz" = "Create Quiz";
-"Show Channel Info" = "Show Channel Info";
-"Question Count: %d" = "Question Count: %d";
-"Question #%d" = "Question #%d";
-"Channel Invitation" = "Channel Invitation";
-"Quiz Available" = "Quiz Available";
-"Responses count: %d" = "Responses count: %d";
+"Manage Channel" = "Kanal Verwalten";
+"Create Quiz" = "Erstelle ein Quiz";
+"Show Channel Info" = "Kanalinfos Anzeigen";
+"Question Count: %d" = "Fragen Zählen: %d";
+"Question #%d" = "Frage #%d";
+"Channel Invitation" = "Kanaleinladung";
+"Quiz Available" = "Quiz Verfügbar";
+"Responses count: %d" = "Antworten zählen: %d";
 
 // Picker View Data Items
-"1 minute" = "1 minute";
-"%d minutes" = "%d minutes";
-"none" = "none";
+"1 minute" = "1 Minute";
+"%d minutes" = "%d Minuten";
+"none" = "keiner";
 
 // Table View Row Actions
-"Edit" = "Edit";
-"Delete" = "Delete";
+"Edit" = "Bearbeiten";
+"Delete" = "Löschen";
 
 // Search Bar Text
-"Search Channels" = "Search Channels";
+"Search Channels" = "Kanäle suchen";

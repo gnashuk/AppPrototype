@@ -15,6 +15,9 @@ class UserInvitationsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -35,10 +38,10 @@ class UserInvitationsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return selectedUsers.isEmpty ? nil : "Selected Users"
+            return selectedUsers.isEmpty ? nil : LocalizedStrings.TableViewHeaderTitle.SelectedUsers
         case 1:
             if let allUsers = allUsers, !allUsers.isEmpty {
-                return "All Users"
+                return LocalizedStrings.TableViewHeaderTitle.AllUsers
             }
             return nil
         default:

@@ -20,11 +20,11 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
     var quiz: Quiz?
     var channel: Channel?
     
-    private let pickerData = ["none", "1 minute", "2 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes", "25  minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes", "75 minutes", "90 minutes", "105 minutes", "120 minutes"]
+    private lazy var pickerData = createPickerData()
     
     private var questionCount = 0 {
         didSet {
-            questionCountLabel.text = "Question Count: \(questionCount)"
+            questionCountLabel.text = String.localizedStringWithFormat(LocalizedStrings.LabelTexts.QuestionCount, questionCount)
         }
     }
     
@@ -56,10 +56,10 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
             if title.isEmpty {
                 quizTitleTextField.setBorder(color: UIColor.red, width: 1.25)
             } else if allQuizTitles.contains(title.lowercased()) {
-                let alert = Alerts.createSingleActionAlert(title: "Duplicate Title", message: "Quiz with selected title already exists in user's repository.")
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.DuplicateTitle, message: LocalizedStrings.AlertMessages.DuplicateTitle)
                 present(alert, animated: true)
             } else if questionCount == 0 {
-                let alert = Alerts.createSingleActionAlert(title: "Insufficient Question Count", message: "To create a quiz add at least one question.")
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.InsufficientQuestionCount, message: LocalizedStrings.AlertMessages.InsufficientQuestionCount)
                 present(alert, animated: true)
             } else {
                 performSegue(withIdentifier: "Show Questions", sender: nil)
@@ -77,6 +77,9 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         timerPicker.delegate = self
         timerPicker.dataSource = self
         quizTitleTextField.delegate = self
@@ -146,7 +149,15 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
             }
         }
     }
-
+    
+    private func createPickerData() -> [String] {
+        var data = [LocalizedStrings.PickerViewDataItems.None, LocalizedStrings.PickerViewDataItems.Minute]
+        let minuteCounts = [2, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 105, 120]
+        for count in minuteCounts {
+            data.append(String.localizedStringWithFormat(LocalizedStrings.PickerViewDataItems.Minutes, count))
+        }
+        return data
+    }
 }
 
 extension UITextField {

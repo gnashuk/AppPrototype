@@ -17,6 +17,7 @@ struct LocalizedStrings {
         static let MessageSent = NSLocalizedString("Message Sent", comment: "Password reset email sent alert title.")
         static let LoginFailed = NSLocalizedString("Login Failed", comment: "Login failed alert title.")
         static let LogoutFailed = NSLocalizedString("Logout Failed", comment: "Facebook logout failed alert title.")
+        static let SendMedia = NSLocalizedString("Send Media", comment: "Send media message.")
         static let DuplicateTitle = NSLocalizedString("Duplicate Title", comment: "Repeating title.")
         static let InsufficientQuestionCount = NSLocalizedString("Insufficient Question Count", comment: "Wrong number of questions.")
         static let SaveProgress = NSLocalizedString("Save Progress", comment: "Save progress of what user was performing.")
@@ -37,6 +38,10 @@ struct LocalizedStrings {
         static let EmptyNameField = NSLocalizedString("Empty Name Field", comment: "Empty name field.")
         static let LogOutError = NSLocalizedString("Log Out Error", comment: "Error on logging out.")
         static let DuplicateAnswer = NSLocalizedString("Duplicate Answer", comment: "Repeating answer text.")
+        static let QuizOver = NSLocalizedString("Quiz Over", comment: "Quiz was finished.")
+        static let DownloadFile = NSLocalizedString("Download File", comment: "Download remote file")
+        static let AccountDeletion = NSLocalizedString("Account Deletion", comment: "Removal of user account.")
+        static let ConfirmRemoval = NSLocalizedString("Confirm Removal", comment: "Approve removal.")
     }
     
     struct AlertMessages {
@@ -63,11 +68,16 @@ struct LocalizedStrings {
         static let ImageChangeSaved = NSLocalizedString("User profile image was successfuly changed.", comment: "User profile image was successfuly changed.")
         static let EmptyNameField = NSLocalizedString("User name field can't be empty.", comment: "User name field can't be empty.")
         static let DuplicateAnswer = NSLocalizedString("The answer repeats an existing.", comment: "The answer repeats an existing.")
+        static let QuizOver = NSLocalizedString("Time is up. Your current progress will be submitted automatically.", comment: "Time is up. Your current progress will be submitted automatically.")
+        static let DownloadFile = NSLocalizedString("Do you want to download file %s?", comment: "Do you want to download file?")
+        static let AccountDeletion = NSLocalizedString("Do you want to delete this user account?", comment: "Do you want to delete this user account?")
+        static let ConfirmRemoval = NSLocalizedString("Are you sure you want to permanently remove user account?", comment: "Are you sure you want to permanently remove user account?")
     }
     
     struct AlertActions {
         static let Ok = NSLocalizedString("OK", comment: "OK - confirmation.")
         static let Hide = NSLocalizedString("Hide", comment: "Hide locading alert.")
+        static let SendFile = NSLocalizedString("Send File", comment: "Send file in message.")
         static let Cancel = NSLocalizedString("Cancel", comment: "Cancel alert.")
         static let Keep = NSLocalizedString("Keep", comment: "Keep; leave unchanged.")
         static let Discard = NSLocalizedString("Discard", comment: "Delete draft; abandon.")
@@ -129,6 +139,7 @@ struct LocalizedStrings {
     
     struct AttributedStrings {
         static let ChannelInvitation = NSLocalizedString(" has invited you to join channel ", comment: "user received channel invitation.")
+        static let Quiz = NSLocalizedString("Quiz ", comment: "Test.")
         static let WasAddedIn = NSLocalizedString(" was added in ", comment: "Something was added in.")
     }
 /*

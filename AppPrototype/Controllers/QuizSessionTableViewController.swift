@@ -43,10 +43,6 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "CollapsibleTableViewHeader")
         setTimer()
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return quiz?.questions.count ?? 0
@@ -111,7 +107,7 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CollapsibleTableViewHeader") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "CollapsibleTableViewHeader")
         
-        header.titleLabel.text = "Question #\(section + 1)"
+        header.titleLabel.text = String.localizedStringWithFormat(LocalizedStrings.LabelTexts.QuestionNumber, section + 1)
         header.setCollapsed(quiz?.questions[section].collapsed ?? false)
         
         header.section = section
@@ -165,7 +161,15 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
     @objc private func tick(timer: Timer) {
         timerSecondsCount -= 1
         if timerSecondsCount < 0 {
-            countdownTimer?.invalidate()
+            if let countdownTimer = countdownTimer, let quiz = quiz {
+                countdownTimer.invalidate()
+                saveQuizResultToFirebase(quiz: quiz)
+                let alert = UIAlertController(title: LocalizedStrings.AlertTitles.QuizOver, message: LocalizedStrings.AlertMessages.QuizOver, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Ok, style: .default) { [weak self] handler in
+                    self?.finishQuizAndPerformSegue()
+                })
+                present(alert, animated: true)
+            }
         } else {
             let seconds: Int = timerSecondsCount % 60
             let minutes: Int = (timerSecondsCount / 60) % 60
@@ -176,17 +180,13 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
 
     @IBAction func didPressSubmit(_ sender: UIBarButtonItem) {
         if let quiz = quiz {
-            let alert = UIAlertController(title: "Finish Quiz", message: "Are you sure you want to complete the quiz?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] handler in
+            let alert = UIAlertController(title: LocalizedStrings.AlertTitles.FinishQuiz, message: LocalizedStrings.AlertMessages.FinishQuiz, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { [weak self] handler in
                 self?.saveQuizResultToFirebase(quiz: quiz)
-                if let launchedFromNotification = self?.launchedFromNotification, launchedFromNotification {
-                    self?.performSegue(withIdentifier: "Back to Notifications", sender: nil)
-                } else {
-                    self?.performSegue(withIdentifier: "Quiz Submitted", sender: nil)
-                }
+                self?.finishQuizAndPerformSegue()
             })
             
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
             present(alert, animated: true)
         }
         
@@ -213,6 +213,14 @@ class QuizSessionTableViewController: UITableViewController, CollapsibleTableVie
             ]
             
             newResultRef.setValue(resultValue)
+        }
+    }
+    
+    private func finishQuizAndPerformSegue() {
+        if launchedFromNotification {
+            performSegue(withIdentifier: "Back to Notifications", sender: nil)
+        } else {
+            performSegue(withIdentifier: "Quiz Submitted", sender: nil)
         }
     }
     

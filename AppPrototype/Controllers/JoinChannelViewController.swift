@@ -29,13 +29,16 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Channels"
-        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchBar.placeholder = LocalizedStrings.SearchBarText.SearchChannels
+        self.navigationItem.searchController = searchController
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: UIColor.white]
         definesPresentationContext = true
         tabBarController?.tabBar.isHidden = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
     @IBAction func cancelChannelCreation(bySegue: UIStoryboardSegue) {
@@ -79,11 +82,11 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
             channel = availableChannels[indexPath.row]
         }
         let alert = UIAlertController(
-            title: "Confirm Subscription",
-            message: "Do you want to join the channel \(channel.title)?",
+            title: LocalizedStrings.AlertTitles.ConfirmSubscription,
+            message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.ConfirmSubscription, channel.title),
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] action in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { [weak self] action in
             self?.userChannelIds.append(channel.id)
             self?.usersReference.child((self?.userId)!).child("channelIds").setValue(self?.userChannelIds)
             
@@ -94,7 +97,7 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
             }
             self?.performSegue(withIdentifier: "Subscription Done", sender: nil)
         })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
         present(alert, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

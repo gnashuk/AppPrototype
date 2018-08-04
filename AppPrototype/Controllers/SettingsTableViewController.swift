@@ -16,6 +16,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
 
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
+            profileImageActivityIndicator.startAnimating()
             fetchProfileImage()
             profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
             profileImageView.layer.masksToBounds = true
@@ -35,7 +36,9 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
             editImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(touchEditImage(_:))))
         }
     }
-
+    
+    @IBOutlet weak var profileImageActivityIndicator: UIActivityIndicatorView!
+    
     private let storageReference = FirebaseReferences.storageReference
     private var firebaseUser = Auth.auth().currentUser!
     
@@ -48,14 +51,23 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
     private lazy var usersReference = FirebaseReferences.usersReference
     private var usersHandle: DatabaseHandle?
     
+    deinit {
+        if let handle = usersHandle {
+            usersReference.removeObserver(withHandle: handle)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         usersHandle = observeUsers()
     }
     
     @objc private func touchProfileImage(_ recognizer: UITapGestureRecognizer) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Camera", style: .default) { [weak self] handler in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Camera, style: .default) { [weak self] handler in
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
@@ -65,36 +77,35 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
             }
             self?.present(imagePicker, animated: true)
         })
-        alert.addAction(UIAlertAction(title: "Photo Library", style: .default) { [weak self] handler in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.PhotoLibrary, style: .default) { [weak self] handler in
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = .photoLibrary
             self?.present(imagePicker, animated: true)
         })
-        alert.addAction(UIAlertAction(title: "View Image", style: .default) { [weak self] handler in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.ViewImage, style: .default) { [weak self] handler in
             if let image = self?.profileImageView.image {
                 let photoProvider = PhotoProvider(image: image)
                 let photosViewController = photoProvider.photoViewer
                 self?.present(photosViewController, animated: true)
             }
         })
-        alert.addAction(UIAlertAction(title: "Remove Image", style: .default) { [weak self] handler in
-            let alert = UIAlertController(title: "Remove Profile Image", message: "Are you sure you want to delete user profile image?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Confirm", style: .destructive) { [weak self] handler in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.RemoveImage, style: .default) { [weak self] handler in
+            let alert = UIAlertController(title: LocalizedStrings.AlertTitles.RemoveProfileImage, message: LocalizedStrings.AlertMessages.RemoveProfileImage, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .destructive) { [weak self] handler in
                 if let changeRequest = self?.firebaseUser.createProfileChangeRequest() {
                     self?.deleteCurrentUserImageInStorage()
                     changeRequest.photoURL = URL(string: "no_image")
                     changeRequest.commitChanges(completion: { error in
-                        self?.commitImageChangesCompletion(storagePath: nil, successMessage: "Profile image was succesfully deleted.", error: error)
+                        self?.commitImageChangesCompletion(storagePath: nil, successMessage: LocalizedStrings.AlertMessages.RemoveProfileImage, error: error)
                     })
                 }
-                
             })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
             
             self?.present(alert, animated: true)
         })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
         present(alert, animated: true)
     }
     
@@ -106,19 +117,19 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
                     changeRequest.displayName = text
                     changeRequest.commitChanges { [weak self] error in
                         if let err = error {
-                            let alert = Alerts.createSingleActionAlert(title: "Error Occured", message: err.localizedDescription)
+                            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ErrorOccured, message: err.localizedDescription)
                             self?.present(alert, animated: true)
                         } else {
                             let user = Auth.auth().currentUser!
                             self?.usersReference.child("userName").setValue(user.displayName)
                             self?.firebaseUser = user
-                            let alert = Alerts.createSingleActionAlert(title: "Change Saved", message: "User display name was successfuly changed to \(user.displayName!).")
+                            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ChangeSaved, message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.NameChangeSaved, user.displayName!))
                             self?.present(alert, animated: true)
                         }
                     }
                 } else {
-                    let alert = UIAlertController(title: "Empty Name Field", message: "User name field can't be empty.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] handler in
+                    let alert = UIAlertController(title: LocalizedStrings.AlertTitles.EmptyNameField, message: LocalizedStrings.AlertMessages.EmptyNameField, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Ok, style: .default) { [weak self] handler in
                         if let displayName = self?.firebaseUser.displayName {
                             self?.displayNameTextField.text = displayName
                         }
@@ -146,7 +157,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
         case 1:
             switch indexPath.row {
             case 0:
-                break
+                performSegue(withIdentifier: "Show User Channels", sender: nil)
             case 1:
                 performSegue(withIdentifier: "Show User Quizes", sender: nil)
             default:
@@ -155,17 +166,38 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
         case 2:
             switch indexPath.row {
             case 0:
-                break
+                performSegue(withIdentifier: "Show Notification Settings", sender: nil)
             case 1:
                 do {
                     try Auth.auth().signOut()
                     performSegue(withIdentifier: "Log Out", sender: nil)
                 } catch let error {
-                    let alert = Alerts.createSingleActionAlert(title: "Log Out Error", message: error.localizedDescription)
+                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.LogOutError, message: error.localizedDescription)
                     present(alert, animated: true)
                 }
             case 2:
-                break
+                let deleteAlert = UIAlertController(title: "Account Deletion", message: "Do you want to delete this user account?", preferredStyle: .alert)
+                deleteAlert.addAction(UIAlertAction(title: "Yes", style: .default) { [weak self] action in
+                    let confirmAlert = UIAlertController(title: "Confirm Removal", message: "Are you sure you want to permanently remove user account?", preferredStyle: .alert)
+                    confirmAlert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .destructive) { [weak self] action in
+                        if let user = self?.firebaseUser {
+                            user.delete { [weak self] error in
+                                if let error = error {
+                                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                                    self?.present(alert, animated: true)
+                                    return
+                                }
+                                self?.usersReference.child(user.uid).removeValue()
+                            }
+                        }
+                    })
+                    confirmAlert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
+                    
+                    self?.present(confirmAlert, animated: true)
+                })
+                deleteAlert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
+                
+                present(deleteAlert, animated: true)
             default:
                 break
             }
@@ -186,31 +218,14 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
     
     private func fetchProfileImage() {
         if let url = Auth.auth().currentUser?.photoURL {
-            let imageURL = url.absoluteString
-            if imageURL.hasPrefix("gs://") {
-                let imageStorageRef = Storage.storage().reference(forURL: imageURL)
-                imageStorageRef.downloadURL { url, error in
-                    if url != nil {
-                        GeneralUtils.fetchImage(from: url!) { image, error in
-                            DispatchQueue.main.async {
-                                if image != nil && error == nil {
-                                    self.profileImageView.image = image
-                                } else {
-                                    self.setPlaceholderProfileImage()
-                                }
-                            }
-                        }
+            GeneralUtils.fetchImage(from: url) { image, error in
+                DispatchQueue.main.async {
+                    if image != nil && error == nil {
+                        self.profileImageView.image = image
+                    } else {
+                        self.setPlaceholderProfileImage()
                     }
-                }
-            } else {
-                GeneralUtils.fetchImage(from: url) { image, error in
-                    DispatchQueue.main.async {
-                        if image != nil && error == nil {
-                            self.profileImageView.image = image
-                        } else {
-                            self.setPlaceholderProfileImage()
-                        }
-                    }
+                    self.profileImageActivityIndicator.stopAnimating()
                 }
             }
         } else {
@@ -223,6 +238,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
             let initials = GeneralUtils.getInitials(for: displayName)
             let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
             self.profileImageView.image = image
+            self.profileImageActivityIndicator.stopAnimating()
         }
     }
     
@@ -238,9 +254,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
                 let metadata = StorageMetadata()
                 metadata.contentType = "image/type"
                 
+                profileImageActivityIndicator.startAnimating()
                 storageReference.child(imagePath).putData(imageData, metadata: metadata) { [weak self] (metadata, error) in
                     if let error = error {
-                        let alert = Alerts.createSingleActionAlert(title: "Error Occured", message: error.localizedDescription)
+                        let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ErrorOccured, message: error.localizedDescription)
                         self?.present(alert, animated: true)
                         return
                     }
@@ -249,7 +266,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
                         let changeRequest = firebaseUser.createProfileChangeRequest()
                         changeRequest.photoURL = url
                         changeRequest.commitChanges { [weak self] error in
-                            self?.commitImageChangesCompletion(storagePath: storageRef.child(path).description, successMessage: "User profile image was successfuly changed.", error: error)
+                            self?.commitImageChangesCompletion(storagePath: storageRef.child(path).description, successMessage: LocalizedStrings.AlertMessages.ImageChangeSaved, error: error)
                             
                         }
                     }
@@ -259,7 +276,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
     }
     
     private func deleteCurrentUserImageInStorage() {
-        if let currentURL = Auth.auth().currentUser?.photoURL {
+        if let currentURL = Auth.auth().currentUser?.photoURL, currentURL.absoluteString.hasPrefix("gs://") {
             let ref = Storage.storage().reference(forURL: currentURL.absoluteString)
             ref.delete(completion: nil)
         }
@@ -267,7 +284,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
     
     private func commitImageChangesCompletion(storagePath: String?, successMessage: String, error: Error?) {
         if let err = error {
-            let alert = Alerts.createSingleActionAlert(title: "Error Occured", message: err.localizedDescription)
+            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ErrorOccured, message: err.localizedDescription)
             present(alert, animated: true)
         } else {
             let user = Auth.auth().currentUser!
@@ -276,8 +293,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
                 currentUserObject.profileImageURL = storagePath
             }
             fetchProfileImage()
-            usersReference.child("profileImageURL").setValue(storagePath)
-            let alert = Alerts.createSingleActionAlert(title: "Change Saved", message: successMessage)
+            usersReference.child(user.uid).child("profileImageURL").setValue(storagePath)
+            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ChangeSaved, message: successMessage)
             present(alert, animated: true)
         }
     }

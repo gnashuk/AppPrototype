@@ -15,7 +15,7 @@ class Alerts {
             message: message,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Ok, style: .default))
         return alert
     }
     

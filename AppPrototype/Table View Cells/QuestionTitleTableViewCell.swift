@@ -13,7 +13,7 @@ class QuestionTitleTableViewCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var questionTextArea: UITextView! {
         didSet {
             questionTextArea.delegate = self
-            questionTextArea.text = "Title"
+            questionTextArea.text = LocalizedStrings.TextViewText.Title
             questionTextArea.textColor = UIColor.lightGray
             questionTextArea.layer.borderColor = UIColor.gray.cgColor
             questionTextArea.layer.borderWidth = 0.25
@@ -38,7 +38,7 @@ class QuestionTitleTableViewCell: UITableViewCell, UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if questionTextArea.text.isEmpty {
-            textView.text = "Title"
+            textView.text = LocalizedStrings.TextViewText.Title
             textView.textColor = UIColor.lightGray
         }
         if questionTextArea.tag == 0 {

@@ -39,7 +39,7 @@ class UserQuizesTableViewController: UITableViewController {
 
         let quiz = quizes[indexPath.row]
         cell.textLabel?.text = quiz.title
-        cell.detailTextLabel?.text = "Responses count: \(quiz.results.count)"
+        cell.detailTextLabel?.text = String.localizedStringWithFormat(LocalizedStrings.LabelTexts.ResponsesCount, quiz.results.count)
 
         return cell
     }

@@ -1,105 +1,113 @@
-/* 
-  Localizable.strings
-  AppPrototype
-
-  Created by Oleg Gnashuk on 7/16/18.
-  Copyright © 2018 Oleg Gnashuk. All rights reserved.
-*/
+/*
+ Localizable.strings
+ AppPrototype
+ 
+ Created by Oleg Gnashuk on 7/16/18.
+ Copyright © 2018 Oleg Gnashuk. All rights reserved.
+ */
 
 // Alert Titles
-"Working" = "Working";
-"Empty Login Field" = "Empty Login Field";
-"Account Password Reset" = "Account Password Reset";
-"Error" = "Error";
-"Message Sent" = "Message Sent";
-"Login Failed" = "Login Failed";
-"Logout Failed" = "Logout Failed";
-"Duplicate Title" = "Duplicate Title";
-"Insufficient Question Count" = "Insufficient Question Count";
-"Save Progress" = "Save Progress";
-"Finish Creation" = "Finish Creation";
-"Missing Titles" = "Missing Titles";
-"Duplicate Questions" = "Duplicate Questions";
-"Missing Answers" = "Missing Answers";
-"Missing Corrert Answers" = "Missing Corrert Answers";
-"Confirm Subscription" = "Confirm Subscription";
-"Non-unique Channel Title" = "Non-unique Channel Title";
-"Empty Channel Title" = "Empty Channel Title";
-"Begin Quiz" = "Begin Quiz";
-"Clear All" = "Clear All";
-"Finish Quiz" = "Finish Quiz";
-"Remove Profile Image" = "Remove Profile Image";
-"Error Occured" = "Error Occured";
-"Change Saved" = "Change Saved";
-"Empty Name Field" = "Empty Name Field";
-"Log Out Error" = "Log Out Error";
-"Duplicate Answer" = "Duplicate Answer";
+"Working" = "Робочий";
+"Empty Login Field" = "Поле Порожнього Входу";
+"Account Password Reset" = "Скидання Пароля Облікового Запису";
+"Error" = "Помилка";
+"Message Sent" = "Повідомлення Надіслано";
+"Login Failed" = "Помилка Логіну";
+"Logout Failed" = "Вихід не Вдався";
+"Duplicate Title" = "Дубльована Назва";
+"Insufficient Question Count" = "Недостатня Кількість Питань";
+"Save Progress" = "Зберегти Прогрес";
+"Finish Creation" = "Закінчити Створення";
+"Missing Titles" = "Відсутні Назви";
+"Duplicate Questions" = "Дубльовані Запитання";
+"Missing Answers" = "Відсутні Відповіді";
+"Missing Corrert Answers" = "Відсутні Правильні Відповіді";
+"Confirm Subscription" = "Підтвердити Підписку";
+"Non-unique Channel Title" = "Не Унікальна Назва Каналу";
+"Empty Channel Title" = "Порожній Заголовок Каналу";
+"Begin Quiz" = "Початок Тесту";
+"Clear All" = "Очистити Все";
+"Finish Quiz" = "Завершити Тест";
+"Remove Profile Image" = "Видалити Зображення Профілю";
+"Error Occured" = "Виникла Помилка";
+"Change Saved" = "Змінити Збережений";
+"Empty Name Field" = "Поле Порожнього Імені";
+"Log Out Error" = "Вийти з Помилки";
+"Quiz Over" = "Тест закінчено";
+"Duplicate Answer" = "Дубльована Відповідь";
+"Download File" = "Завантажити файл";
+"Account Deletion" = "Видалення облікового запису";
+"Confirm Removal" = "Підтвердити видалення";
 
 // Alert Messages
-"Please wait..." = "Please wait...";
-"Email and password fields can't be empty." = "Email and password fields can't be empty.";
-"Enter the email associated with account." = "Enter the email associated with account.";
-"Password reset link was sent to the specified email." = "Password reset link was sent to the specified email.";
-"Quiz with selected title already exists in user's repository." = "Quiz with selected title already exists in user's repository.";
-"To create a quiz add at least one question." = "To create a quiz add at least one question.";
-"Do you want to keep the draft?" = "Do you want to keep the draft?";
-"Choose the action." = "Choose the action.";
-"Please provide all question titles." = "Please provide all question titles.";
-"Quiz contains duplicated question titles." = "Quiz contains duplicated question titles.";
-"Some questions don't have any answers." = "Some questions don't have any answers.";
-"Some questions don't have any answers marked as correct." = "Some questions don't have any answers marked as correct.";
-"Do you want to join the channel %s?" = "Do you want to join the channel %s?";
-"Channel with such title already exists." = "Channel with such title already exists.";
-"Please provide a channel title." = "Please provide a channel title.";
-"Do you want to start quiz %s now?" = "Do you want to start quiz %s now?";
-"Are you sure you want to delete all notifications?" = "Are you sure you want to delete all notifications?";
-"Are you sure you want to complete the quiz?" = "Are you sure you want to complete the quiz?";
-"Profile image was succesfully deleted." = "Profile image was succesfully deleted.";
-"User display name was successfuly changed to %s." = "User display name was successfuly changed to %s.";
-"User profile image was successfuly changed." = "User profile image was successfuly changed.";
-"User name field can't be empty." = "User name field can't be empty.";
-"The answer repeats an existing." = "The answer repeats an existing.";
+"Please wait..." = "Будь ласка, зачекайте ...";
+"Email and password fields can't be empty." = "Поле електронної пошти та пароля не може бути порожнім.";
+"Enter the email associated with account." = "Введіть електронну адресу, пов'язану з обліковим записом.";
+"Password reset link was sent to the specified email." = "Посилання на скидання пароля було надіслано на вказаний електронний лист.";
+"Quiz with selected title already exists in user's repository." = "Тест з вибраним заголовком вже існує в сховищі користувача.";
+"To create a quiz add at least one question." = "Щоб створити тест, додайте принаймні одне питання.";
+"Do you want to keep the draft?" = "Ви хочете залишити проект?";
+"Choose the action." = "Виберіть дію.";
+"Please provide all question titles." = "Будь-ласка, надішліть всі назви питань.";
+"Quiz contains duplicated question titles." = "Тест містить дубльовані заголовки питань.";
+"Some questions don't have any answers." = "У деяких питаннях немає відповіді.";
+"Some questions don't have any answers marked as correct." = "У деяких питаннях немає відповідей, позначених як правильні.";
+"Do you want to join the channel %s?" = "Ви хочете приєднатися до каналу %s?";
+"Channel with such title already exists." = "Канал з такою назвою вже існує.";
+"Please provide a channel title." = "Будь ласка, надайте назву каналу.";
+"Do you want to start quiz %s now?" = "Ви хочете почати тест %s зараз?";
+"Are you sure you want to delete all notifications?" = "Ви впевнені, що хочете видалити всі повідомлення?";
+"Are you sure you want to complete the quiz?" = "Ви впевнені, що хочете завершити тест?";
+"Profile image was succesfully deleted." = "Зображення профілю було успішно видалено.";
+"User display name was successfuly changed to %s." = "Ім'я дисплея користувача було успішно змінено на %s.";
+"User profile image was successfuly changed." = "Зображення профілю користувача було успішно змінено.";
+"User name field can't be empty." = "Поле Ім'я користувача не може бути порожнім.";
+"The answer repeats an existing." = "Відповідь повторює існуючу.";
+"Time is up. Your current progress will be submitted automatically." = "Час закінчиться, ваш поточний прогрес буде подано автоматично.";
+"Do you want to download file %s?" = "Ви хочете завантажити файл %s?";
+"Do you want to delete this user account?" = "Ви хочете видалити цю обліковий запис?";
+"Are you sure you want to permanently remove user account?" = "Ви впевнені, що хочете остаточно видалити обліковий запис користувача?";
 
 // Alert Actions
-"OK" = "OK";
-"Hide" = "Hide";
-"Cancel" = "Cancel";
-"Keep" = "Keep";
-"Discard" = "Discard";
-"Save" = "Save";
-"Save and Post" = "Save and Post";
-"Confirm" = "Confirm";
-"Camera" = "Camera";
-"Photo Library" = "Photo Library";
-"View Image" = "View Image";
-"Remove Image" = "Remove Image";
+"OK" = "Добре";
+"Hide" = "Сховати";
+"Cancel" = "Скасувати";
+"Keep" = "Тримайся";
+"Discard" = "Відхилити";
+"Save" = "Зберегти";
+"Save and Post" = "Зберегти та Опублікувати";
+"Confirm" = "Підтвердьте";
+"Camera" = "Камера";
+"Photo Library" = "Фото Бібліотека";
+"View Image" = "Переглянути Зображення";
+"Remove Image" = "Видалити Зображення";
 
 // Navigation Bar Item Titles
-"Back" = "Back";
+"Back" = "Назад";
 
 // Tab Bar Item Titles
-"Chats" = "Chats";
-"Alerts" = "Alerts";
-"Settings" = "Settings";
+"Chats" = "Чати";
+"Alerts" = "Сповіщення";
+"Settings" = "Налаштування";
 
 // Label Texts
-"Manage Channel" = "Manage Channel";
-"Create Quiz" = "Create Quiz";
-"Show Channel Info" = "Show Channel Info";
-"Question Count: %d" = "Question Count: %d";
-"Question #%d" = "Question #%d";
-"Channel Invitation" = "Channel Invitation";
-"Quiz Available" = "Quiz Available";
-"Responses count: %d" = "Responses count: %d";
+"Manage Channel" = "Управління Каналом";
+"Create Quiz" = "Створити Тест";
+"Show Channel Info" = "Показати Інформацію про Канал";
+"Question Count: %d" = "Питання Графа: %d";
+"Question #%d" = "Питання #%d";
+"Channel Invitation" = "Запрошення до Каналу";
+"Quiz Available" = "Тест Доступний";
+"Responses count: %d" = "Відповіді підраховуються: %d";
 
 // Picker View Data Items
-"1 minute" = "1 minute";
-"%d minutes" = "%d minutes";
-"none" = "none";
+"1 minute" = "1 хвилина";
+"%d minutes" = "%d хвилин";
+"none" = "ніхто";
 
 // Table View Row Actions
-"Edit" = "Edit";
-"Delete" = "Delete";
+"Edit" = "Редагувати";
+"Delete" = "Видалити";
 
 // Search Bar Text
-"Search Channels" = "Search Channels";
+"Search Channels" = "Пошук каналів";

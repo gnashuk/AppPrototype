@@ -14,8 +14,11 @@ import FirebaseAuth
 import JSQMessagesViewController
 import NYTPhotoViewer
 import MobileCoreServices
+import Alamofire
 
 class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
+    
+    @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
     private let refreshControl = UIRefreshControl()
     private var queryLimit = 50
@@ -26,14 +29,12 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     var users = [User]()
     var channelReference: DatabaseReference?
     
-    private let sharedCache = URLCache.shared
-    
     private lazy var messagesReference: DatabaseReference = channelReference!.child("messages")
     private var newMessagesHandle: DatabaseHandle?
     
     private var messages = [JSQMessage]()
     private var messagesFirebaseKeys: Set<String> = Set<String>()
-    private var photoMediaItemsBySenderId = [String: JSQPhotoMediaItem]()
+    private var userSentMediaByMessageId = [String: JSQPhotoMediaItem]()
     private var userProfileImages: [User: UIImage] = [:]
     
     private var selfTyping = false {
@@ -53,16 +54,23 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     private var userStoppedTypingWorkItem: DispatchWorkItem?
     
     private let storageReference = FirebaseReferences.storageReference
-    private let placeholderImageURL = "placeholderImageURL"
+    
+    private let fileManager = FileManager.default
+    private lazy var documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    
+    let documentInteractionController = UIDocumentInteractionController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.title = channel?.title
         automaticallyScrollsToMostRecentMessage = true
         senderId = Auth.auth().currentUser?.uid
         newMessagesHandle = observeNewMessages()
         tabBarController?.tabBar.isHidden = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(fetchPreviousMessages(_:)), for: .valueChanged)
+        documentInteractionController.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -82,19 +90,14 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                         self?.appendMessage(senderId: id, senderName: senderName, date: messageDate, text: messageText)
                         self?.finishSendingMessage()
                     } else if let imageURL = messageContent["imageURL"] as? String {
-                        if let _ = self?.photoMediaItemsBySenderId[snapshot.key] {
-                        } else if let newMediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self?.senderId) {
-                            self?.appendImageMessage(senderId: id, senderName: senderName, date: messageDate, mediaItem: newMediaItem)
-                            if imageURL.hasPrefix("gs://") {
-                                let imageStorageRef = Storage.storage().reference(forURL: imageURL)
-                                imageStorageRef.downloadURL { url, error in
-                                    if url != nil {
-                                        GeneralUtils.fetchImage(from: url!) { image, error in
-                                            DispatchQueue.main.async {
-                                                newMediaItem.image = image
-                                                self?.collectionView.reloadData()
-                                            }
-                                        }
+                        if let _ = self?.userSentMediaByMessageId[snapshot.key] {
+                        } else if let mediaItem = JSQPhotoMediaItem(maskAsOutgoing: id == self?.senderId) {
+                            self?.appendImageMessage(senderId: id, senderName: senderName, date: messageDate, mediaItem: mediaItem)
+                            if let url = URL(string: imageURL) {
+                                GeneralUtils.fetchImage(from: url) { image, error in
+                                    DispatchQueue.main.async {
+                                        mediaItem.image = image
+                                        self?.collectionView.reloadData()
                                     }
                                 }
                             }
@@ -107,6 +110,11 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                                 self?.appendQuizMessage(senderId: id, senderName: senderName, date: messageDate, quiz: quiz)
                             }
                         })
+                    } else if let fileUrl = messageContent["fileUrl"] as? String, let fileSize = messageContent["fileSize"] as? String {
+                        if let _ = self?.userSentMediaByMessageId[snapshot.key] {
+                        } else if let url = URL(string: fileUrl), let mediaItem = self?.createFileMedia(fileUrl: url, fileSize: fileSize, senderId: id) {
+                            self?.appendFileMessage(senderId: id, senderName: senderName, date: messageDate, mediaItem: mediaItem)
+                        }
                     }
                     if let user = self?.users.filter({ $0.userId == id }).first, let keys = self?.userProfileImages.keys {
                         if !keys.contains(user) {
@@ -168,10 +176,29 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         }
     }
     
-    private func saveImageMessage(at url: String, reference: DatabaseReference) {
+    private func appendFileMessage(senderId id: String, senderName: String, date: Date?, mediaItem: JSQPhotoMediaItem) {
+        appendImageMessage(senderId: id, senderName: senderName, date: date, mediaItem: mediaItem)
+    }
+    
+    private func saveImageMessage(imageUrl url: String, reference: DatabaseReference) {
         let messageValue = [
             "senderId": senderId!,
             "imageURL": url,
+            "senderName": senderDisplayName,
+            "date": Date().longString
+        ]
+        
+        reference.setValue(messageValue)
+        
+        JSQSystemSoundPlayer.jsq_playMessageSentSound()
+        finishSendingMessage()
+    }
+    
+    private func saveFileMessage(fileUrl url: String, fileSize: String, reference: DatabaseReference) {
+        let messageValue = [
+            "senderId": senderId!,
+            "fileUrl": url,
+            "fileSize": fileSize,
             "senderName": senderDisplayName,
             "date": Date().longString
         ]
@@ -212,7 +239,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.item]
         if isEarliest(message: message, index: indexPath.item, timeUnit: .day) {
-            return NSAttributedString(string: message.date.longString)
+            return NSAttributedString(string: message.date.longStringLocalized)
         }
         return nil
     }
@@ -281,8 +308,8 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     
     override func didPressAccessoryButton(_ sender: UIButton!) {
         self.inputToolbar.contentView!.textView!.resignFirstResponder()
-        let actionSheet = UIAlertController(title: "Send media", message: nil, preferredStyle: .actionSheet)
-        let cameraAction = UIAlertAction(title: "Camera", style: .default) { [weak self] (action) in
+        let actionSheet = UIAlertController(title: LocalizedStrings.AlertTitles.SendMedia, message: nil, preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: LocalizedStrings.AlertActions.Camera, style: .default) { [weak self] (action) in
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
@@ -292,52 +319,22 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             }
             self?.present(imagePicker, animated: true)
         }
-        let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default) { [weak self] (action) in
+        let photoLibraryAction = UIAlertAction(title: LocalizedStrings.AlertActions.PhotoLibrary, style: .default) { [weak self] (action) in
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = .photoLibrary
             self?.present(imagePicker, animated: true)
         }
-        let documentPickerAction = UIAlertAction(title: "Send File", style: .default) { [weak self] action in
-            let documentMenu = UIDocumentMenuViewController(documentTypes: [String(kUTTypePDF)], in: .import)
-            documentMenu.delegate = self
-            documentMenu.modalPresentationStyle = .formSheet
-            self?.present(documentMenu, animated: true)
+        let documentPickerAction = UIAlertAction(title: LocalizedStrings.AlertActions.SendFile, style: .default) { [weak self] action in
+            let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.data"], in: .import)
+            documentPicker.delegate = self
+            documentPicker.modalPresentationStyle = .formSheet
+            self?.present(documentPicker, animated: true)
         }
-        let fileAction = UIAlertAction(title: "Send File Mock", style: .default) { (action) in
-            let rect = CGRect(x: 0, y: 0, width: 200, height: 200)
-            let label = self.createLabel(rect, text: "pdf", font: UIFont.systemFont(ofSize: 14), textColor: UIColor.blue)
-            let topView = UIView(frame: rect)
-            topView.backgroundColor = UIColor(red: 232/255, green: 232/255, blue: 232/255, alpha: 1)
-            UIGraphicsBeginImageContext(rect.size)
-            if let currentContext = UIGraphicsGetCurrentContext() {
-                let fileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 85, height: 85))
-                fileImageView.image = UIImage(named: "file")
-                label.center = fileImageView.center
-                fileImageView.addSubview(label)
-                fileImageView.center = CGPoint(x: topView.center.x, y: topView.center.y - 10)
-                
-                let titleLabel = self.createLabel(rect, text: "file.pdf", font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
-                titleLabel.center = CGPoint(x: topView.center.x, y: topView.center.y + 40)
-                
-                let sizeLabel = self.createLabel(rect, text: "32.0 KB", font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
-                sizeLabel.center = CGPoint(x: titleLabel.center.x, y: titleLabel.center.y + 15)
-                
-                topView.addSubview(fileImageView)
-                topView.addSubview(titleLabel)
-                topView.addSubview(sizeLabel)
-                topView.layer.render(in: currentContext)
-                let image = UIGraphicsGetImageFromCurrentImageContext()
-                
-                let media = JSQPhotoMediaItem(image: image)
-                self.appendImageMessage(senderId: self.senderId, senderName: self.senderDisplayName, date: Date(), mediaItem: media!)
-            }
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel)
         actionSheet.addAction(cameraAction)
         actionSheet.addAction(photoLibraryAction)
         actionSheet.addAction(documentPickerAction)
-        actionSheet.addAction(fileAction)
         actionSheet.addAction(cancelAction)
         present(actionSheet, animated: true)
     }
@@ -371,6 +368,41 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             } else {
                 performSegue(withIdentifier: "Show Quiz Session", sender: quiz)
             }
+        } else if let fileMediaItem = message.media as? FileMediaItem, let url = fileMediaItem.fileUrl {
+            let fileName = url.absoluteString.lastPathComponent
+            let destinationUrl = documentsDirectory
+                .appendingPathComponent("AppPrototype")
+                .appendingPathComponent(fileName)
+            
+            if FileManager.default.fileExists(atPath: destinationUrl.path) {
+                documentInteractionController.url = destinationUrl
+                documentInteractionController.presentPreview(animated: true)
+            } else {
+                let alert = UIAlertController(title: LocalizedStrings.AlertTitles.DownloadFile, message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.DownloadFile, fileName), preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { action in
+                    let fileStorageReference = Storage.storage().reference(forURL: url.absoluteString)
+                    let loadingAlert = Alerts.createLoadingAlert(withCenterIn: self.view, title: "Downloading", message: "Please wait...", delegate: nil, cancelButtonTitle: "Hide")
+                    loadingAlert.show()
+                    fileStorageReference.downloadURL { downloadUrl, error in
+                        if let error = error {
+                            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                            self.present(alert, animated: true)
+                            loadingAlert.dismiss(withClickedButtonIndex: 0, animated: true)
+                            return
+                        }
+                        if downloadUrl != nil {
+                            let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+                                return (destinationUrl, [.removePreviousFile, .createIntermediateDirectories])
+                            }
+                            Alamofire.download(downloadUrl!, to: destination).response { response in
+                                loadingAlert.dismiss(withClickedButtonIndex: 0, animated: true)
+                            }
+                        }
+                    }
+                })
+                alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
+                present(alert, animated: true)
+            }
         } else if let photoMedia = message.media as? JSQPhotoMediaItem, let image = photoMedia.image {
             let photoProvider = PhotoProvider(image: image)
             let photosViewController = photoProvider.photoViewer
@@ -379,7 +411,10 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, at indexPath: IndexPath!) {
-        print("didTapAvatarAt: \(indexPath.item)")
+        if let image = avatarImageView.image {
+            let photoProvider = PhotoProvider(image: image)
+            present(photoProvider.photoViewer, animated: true)
+        }
     }
     
     private func setupOutgoingBubble() -> JSQMessagesBubbleImage {
@@ -395,7 +430,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             let newRef = messagesReference.childByAutoId()
             let mediaItem = JSQPhotoMediaItem(image: image)
-            photoMediaItemsBySenderId[newRef.key] = mediaItem
+            userSentMediaByMessageId[newRef.key] = mediaItem
             appendImageMessage(senderId: senderId, senderName: senderDisplayName, date: Date(), mediaItem: mediaItem!)
             if let imageData = UIImageJPEGRepresentation(image, 1.0) {
                 let imagePath = "\(senderId!)/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
@@ -403,12 +438,12 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                 metadata.contentType = "image/type"
                 storageReference.child(imagePath).putData(imageData, metadata: metadata) { [weak self] (metadata, error) in
                     if let error = error {
-                        let alert = Alerts.createSingleActionAlert(title: "Error", message: error.localizedDescription)
+                        let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
                         self?.present(alert, animated: true)
                         return
                     }
                     if let storageRef = self?.storageReference, let path = metadata?.path {
-                        self?.saveImageMessage(at: storageRef.child(path).description, reference: newRef)
+                        self?.saveImageMessage(imageUrl: storageRef.child(path).description, reference: newRef)
                     }
                 }
             }
@@ -425,6 +460,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             if let destination = segue.destination.contents as? ChannelMenuTableViewController {
                 destination.ownerOptions = channel?.ownerId == senderId
                 destination.channel = channel
+                destination.menuBarButton = menuBarButton
                 if let ppc = destination.popoverPresentationController {
                     ppc.delegate = self
                 }
@@ -472,9 +508,6 @@ extension ChatViewController {
             return calendar.compare(message.date, to: previousMessage.date, toGranularity: timeUnit) == .orderedDescending && previousMessage.date < message.date
         }
         return false
-//        return messages.filter({ calendar.compare(message.date, to: $0.date, toGranularity: by) == .orderedSame })
-//            .sorted(by: { $0.date < $1.date })
-//            .first == message
     }
     
     private func getAvatarInitials(for senderName: String) -> String {
@@ -504,20 +537,137 @@ extension ChatViewController {
         label.textColor = textColor
         return label
     }
+    
+    private func createFileMedia(fileUrl: URL, fileSize: String, senderId: String) -> FileMediaItem? {
+        let stringUrl = fileUrl.absoluteString
+        let rect = CGRect(x: 0, y: 0, width: 200, height: 200)
+        let label = self.createLabel(rect, text: stringUrl.pathExtension, font: UIFont.systemFont(ofSize: 14), textColor: UIColor.blue)
+        let topView = UIView(frame: rect)
+        topView.backgroundColor = UIColor(red: 232/255, green: 232/255, blue: 232/255, alpha: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        if let currentContext = UIGraphicsGetCurrentContext() {
+            let fileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 85, height: 85))
+            fileImageView.image = UIImage(named: "file_thumbnail")
+            label.center = fileImageView.center
+            fileImageView.addSubview(label)
+            fileImageView.center = CGPoint(x: topView.center.x, y: topView.center.y - 10)
+            
+            let titleLabel = self.createLabel(rect, text: stringUrl.lastPathComponent, font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
+            titleLabel.center = CGPoint(x: topView.center.x, y: topView.center.y + 40)
+            
+            let sizeLabel = self.createLabel(rect, text: fileSize, font: UIFont.systemFont(ofSize: 12), textColor: UIColor.black)
+            sizeLabel.center = CGPoint(x: titleLabel.center.x, y: titleLabel.center.y + 15)
+            
+            topView.addSubview(fileImageView)
+            topView.addSubview(titleLabel)
+            topView.addSubview(sizeLabel)
+            topView.layer.render(in: currentContext)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            
+            if let userId = self.senderId, let media = FileMediaItem(maskAsOutgoing: userId == senderId) {
+                media.fileUrl = fileUrl
+                media.image = image
+                return media
+            }
+        }
+        return nil
+    }
+    
+    private func saveFileLocally(from url: URL, fileName: String) throws {
+        let destinationDirectoryUrl = documentsDirectory.appendingPathComponent("AppPrototype")
+        if !fileManager.fileExists(atPath: destinationDirectoryUrl.path) {
+            try FileManager.default.createDirectory(at: destinationDirectoryUrl, withIntermediateDirectories: true)
+        }
+        let destinationUrl = destinationDirectoryUrl.appendingPathComponent(fileName)
+        
+        try FileManager.default.copyItem(at: url, to: destinationUrl)
+    }
+    
+    private func getUniqueFileName(fileName name: String) -> String {
+
+        func getUniqueName(fileName: String, counter: Int) -> String {
+            for message in messages where message.media is FileMediaItem {
+                let fileItem = message.media as! FileMediaItem
+                if let stringUrl = fileItem.fileUrl?.absoluteString {
+                    if stringUrl.lastPathComponent == fileName {
+                        let nameNoExtention = name.deletingPathExtension
+                        let extention = name.pathExtension
+                        let nextCount = counter + 1
+                        return getUniqueName(fileName: "\(nameNoExtention) (\(nextCount)).\(extention)", counter: nextCount)
+                    }
+                }
+            }
+            return fileName
+        }
+
+        return getUniqueName(fileName: name, counter: 0)
+    }
+    
+    private func getFileSize(fileUrl url: URL) throws -> String {
+        let fileAttribute: [FileAttributeKey : Any] = try FileManager.default.attributesOfItem(atPath: url.path)
+        var fileSizeValue: UInt64 = 0
+        let byteCountFormatter: ByteCountFormatter = ByteCountFormatter()
+        if let fileNumberSize: NSNumber = fileAttribute[FileAttributeKey.size] as? NSNumber {
+            fileSizeValue = UInt64(truncating: fileNumberSize)
+            byteCountFormatter.countStyle = ByteCountFormatter.CountStyle.file
+            if fileSizeValue / 1000 > 0 {
+                byteCountFormatter.allowedUnits = fileSizeValue / 1000_000 > 0 ? .useMB : .useKB
+            } else {
+                byteCountFormatter.allowedUnits = ByteCountFormatter.Units.useBytes
+            }
+        }
+        return byteCountFormatter.string(fromByteCount: Int64(fileSizeValue))
+    }
 }
 
-extension ChatViewController: UIDocumentMenuDelegate, UIDocumentPickerDelegate {
-    func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
-        documentPicker.delegate = self
-        present(documentPicker, animated: true)
-    }
-    
+extension ChatViewController: UIDocumentPickerDelegate, UIDocumentInteractionControllerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         print("didPickDocumentAtUrl: \(url)")
+        let downloadTask = URLSession.shared.downloadTask(with: url) { tempUrl, response, error in
+            if let error = error {
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                self.present(alert, animated: true)
+                return
+            }
+            do {
+                if tempUrl != nil {
+                    let stringUrl = url.absoluteString
+                    let fileName = self.getUniqueFileName(fileName: stringUrl.lastPathComponent)
+                
+                    try self.saveFileLocally(from: tempUrl!, fileName: fileName)
+                    
+                    let newRef = self.messagesReference.childByAutoId()
+
+                    let fileSize = try self.getFileSize(fileUrl: tempUrl!)
+                    let filePath = "\(self.senderId!)/\(fileName)"
+                    let fileFirebasePath = "\(FirebaseReferences.storageUrl)/\(filePath)"
+                    DispatchQueue.main.async {
+                        if let fileFirebaseUrl = URL(string: fileFirebasePath), let mediaItem = self.createFileMedia(fileUrl: fileFirebaseUrl, fileSize: fileSize, senderId: self.senderId) {
+                            self.userSentMediaByMessageId[newRef.key] = mediaItem
+                            self.appendFileMessage(senderId: self.senderId, senderName: self.senderDisplayName, date: Date(), mediaItem: mediaItem)
+                            
+                            self.storageReference.child(filePath).putFile(from: url, metadata: nil) { metadata, error in
+                                if let error = error {
+                                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                                    self.present(alert, animated: true)
+                                    return
+                                }
+                                self.saveFileMessage(fileUrl: fileFirebasePath, fileSize: fileSize, reference: newRef)
+                            }
+                        }
+                    }
+                }
+            } catch let error {
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                self.present(alert, animated: true)
+                return
+            }
+        }
+        downloadTask.resume()
     }
     
-    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        dismiss(animated: true)
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
     }
 }
 
@@ -530,7 +680,24 @@ class QuizMediaItem: JSQPhotoMediaItem {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+    }
+    
+    override init!(maskAsOutgoing: Bool) {
+        super.init(maskAsOutgoing: maskAsOutgoing)
+    }
+}
+
+class FileMediaItem: JSQPhotoMediaItem {
+    var fileUrl: URL?
+    
+    init(image: UIImage, fileUrl: URL) {
+        super.init(image: image)
+        self.fileUrl = fileUrl
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     override init!(maskAsOutgoing: Bool) {

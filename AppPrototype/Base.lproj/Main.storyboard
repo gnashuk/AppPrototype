@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
@@ -111,7 +110,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1447" y="-373"/>
+            <point key="canvasLocation" x="-1375" y="-967"/>
         </scene>
         <!--Settings-->
         <scene sceneID="vgB-yL-I6q">
@@ -151,13 +150,18 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ECy-SX-cDm">
+                                                    <rect key="frame" x="42" y="36" width="37" height="37"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ri2-36-uhM" firstAttribute="leading" secondItem="Qhc-oF-Inh" secondAttribute="trailing" constant="8" symbolic="YES" id="6uJ-kO-icf"/>
                                                 <constraint firstItem="9Vj-yM-eVW" firstAttribute="leading" secondItem="j7c-UT-ov1" secondAttribute="leading" constant="20" id="A6J-ZP-iaa"/>
                                                 <constraint firstAttribute="bottom" secondItem="9Vj-yM-eVW" secondAttribute="bottom" constant="14.5" id="B5G-C3-dwN"/>
+                                                <constraint firstItem="ECy-SX-cDm" firstAttribute="centerX" secondItem="9Vj-yM-eVW" secondAttribute="centerX" id="Hb3-Fz-W2E"/>
                                                 <constraint firstItem="Qhc-oF-Inh" firstAttribute="centerY" secondItem="j7c-UT-ov1" secondAttribute="centerY" id="Vce-8z-bak"/>
                                                 <constraint firstItem="Qhc-oF-Inh" firstAttribute="leading" secondItem="9Vj-yM-eVW" secondAttribute="trailing" constant="8" symbolic="YES" id="cS7-nK-R70"/>
+                                                <constraint firstItem="ECy-SX-cDm" firstAttribute="centerY" secondItem="9Vj-yM-eVW" secondAttribute="centerY" id="gZr-1V-mIl"/>
                                                 <constraint firstItem="ri2-36-uhM" firstAttribute="centerY" secondItem="j7c-UT-ov1" secondAttribute="centerY" id="kNv-kY-CVu"/>
                                                 <constraint firstItem="9Vj-yM-eVW" firstAttribute="centerY" secondItem="j7c-UT-ov1" secondAttribute="centerY" id="p0z-fJ-Kfj"/>
                                                 <constraint firstAttribute="trailing" secondItem="ri2-36-uhM" secondAttribute="trailing" constant="20" id="t0U-wg-sfO"/>
@@ -270,15 +274,195 @@
                     <connections>
                         <outlet property="displayNameTextField" destination="Qhc-oF-Inh" id="141-5M-6fR"/>
                         <outlet property="editImageView" destination="ri2-36-uhM" id="mBo-vH-yut"/>
+                        <outlet property="profileImageActivityIndicator" destination="ECy-SX-cDm" id="av9-Ih-e1k"/>
                         <outlet property="profileImageView" destination="9Vj-yM-eVW" id="zo2-9M-Cbk"/>
                         <segue destination="ZYU-po-skU" kind="unwind" identifier="Log Out" unwindAction="loggedOutBySegue:" id="eMU-xn-UnS"/>
                         <segue destination="gdD-UT-Hje" kind="show" identifier="Show User Quizes" id="hVZ-w4-QoR"/>
+                        <segue destination="bKm-S2-76t" kind="show" identifier="Show User Channels" id="xtY-ln-Xmu"/>
+                        <segue destination="rNM-1M-oze" kind="show" identifier="Show Notification Settings" id="fqw-Z6-LEI"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tIt-hL-MZm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ZYU-po-skU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1222" y="-1322"/>
+            <point key="canvasLocation" x="1228" y="-2061"/>
+        </scene>
+        <!--Files-->
+        <scene sceneID="sB7-q9-k0T">
+            <objects>
+                <viewController storyboardIdentifier="Files VC" id="4LH-vl-ofa" customClass="FileBrowserViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BeX-s8-X2T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="gbr-PY-Ujq"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Files" selectedImage="file" id="q8K-eP-zXh"/>
+                    <navigationItem key="navigationItem" id="q3j-vs-65p"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hns-bT-cKR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="342" y="-1329"/>
+        </scene>
+        <!--Notification Settings Table View Controller-->
+        <scene sceneID="JIe-ZH-trd">
+            <objects>
+                <tableViewController id="rNM-1M-oze" customClass="NotificationSettingsTableViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="aOm-aj-vHu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection headerTitle="In-App Notifications" id="2zl-wd-huL">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="64" id="1s7-Qn-0WU">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1s7-Qn-0WU" id="bkB-n8-MRw">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="KRJ-Fg-0US">
+                                                    <rect key="frame" x="10" y="0.0" width="355" height="63.5"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XGp-Nk-ugZ">
+                                                            <rect key="frame" x="0.0" y="5" width="298" height="54"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Channel Invitations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a5D-Um-h6c">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="298" height="20.5"/>
+                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notifications when user gets invitation to join a channel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1k-bs-bY8">
+                                                                    <rect key="frame" x="0.0" y="20.5" width="298" height="33.5"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xio-sk-87M">
+                                                            <rect key="frame" x="306" y="16.5" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="invitationSwitchValueChanged:" destination="rNM-1M-oze" eventType="valueChanged" id="JgS-vh-ZIE"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="KRJ-Fg-0US" firstAttribute="leading" secondItem="bkB-n8-MRw" secondAttribute="leading" constant="10" id="I73-Xz-SGf"/>
+                                                <constraint firstItem="KRJ-Fg-0US" firstAttribute="top" secondItem="bkB-n8-MRw" secondAttribute="top" id="UaJ-27-HfQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="KRJ-Fg-0US" secondAttribute="trailing" constant="10" id="lXx-bT-qIS"/>
+                                                <constraint firstAttribute="bottom" secondItem="KRJ-Fg-0US" secondAttribute="bottom" id="n4E-a3-ycQ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="64" id="dgA-pF-6D8">
+                                        <rect key="frame" x="0.0" y="92" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dgA-pF-6D8" id="ZFj-h6-8i9">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="sN2-mQ-GZW">
+                                                    <rect key="frame" x="10" y="0.0" width="355" height="63.5"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="g20-8A-gMS">
+                                                            <rect key="frame" x="0.0" y="5" width="298" height="54"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="New Quizes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9l8-PQ-qh4">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="298" height="20.5"/>
+                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notifications when a new quiz is posted in one of the user's channels" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cg-4G-rtX">
+                                                                    <rect key="frame" x="0.0" y="20.5" width="298" height="33.5"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="riG-rO-cUs">
+                                                            <rect key="frame" x="306" y="16.5" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="quizSwitchChanged:" destination="rNM-1M-oze" eventType="valueChanged" id="gcj-PS-3OD"/>
+                                                            </connections>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="sN2-mQ-GZW" secondAttribute="trailing" constant="10" id="SfN-Wv-N6w"/>
+                                                <constraint firstAttribute="bottom" secondItem="sN2-mQ-GZW" secondAttribute="bottom" id="W59-6h-iaI"/>
+                                                <constraint firstItem="sN2-mQ-GZW" firstAttribute="top" secondItem="ZFj-h6-8i9" secondAttribute="top" id="cvx-NG-9uL"/>
+                                                <constraint firstItem="sN2-mQ-GZW" firstAttribute="leading" secondItem="ZFj-h6-8i9" secondAttribute="leading" constant="10" id="wdj-kO-9OO"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="rNM-1M-oze" id="7VB-Od-G2t"/>
+                            <outlet property="delegate" destination="rNM-1M-oze" id="yWw-YZ-DjK"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="invitationSwitch" destination="xio-sk-87M" id="lnV-RV-HqD"/>
+                        <outlet property="quizSwitch" destination="riG-rO-cUs" id="Kdz-OJ-Inq"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Onh-Vq-jSI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1228" y="-2776.4617691154426"/>
+        </scene>
+        <!--User Owned Channels Table View Controller-->
+        <scene sceneID="Qwr-Ff-Sll">
+            <objects>
+                <tableViewController id="bKm-S2-76t" customClass="UserOwnedChannelsTableViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="EZt-v9-Rk4">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Channel Cell" textLabel="mVE-1B-GiS" detailTextLabel="VV2-Cu-XcO" style="IBUITableViewCellStyleSubtitle" id="IPY-7c-MHa">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IPY-7c-MHa" id="Loh-ep-6i5">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mVE-1B-GiS">
+                                            <rect key="frame" x="16" y="5" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VV2-Cu-XcO">
+                                            <rect key="frame" x="16" y="25.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="bKm-S2-76t" id="3xQ-dF-IOj"/>
+                            <outlet property="delegate" destination="bKm-S2-76t" id="9eP-bV-ZEg"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HVx-Xa-wx5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2100" y="-2776"/>
         </scene>
         <!--User Quizes Table View Controller-->
         <scene sceneID="ew0-hf-2dN">
@@ -325,7 +509,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzB-ev-lSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2062" y="-1743"/>
+            <point key="canvasLocation" x="2100" y="-2062"/>
         </scene>
         <!--Notifications-->
         <scene sceneID="85Q-xd-8tY">
@@ -436,7 +620,7 @@
             </objects>
             <point key="canvasLocation" x="2062" y="-241"/>
         </scene>
-        <!--Create Channel View Controller-->
+        <!--Create Channel-->
         <scene sceneID="0hA-4i-y8a">
             <objects>
                 <viewController id="sXu-UJ-8bs" customClass="CreateChannelViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
@@ -537,7 +721,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="p2d-Y7-Zje"/>
                     </view>
-                    <navigationItem key="navigationItem" id="T8o-Xq-Rcy">
+                    <navigationItem key="navigationItem" title="Create Channel" id="T8o-Xq-Rcy">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="UUh-ax-vSD">
                             <connections>
                                 <segue destination="YI3-2z-knn" kind="unwind" identifier="" unwindAction="cancelChannelCreationBySegue:" id="bZD-A5-KP0"/>
@@ -562,7 +746,7 @@
             </objects>
             <point key="canvasLocation" x="3737" y="-242"/>
         </scene>
-        <!--User Invitations Table View Controller-->
+        <!--Invite Users-->
         <scene sceneID="RN2-DP-LJ5">
             <objects>
                 <tableViewController id="pHD-yD-f0X" customClass="UserInvitationsTableViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
@@ -594,7 +778,7 @@
                             <outlet property="delegate" destination="pHD-yD-f0X" id="r2f-3B-lPB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="6Vd-ZW-Yg7">
+                    <navigationItem key="navigationItem" title="Invite Users" id="6Vd-ZW-Yg7">
                         <barButtonItem key="rightBarButtonItem" title="Done" id="u7Y-Ke-6bK">
                             <connections>
                                 <segue destination="owc-Wb-LId" kind="unwind" identifier="User Selection Done" unwindAction="userSelectionDoneBySegue:" id="aTU-tk-6ym"/>
@@ -619,14 +803,15 @@
                     <connections>
                         <segue destination="Qh9-Op-Qih" kind="relationship" relationship="viewControllers" id="Tu1-co-ffa"/>
                         <segue destination="ANN-W2-l6M" kind="relationship" relationship="viewControllers" id="RDe-9G-jp2"/>
+                        <segue destination="4LH-vl-ofa" kind="relationship" relationship="viewControllers" id="Mhg-Ut-ZOX"/>
                         <segue destination="f0m-Ad-a3r" kind="relationship" relationship="viewControllers" id="EOv-8F-Cow"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wat-0S-pJt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-676" y="-373"/>
+            <point key="canvasLocation" x="-532" y="-967"/>
         </scene>
-        <!--User Channels Table View Controller-->
+        <!--Chats-->
         <scene sceneID="VTA-wl-FFi">
             <objects>
                 <tableViewController storyboardIdentifier="User Channels VC" id="T9V-ZN-3qq" customClass="UserChannelsTableViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
@@ -665,13 +850,12 @@
                             <outlet property="delegate" destination="T9V-ZN-3qq" id="9zk-8g-sz8"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="XDd-dl-ewy">
-                        <nil key="title"/>
+                    <navigationItem key="navigationItem" title="Chats" id="XDd-dl-ewy">
                         <view key="titleView" contentMode="scaleToFill" id="d7q-EC-OsO">
                             <rect key="frame" x="167.5" y="6" width="40" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1op-ap-zWF">
+                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1op-ap-zWF">
                                     <rect key="frame" x="0.0" y="-4" width="40" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="dON-d7-33Y"/>
@@ -922,6 +1106,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="menuBarButton" destination="wgh-nO-pzZ" id="B7j-nk-vdE"/>
                         <segue destination="8TO-GE-3X8" kind="presentation" identifier="Show Quiz Session" id="5QP-fN-woj"/>
                         <segue destination="BwA-Zo-IPv" kind="show" identifier="Show Quiz Results" id="og4-jT-BP4"/>
                     </connections>
@@ -970,7 +1155,7 @@
             </objects>
             <point key="canvasLocation" x="2892" y="555"/>
         </scene>
-        <!--Quiz Creator Main Table View Controller-->
+        <!--New Quiz-->
         <scene sceneID="zTU-jY-UtS">
             <objects>
                 <tableViewController id="N35-Ax-l2y" customClass="QuizCreatorMainTableViewController" customModule="AppPrototype" customModuleProvider="target" sceneMemberID="viewController">
@@ -1128,7 +1313,7 @@
                             <outlet property="delegate" destination="N35-Ax-l2y" id="l9M-Xa-FwK"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="x9H-OG-gBa">
+                    <navigationItem key="navigationItem" title="New Quiz" id="x9H-OG-gBa">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="B4f-De-k8L">
                             <connections>
                                 <segue destination="UUu-0c-Y2e" kind="unwind" unwindAction="quizCreationDoneBySegue:" id="zrN-4U-ewa"/>
@@ -1245,7 +1430,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bT0-6D-ARI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2062" y="-967"/>
+            <point key="canvasLocation" x="2892" y="-967"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Cjz-oh-EIe">
@@ -1526,19 +1711,20 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3aI-Ep-a0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="334" y="-1319"/>
+            <point key="canvasLocation" x="343" y="-2061"/>
         </scene>
     </scenes>
     <resources>
         <image name="bell" width="30" height="30"/>
         <image name="chat" width="30" height="30"/>
+        <image name="file" width="30" height="30"/>
         <image name="menu" width="30" height="30"/>
         <image name="pencil" width="30" height="30"/>
         <image name="settings" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="5QP-fN-woj"/>
-        <segue reference="yB5-6y-3Zr"/>
-        <segue reference="IUJ-dO-0hx"/>
+        <segue reference="og4-jT-BP4"/>
+        <segue reference="JJT-d5-4B0"/>
     </inferredMetricsTieBreakers>
 </document>

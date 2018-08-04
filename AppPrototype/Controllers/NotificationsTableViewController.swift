@@ -27,6 +27,9 @@ class NotificationsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         notificationsHandle = observeUserNotifications()
     }
 
@@ -43,16 +46,16 @@ class NotificationsTableViewController: UITableViewController {
 
         let notification = notificationsByDates[indexPath.section].notifications[indexPath.row]
         if let invitation = notification as? ChannelInvitationNotification {
-            cell.textLabel?.text = "Channel Invitation"
+            cell.textLabel?.text = LocalizedStrings.LabelTexts.Channelinvitation
             let attributedText = GeneralUtils.createBoldAttributedString(string: invitation.senderName, fontSize: 12)
-            attributedText.append(NSAttributedString(string: " has invited you to join channel "))
+            attributedText.append(NSAttributedString(string: LocalizedStrings.AttributedStrings.ChannelInvitation))
             attributedText.append(GeneralUtils.createBoldAttributedString(string: invitation.channelTitle, fontSize: 12))
             cell.detailTextLabel?.attributedText = attributedText
         } else if let quizNotification = notification as? QuizNotification {
-            cell.textLabel?.text = "Quiz Available"
-            let attributedText = NSMutableAttributedString(string: "Quiz ")
+            cell.textLabel?.text = LocalizedStrings.LabelTexts.QuizAvailable
+            let attributedText = NSMutableAttributedString(string: LocalizedStrings.AttributedStrings.Quiz)
             attributedText.append(GeneralUtils.createBoldAttributedString(string: quizNotification.quizTitle, fontSize: 12))
-            attributedText.append(NSAttributedString(string: " was added in "))
+            attributedText.append(NSAttributedString(string: LocalizedStrings.AttributedStrings.WasAddedIn))
             attributedText.append(GeneralUtils.createBoldAttributedString(string: quizNotification.channelTitle, fontSize: 12))
             cell.detailTextLabel?.attributedText = attributedText
         }
@@ -61,7 +64,7 @@ class NotificationsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return notificationsByDates[section].date.shortString
+        return notificationsByDates[section].date.shortStringLocalized
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -69,11 +72,11 @@ class NotificationsTableViewController: UITableViewController {
         let notificationRef = self.notificationsReference.child(notification.id)
         if let invitation = notification as? ChannelInvitationNotification {
             let alert = UIAlertController(
-                title: "Confirm subscription",
-                message: "Do you want to join the channel \(invitation.channelTitle)",
+                title: LocalizedStrings.AlertTitles.ConfirmSubscription,
+                message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.ConfirmSubscription, invitation.channelTitle),
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Confirm", style: .default) { action in
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { action in
                 let userRef = FirebaseReferences.usersReference.child(self.user.uid).child("channelIds")
                 userRef.observe(.value) { snapshot in
                     if var userData = snapshot.value as? [String] {
@@ -106,15 +109,15 @@ class NotificationsTableViewController: UITableViewController {
                 
                 self.tabBarController?.selectedIndex = 0
             })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
             present(alert, animated: true)
         } else if let quizNotification = notification as? QuizNotification {
             let alert = UIAlertController(
-                title: "Begin Quiz",
-                message: "Do you want to start quiz \(quizNotification.quizTitle) now?",
+                title: LocalizedStrings.AlertTitles.BeginQuiz,
+                message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.BeginQuiz, quizNotification.quizTitle),
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Confirm", style: .default) { action in
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { action in
                 let quizRef = FirebaseReferences.usersReference.child(quizNotification.senderId).child("quizes").child(quizNotification.quizId)
                 let query = quizRef.queryOrderedByKey()
                 query.observe(.value) { [weak self] snapshot in
@@ -126,7 +129,7 @@ class NotificationsTableViewController: UITableViewController {
                     }
                 }
             })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
             present(alert, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -149,9 +152,9 @@ class NotificationsTableViewController: UITableViewController {
                     if let existingPair = self.notificationsByDates.filter({ self.datesEqualWithDayGranularity(date1: date, date2: $0.date) }).first {
                         notificationsOnThisDate = existingPair
                     }
-                    if let invitationNotification = ChannelInvitationNotification.createFrom(dataSnapshot: snapshot) {
+                    if let invitationNotification = ChannelInvitationNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.ChannelInvitations) {
                         notificationsOnThisDate.notifications.insert(invitationNotification, at: 0)
-                    } else if let quizNotification = QuizNotification.createFrom(dataSnapshot: snapshot) {
+                    } else if let quizNotification = QuizNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.QuizPosted) {
                         notificationsOnThisDate.notifications.insert(quizNotification, at: 0)
                     }
                     
@@ -170,11 +173,11 @@ class NotificationsTableViewController: UITableViewController {
 
     @IBAction func clearAllPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(
-            title: "Clear All",
-            message: "Are you sure you want to delete all notifications?",
+            title: LocalizedStrings.AlertTitles.ClearAll,
+            message: LocalizedStrings.AlertMessages.ClearAll,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Confirm", style: .destructive) { action in
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .destructive) { action in
             for (_, notifications) in self.notificationsByDates {
                 for notification in notifications {
                     self.notificationsReference.child(notification.id).removeValue()
@@ -182,7 +185,7 @@ class NotificationsTableViewController: UITableViewController {
             }
             self.notificationsByDates = []
         })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
         present(alert, animated: true)
     }
     

@@ -24,7 +24,7 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     private var usersHandle: DatabaseHandle?
     
     private let user = Auth.auth().currentUser!
-    private let descriptionPlaceholder = "Description (Optional)"
+    private let descriptionPlaceholder = LocalizedStrings.TextViewText.Desciption
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -42,6 +42,9 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         descriptionTextView.delegate = self
         titleTextField.delegate = self
         descriptionTextView.text = descriptionPlaceholder
@@ -90,11 +93,11 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
                 sendUserInvitation(channelId: newChannelReference.key, channelTitle: title)
                 performSegue(withIdentifier: "Creation Done", sender: sender)
             } else {
-                let alert = Alerts.createSingleActionAlert(title: "Non-unique Channel Title", message: "Channel with such title already exists.")
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.NonUniqueChannelTitle, message: LocalizedStrings.AlertMessages.NonUniqueChannelTitle)
                 present(alert, animated: true)
             }
         } else {
-            let alert = Alerts.createSingleActionAlert(title: "Empty Channel Title", message: "Please provide a channel title.")
+            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.EmptyChannelTitle, message: LocalizedStrings.AlertMessages.EmptyChannelTitle)
             present(alert, animated: true)
         }
     }
@@ -190,30 +193,12 @@ class CreateChannelViewController: UIViewController, UITextViewDelegate, UITextF
     
     private func fetchProfileImage(userCell cell: UserImageCollectionViewCell, user: User) {
         if let imageURL = user.profileImageURL, let url = URL(string: imageURL) {
-            let urlString = url.absoluteString
-            if urlString.hasPrefix("gs://") {
-                let imageStorageRef = Storage.storage().reference(forURL: urlString)
-                imageStorageRef.downloadURL { url, error in
-                    if url != nil {
-                        GeneralUtils.fetchImage(from: url!) { image, error in
-                            DispatchQueue.main.async {
-                                if image != nil && error == nil {
-                                    cell.profileImageView.image = image
-                                } else {
-                                    self.setPlaceholderProfileImage(userCell: cell, user: user)
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                GeneralUtils.fetchImage(from: url) { image, error in
-                    DispatchQueue.main.async {
-                        if image != nil && error == nil {
-                            cell.profileImageView.image = image
-                        } else {
-                            self.setPlaceholderProfileImage(userCell: cell, user: user)
-                        }
+            GeneralUtils.fetchImage(from: url) { image, error in
+                DispatchQueue.main.async {
+                    if image != nil && error == nil {
+                        cell.profileImageView.image = image
+                    } else {
+                        self.setPlaceholderProfileImage(userCell: cell, user: user)
                     }
                 }
             }

@@ -1,171 +1,170 @@
 
 /* Class = "UITextView"; text = "Description (Optional)"; ObjectID = "0Y9-1A-o8A"; */
-"0Y9-1A-o8A.text" = "Description (Optional)";
+"0Y9-1A-o8A.text" = "Opis (opcjonalnie)";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "2ha-Od-fvD"; */
-"2ha-Od-fvD.text" = "Label";
+"2ha-Od-fvD.text" = "Etykieta";
 
 /* Class = "UILabel"; text = "Choose the definition of Information Theory"; ObjectID = "8VA-Bq-YWv"; */
-"8VA-Bq-YWv.text" = "Choose the definition of Information Theory";
+"8VA-Bq-YWv.text" = "Wybierz definicję teorii informacji";
 
 /* Class = "UILabel"; text = "User Owned Channels"; ObjectID = "8hB-WU-cVR"; */
-"8hB-WU-cVR.text" = "User Owned Channels";
+"8hB-WU-cVR.text" = "Kanały użytkownika";
 
 /* Class = "UITableViewSection"; headerTitle = "Properties"; ObjectID = "8wk-Pg-2pf"; */
-"8wk-Pg-2pf.headerTitle" = "Properties";
+"8wk-Pg-2pf.headerTitle" = "Nieruchomości";
 
 /* Class = "UILabel"; text = "Username"; ObjectID = "9gB-Bb-1bt"; */
-"9gB-Bb-1bt.text" = "Username";
+"9gB-Bb-1bt.text" = "Nazwa Użytkownika";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "9ik-Q8-T5S"; */
-"9ik-Q8-T5S.text" = "Label";
+"9ik-Q8-T5S.text" = "Etykieta";
 
 /* Class = "UILabel"; text = "Date"; ObjectID = "ADa-rV-p2V"; */
-"ADa-rV-p2V.text" = "Date";
+"ADa-rV-p2V.text" = "Data";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "Anr-8O-u1k"; */
-"Anr-8O-u1k.text" = "Subtitle";
+"Anr-8O-u1k.text" = "Podtytuł";
 
 /* Class = "UIBarButtonItem"; title = "Cancel"; ObjectID = "B4f-De-k8L"; */
-"B4f-De-k8L.title" = "Cancel";
+"B4f-De-k8L.title" = "Anuluj";
 
 /* Class = "UIButton"; normalTitle = "Log in"; ObjectID = "BHA-HE-ctw"; */
-"BHA-HE-ctw.normalTitle" = "Log in";
+"BHA-HE-ctw.normalTitle" = "Zaloguj Się";
 
 /* Class = "UILabel"; text = "User Quizes"; ObjectID = "CNv-bp-UbB"; */
-"CNv-bp-UbB.text" = "User Quizes";
+"CNv-bp-UbB.text" = "Testz użytkowników";
 
 /* Class = "UITabBarItem"; title = "Chats"; ObjectID = "D9S-iy-mSO"; */
-"D9S-iy-mSO.title" = "Chats";
+"D9S-iy-mSO.title" = "Czat";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "Dg1-SS-IUy"; */
-"Dg1-SS-IUy.text" = "Title";
+"Dg1-SS-IUy.text" = "Tytuł";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "Ewn-QA-ajc"; */
-"Ewn-QA-ajc.text" = "Title";
+"Ewn-QA-ajc.text" = "Tytuł";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "FD2-1Y-O1G"; */
-"FD2-1Y-O1G.text" = "Title";
+"FD2-1Y-O1G.text" = "Tytuł";
 
 /* Class = "UIButton"; normalTitle = "Invite Users"; ObjectID = "H32-kj-O35"; */
-"H32-kj-O35.normalTitle" = "Invite Users";
+"H32-kj-O35.normalTitle" = "Zaproś użytkowników";
 
 /* Class = "UIButton"; normalTitle = "Next"; ObjectID = "Iy5-0m-A8n"; */
-"Iy5-0m-A8n.normalTitle" = "Next";
+"Iy5-0m-A8n.normalTitle" = "Kolejny";
 
 /* Class = "UILabel"; text = "Make private"; ObjectID = "J6T-8N-LKG"; */
-"J6T-8N-LKG.text" = "Make private";
+"J6T-8N-LKG.text" = "Uczynić prywatnym";
 
 /* Class = "UITextField"; placeholder = "Password"; ObjectID = "Jly-1a-udd"; */
-"Jly-1a-udd.placeholder" = "Password";
+"Jly-1a-udd.placeholder" = "Hasło";
 
 /* Class = "UILabel"; text = "Owner"; ObjectID = "Mbo-X3-LIW"; */
-"Mbo-X3-LIW.text" = "Owner";
+"Mbo-X3-LIW.text" = "Właściciel";
 
 /* Class = "UILabel"; text = "Notifications"; ObjectID = "Mcx-Cq-hZS"; */
-"Mcx-Cq-hZS.text" = "Notifications";
+"Mcx-Cq-hZS.text" = "Powiadomienia";
 
 /* Class = "UITextField"; placeholder = "TItle"; ObjectID = "MmE-io-jp0"; */
-"MmE-io-jp0.placeholder" = "TItle";
+"MmE-io-jp0.placeholder" = "Tytuł";
 
 /* Class = "UIBarButtonItem"; title = "Create"; ObjectID = "NEF-tl-yHi"; */
-"NEF-tl-yHi.title" = "Create";
+"NEF-tl-yHi.title" = "Stwórz";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "NH8-4c-lp1"; */
-"NH8-4c-lp1.text" = "Title";
+"NH8-4c-lp1.text" = "Tytuł";
 
 /* Class = "UITableViewSection"; headerTitle = "Completion Timer"; ObjectID = "OpT-Rt-1b2"; */
-"OpT-Rt-1b2.headerTitle" = "Completion Timer";
+"OpT-Rt-1b2.headerTitle" = "Zegar Zakończenia";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "Pzs-0M-kOE"; */
-"Pzs-0M-kOE.text" = "Label";
+"Pzs-0M-kOE.text" = "Etykieta";
 
 /* Class = "UILabel"; text = "15/20"; ObjectID = "Se4-CN-ODj"; */
 "Se4-CN-ODj.text" = "15/20";
 
 /* Class = "UISegmentedControl"; T9o-tb-x0T.segmentTitles[0] = "SIngle Choice"; ObjectID = "T9o-tb-x0T"; */
-"T9o-tb-x0T.segmentTitles[0]" = "SIngle Choice";
+"T9o-tb-x0T.segmentTitles[0]" = "Pojedynczy wybor";
 
 /* Class = "UISegmentedControl"; T9o-tb-x0T.segmentTitles[1] = "Multiple Choice"; ObjectID = "T9o-tb-x0T"; */
-"T9o-tb-x0T.segmentTitles[1]" = "Multiple Choice";
-
+"T9o-tb-x0T.segmentTitles[1]" = "Wielokrotny wybór";
 /* Class = "UILabel"; text = "Question Count: 0"; ObjectID = "TGw-MG-rEB"; */
-"TGw-MG-rEB.text" = "Question Count: 0";
+"TGw-MG-rEB.text" = "Liczba pytań: 0";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "WgO-SO-cvb"; */
-"WgO-SO-cvb.text" = "Title";
+"WgO-SO-cvb.text" = "Tytuł";
 
 /* Class = "UIBarButtonItem"; title = "Submit"; ObjectID = "YJg-7q-ZIv"; */
-"YJg-7q-ZIv.title" = "Submit";
+"YJg-7q-ZIv.title" = "Zatwierdź";
 
 /* Class = "UITextField"; placeholder = "Email"; ObjectID = "YQj-qS-eee"; */
 "YQj-qS-eee.placeholder" = "Email";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "Z8P-mn-coq"; */
-"Z8P-mn-coq.text" = "Title";
+"Z8P-mn-coq.text" = "Tytuł";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "ZH1-WL-JAa"; */
-"ZH1-WL-JAa.text" = "Subtitle";
+"ZH1-WL-JAa.text" = "Podtytuł";
 
 /* Class = "UITableViewSection"; headerTitle = "Account"; ObjectID = "csT-6U-oVO"; */
-"csT-6U-oVO.headerTitle" = "Account";
+"csT-6U-oVO.headerTitle" = "Konto";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "d6h-Nw-0bc"; */
-"d6h-Nw-0bc.text" = "Title";
+"d6h-Nw-0bc.text" = "Tytuł";
 
 /* Class = "UITabBarItem"; title = "Alerts"; ObjectID = "dFL-gL-O23"; */
-"dFL-gL-O23.title" = "Alerts";
+"dFL-gL-O23.title" = "Alerty";
 
 /* Class = "UINavigationItem"; title = "Join Group"; ObjectID = "e5U-2G-Pa0"; */
-"e5U-2G-Pa0.title" = "Join Group";
+"e5U-2G-Pa0.title" = "Dołączyć do grupy";
 
 /* Class = "UITableViewSection"; headerTitle = "Profile"; ObjectID = "eqp-I8-qL6"; */
-"eqp-I8-qL6.headerTitle" = "Profile";
+"eqp-I8-qL6.headerTitle" = "Profil";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "ft3-dr-IEs"; */
-"ft3-dr-IEs.text" = "Label";
+"ft3-dr-IEs.text" = "Etykieta";
 
 /* Class = "UILabel"; text = "Sign Out"; ObjectID = "gEM-lb-2eT"; */
-"gEM-lb-2eT.text" = "Sign Out";
+"gEM-lb-2eT.text" = "Wyloguj się";
 
 /* Class = "UITabBarItem"; title = "Settings"; ObjectID = "gFk-jo-zVV"; */
-"gFk-jo-zVV.title" = "Settings";
+"gFk-jo-zVV.title" = "Ustawienia";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "gVL-jA-pWV"; */
-"gVL-jA-pWV.text" = "Subtitle";
+"gVL-jA-pWV.text" = "Podtytuł";
 
 /* Class = "UIButton"; normalTitle = "Forgot password?"; ObjectID = "h5m-uK-9eB"; */
-"h5m-uK-9eB.normalTitle" = "Forgot password?";
+"h5m-uK-9eB.normalTitle" = "Zapomniałeś hasła?";
 
 /* Class = "UITextField"; placeholder = "Quiz Title"; ObjectID = "ifW-iC-zD6"; */
-"ifW-iC-zD6.placeholder" = "Quiz Title";
+"ifW-iC-zD6.placeholder" = "Tytuł testa";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "kA8-UO-jXS"; */
-"kA8-UO-jXS.text" = "Label";
+"kA8-UO-jXS.text" = "Etykieta";
 
 /* Class = "UILabel"; text = "Delete Account"; ObjectID = "muz-Or-XMY"; */
-"muz-Or-XMY.text" = "Delete Account";
+"muz-Or-XMY.text" = "Usuń konto";
 
 /* Class = "UILabel"; text = "00:01:00"; ObjectID = "q22-k7-ZJz"; */
 "q22-k7-ZJz.text" = "00:01:00";
 
 /* Class = "UINavigationItem"; title = "Notifications"; ObjectID = "sEx-A1-8Yk"; */
-"sEx-A1-8Yk.title" = "Notifications";
+"sEx-A1-8Yk.title" = "Powiadomienia";
 
 /* Class = "UIBarButtonItem"; title = "Next"; ObjectID = "ts3-SE-7ig"; */
-"ts3-SE-7ig.title" = "Next";
+"ts3-SE-7ig.title" = "Kolejny";
 
 /* Class = "UIBarButtonItem"; title = "Done"; ObjectID = "u7Y-Ke-6bK"; */
-"u7Y-Ke-6bK.title" = "Done";
+"u7Y-Ke-6bK.title" = "Gotowe";
 
 /* Class = "UIButton"; normalTitle = "Sign up"; ObjectID = "uTa-BM-hKZ"; */
-"uTa-BM-hKZ.normalTitle" = "Sign up";
+"uTa-BM-hKZ.normalTitle" = "Zapisz się";
 
 /* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "wgh-nO-pzZ"; */
-"wgh-nO-pzZ.title" = "Item";
+"wgh-nO-pzZ.title" = "Pozycja";
 
 /* Class = "UINavigationItem"; title = "Settings"; ObjectID = "yY1-Am-iid"; */
-"yY1-Am-iid.title" = "Settings";
+"yY1-Am-iid.title" = "Ustawienia";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "zOw-gC-SWN"; */
-"zOw-gC-SWN.text" = "Detail";
+"zOw-gC-SWN.text" = "Szczegóły";

@@ -73,7 +73,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     
     @IBAction func login(_ sender: UIButton) {
         if let email = emailTextField.text, let password = passwordTextField.text, !email.isEmpty, !password.isEmpty {
-            let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: "Working", message: "Please wait...", delegate: nil, cancelButtonTitle: nil)
+            let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: LocalizedStrings.AlertTitles.Working, message: LocalizedStrings.AlertMessages.PleaseWait, delegate: nil, cancelButtonTitle: nil)
             loadingAlert.show()
             Auth.auth().signIn(withEmail: email, password: password) { [weak self] (result, error) in
                 loadingAlert.dismiss(withClickedButtonIndex: 0, animated: true)
@@ -84,7 +84,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
                 }
             }
         } else {
-            let alert = Alerts.createSingleActionAlert(title: "Empty Login Field", message: "Email and password fields can't be empty.")
+            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.EmptyLogin, message: LocalizedStrings.AlertMessages.EmptyLogin)
             present(alert, animated: true)
         }
     }
@@ -101,34 +101,34 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     
     @IBAction func forgotPassword(_ sender: UIButton) {
         let alert = UIAlertController(
-            title: "Account Password Reset",
-            message: "Enter the email associated with account.",
+            title: LocalizedStrings.AlertTitles.AccountPasswordReset,
+            message: LocalizedStrings.AlertMessages.EnterEmail,
             preferredStyle: .alert
         )
         alert.addTextField()
         
         alert.addAction(UIAlertAction(
-            title: "OK",
+            title: LocalizedStrings.AlertActions.Ok,
             style: .default) { [weak self] action in
                 if let email = alert.textFields?.first?.text {
                     if !email.isEmpty, let view = self?.view {
-                        let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: "Working", message: "Please wait...", delegate: nil, cancelButtonTitle: "Hide")
+                        let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: LocalizedStrings.AlertTitles.Working, message: LocalizedStrings.AlertMessages.PleaseWait, delegate: nil, cancelButtonTitle: LocalizedStrings.AlertActions.Hide)
                         loadingAlert.show()
                         Auth.auth().sendPasswordReset(withEmail: email) { (error) in
                             loadingAlert.dismiss(withClickedButtonIndex: 0, animated: true)
                             if let error = error {
-                                let errorAlert = Alerts.createSingleActionAlert(title: "Error", message: error.localizedDescription)
+                                let errorAlert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
                                 self?.present(errorAlert, animated: true)
                                 return
                             }
-                            let confirmAlert = Alerts.createSingleActionAlert(title: "Message Sent", message: "Password reset link was sent to the specified email.")
+                            let confirmAlert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.MessageSent, message: LocalizedStrings.AlertMessages.MessageSent)
                             self?.present(confirmAlert, animated: true)
                         }
                     }
                 }
             }
         )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
         present(alert, animated: true)
     }
     
@@ -144,7 +144,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         if let user = Auth.auth().currentUser {
             presentChannelsViewControler(userDisplayName: user.displayName)
         } else {
-            let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: "Working", message: "Please wait...", delegate: nil, cancelButtonTitle: nil)
+            let loadingAlert = Alerts.createLoadingAlert(withCenterIn: view, title: LocalizedStrings.AlertTitles.Working, message: LocalizedStrings.AlertMessages.PleaseWait, delegate: nil, cancelButtonTitle: nil)
             loadingAlert.show()
             Auth.auth().signInAndRetrieveData(with: credential) { [weak self] (authResult, error) in
                 if let error = error {
@@ -170,6 +170,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
                 userValue["profileImageURL"] = profileImageURL
             }
             newUserReference.setValue(userValue)
+            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.Settings.ChannelInvitations)
+            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.Settings.QuizPosted)
         }
     }
     
@@ -191,12 +193,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
            let channelsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
            let notificationsVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
            let notificationsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController,
+           let filesVC = mainStoryboard.instantiateViewController(withIdentifier: "Files VC") as? FileBrowserViewController,
            let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings VC") as? SettingsTableViewController,
            let settingsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings Navigation VC") as? UINavigationController {
                 userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
                 notificationsVC.tabBarItem = UITabBarItem(title: "Alerts", image: UIImage(named: "bell"), tag: 1)
-                settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named: "settings"), tag: 2)
-                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC, settingsNavigationVC], animated: true)
+                filesVC.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "file"), tag: 2)
+                settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named: "settings"), tag: 3)
+                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC, filesVC, settingsNavigationVC], animated: true)
             
                 userChannelsTVC.senderName = emailTextField?.text
                 userChannelsTVC.senderName = userDisplayName
@@ -204,14 +208,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
                 notificationsNavigationVC.viewControllers = [notificationsVC]
                 settingsNavigationVC.viewControllers = [settingsVC]
                 present(tabBarController, animated: true, completion: nil)
-                    
-            
-            
         }
     }
     
     private func presentLoginFailedAlert(_ error: Error) {
-        let alert = Alerts.createSingleActionAlert(title: "Login Failed", message: error.localizedDescription)
+        let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.LoginFailed, message: error.localizedDescription)
         present(alert, animated: true)
     }
     
@@ -246,7 +247,7 @@ extension LoginViewController: FBSDKLoginButtonDelegate {
         do {
             try Auth.auth().signOut()
         } catch let error as NSError {
-            let alert = Alerts.createSingleActionAlert(title: "Logout Failed", message: error.localizedDescription)
+            let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.LogoutFailed, message: error.localizedDescription)
             present(alert, animated: true)
         }
     }

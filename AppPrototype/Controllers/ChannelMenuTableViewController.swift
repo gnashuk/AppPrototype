@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ChannelMenuTableViewController: UITableViewController {
+class ChannelMenuTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
+    var menuBarButton: UIBarButtonItem?
     var ownerOptions: Bool = false
     var channel: Channel?
 
@@ -42,16 +43,16 @@ class ChannelMenuTableViewController: UITableViewController {
         if ownerOptions {
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Manage Channel"
+                cell.textLabel?.text = LocalizedStrings.LabelTexts.ManageChannels
             case 1:
-                cell.textLabel?.text = "Create Quiz"
+                cell.textLabel?.text = LocalizedStrings.LabelTexts.CreateQuiz
             default:
                 break
             }
         } else {
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Show Channel Info"
+                cell.textLabel?.text = LocalizedStrings.LabelTexts.ShowChannelInfo
             default:
                 break
             }

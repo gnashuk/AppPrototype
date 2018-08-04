@@ -23,7 +23,7 @@ class NewQuizAnswerTableViewCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var answerTextArea: UITextView! {
         didSet {
             answerTextArea.delegate = self
-            answerTextArea.text = "Answer Text"
+            answerTextArea.text = LocalizedStrings.TextViewText.AnswerText
             answerTextArea.textColor = UIColor.lightGray
             answerTextArea.layer.borderColor = UIColor.gray.cgColor
             answerTextArea.layer.borderWidth = 0.25
@@ -60,7 +60,7 @@ class NewQuizAnswerTableViewCell: UITableViewCell, UITextViewDelegate {
                 answerTextArea.tag = 1
                 tableView?.reloadData()
             } else {
-                answerCellDelegate?.presentAlert(title: "Duplicate Answer", message: "The answer repeats an existing.")
+                answerCellDelegate?.presentAlert(title: LocalizedStrings.AlertTitles.DuplicateAnswer, message: LocalizedStrings.AlertMessages.DuplicateAnswer)
             }
         }
     }
@@ -84,7 +84,7 @@ class NewQuizAnswerTableViewCell: UITableViewCell, UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if answerTextArea.text.isEmpty {
-            textView.text = "Answer Text"
+            textView.text = LocalizedStrings.TextViewText.AnswerText
             textView.textColor = UIColor.lightGray
         }
         if answerTextArea.tag == 0 {

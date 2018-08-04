@@ -68,29 +68,12 @@ class ChannelDetailsPopoverViewController: UIViewController {
     
     private func fetchProfileImage(user: User) {
         if let imageURL = user.profileImageURL, let url = URL(string: imageURL) {
-            if imageURL.hasPrefix("gs://") {
-                let imageStorageRef = Storage.storage().reference(forURL: imageURL)
-                imageStorageRef.downloadURL { url, error in
-                    if url != nil {
-                        GeneralUtils.fetchImage(from: url!) { image, error in
-                            DispatchQueue.main.async {
-                                if image != nil && error == nil {
-                                    self.profileImageView.image = image
-                                } else {
-                                    self.setPlaceholderProfileImage(user: user)
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                GeneralUtils.fetchImage(from: url) { image, error in
-                    DispatchQueue.main.async {
-                        if image != nil && error == nil {
-                            self.profileImageView.image = image
-                        } else {
-                            self.setPlaceholderProfileImage(user: user)
-                        }
+            GeneralUtils.fetchImage(from: url) { image, error in
+                DispatchQueue.main.async {
+                    if image != nil && error == nil {
+                        self.profileImageView.image = image
+                    } else {
+                        self.setPlaceholderProfileImage(user: user)
                     }
                 }
             }

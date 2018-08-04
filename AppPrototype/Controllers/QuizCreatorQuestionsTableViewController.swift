@@ -37,16 +37,16 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
         let headerNib = UINib.init(nibName: "CollapsibleTableViewHeader", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "CollapsibleTableViewHeader")
         self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(QuizCreatorQuestionsTableViewController.back(sender:)))
+        let newBackButton = UIBarButtonItem(title: LocalizedStrings.NavigationBarItemTitles.Back, style: UIBarButtonItemStyle.plain, target: self, action: #selector(QuizCreatorQuestionsTableViewController.back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
     }
     
     @objc func back(sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "Save Progress", message: "Do you want to keep the draft?", preferredStyle: .alert)
-        let keepAction = UIAlertAction(title: "Keep", style: .default) { [weak self] action in
+        let alert = UIAlertController(title: LocalizedStrings.AlertTitles.SaveProgress, message: LocalizedStrings.AlertMessages.SaveProgress, preferredStyle: .alert)
+        let keepAction = UIAlertAction(title: LocalizedStrings.AlertActions.Keep, style: .default) { [weak self] action in
             self?.navigationController?.popViewController(animated: true)
         }
-        let discardAction = UIAlertAction(title: "Discard", style: .destructive) { [weak self] action in
+        let discardAction = UIAlertAction(title: LocalizedStrings.AlertActions.Discard, style: .destructive) { [weak self] action in
             self?.backDelegate?.resetQuiz()
             self?.navigationController?.popViewController(animated: true)
         }
@@ -57,20 +57,20 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
 
     @IBAction func donePressed(_ sender: UIBarButtonItem) {
         if verifyQuiz(), let quiz = quiz {
-            let alert = UIAlertController(title: "Finish Creation", message: "Choose the action.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self] handler in
+            let alert = UIAlertController(title: LocalizedStrings.AlertTitles.FinishCreation, message: LocalizedStrings.AlertMessages.ChooseAction, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Save, style: .default) { [weak self] handler in
                 _ = self?.saveQuizToFirebase(quiz: quiz)
                 self?.performSegue(withIdentifier: "Creation Done", sender: nil)
             })
             
-            alert.addAction(UIAlertAction(title: "Save and Post", style: .default) { [weak self] handler in
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.SaveAndPost, style: .default) { [weak self] handler in
                 if let quizId = self?.saveQuizToFirebase(quiz: quiz) {
                     self?.postQuizInChannel(quizId: quizId)
                     self?.performSegue(withIdentifier: "Creation Done", sender: nil)
                 }
             })
             
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
             present(alert, animated: true)
         }
     }
@@ -90,7 +90,7 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "CollapsibleTableViewHeader") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "CollapsibleTableViewHeader")
 
-        header.titleLabel.text = "Question #\(section + 1)"
+        header.titleLabel.text = String.localizedStringWithFormat(LocalizedStrings.LabelTexts.QuestionNumber, section + 1)
         header.setCollapsed(quiz?.questions[section].collapsed ?? false)
 
         header.section = section
@@ -165,27 +165,27 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     private func verifyQuiz() -> Bool {
         if let questions = quiz?.questions {
             if questions.filter({ $0.title.isEmpty }).count > 0 {
-                let alert = Alerts.createSingleActionAlert(title: "Missing Titles", message: "Please provide all question titles.")
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.MissingTitles, message: LocalizedStrings.AlertMessages.MissingTitles)
                 present(alert, animated: true)
                 return false
             }
             
             let uniqueQuestionTitles = Set(questions.map { $0.title.lowercased() } )
             if uniqueQuestionTitles.count < questions.count {
-                let alert = Alerts.createSingleActionAlert(title: "Duplicate Questions", message: "Quiz contains duplicated question titles.")
+                let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.DuplicateQuestions, message: LocalizedStrings.AlertMessages.DuplicateQuestions)
                 present(alert, animated: true)
                 return false
             }
             
             for question in questions {
                 if question.answers.count == 0 {
-                    let alert = Alerts.createSingleActionAlert(title: "Missing Answers", message: "Some questions don't have any answers.")
+                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.MissingAnswers, message: LocalizedStrings.AlertMessages.MissingAnswers)
                     present(alert, animated: true)
                     return false
                 }
                 
                 if question.answers.filter({ $0.correct == true }).isEmpty {
-                    let alert = Alerts.createSingleActionAlert(title: "Missing Corrert Answers", message: "Some questions don't have any answers marked as correct.")
+                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.MissingCorrertAnswers, message: LocalizedStrings.AlertMessages.MissingCorrectAnswers)
                     present(alert, animated: true)
                     return false
                 }
@@ -229,13 +229,13 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if indexPath.row > 0 && indexPath.row < getLastIndex(in: indexPath.section) {
-            let editAction = UITableViewRowAction(style: .normal, title: "Edit") { [weak self] (action, indexPath) in
+            let editAction = UITableViewRowAction(style: .normal, title: LocalizedStrings.TableViewRowActions.Edit) { [weak self] (action, indexPath) in
                 if let answer = self?.deleteAnswerCell(at: indexPath), let row = self?.getLastIndex(in: indexPath.section), let cell = tableView.cellForRow(at: IndexPath(item: row, section: indexPath.section)) as? NewQuizAnswerTableViewCell {
                     cell.answerText = answer
                 }
             }
             
-            let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
+            let deleteAction = UITableViewRowAction(style: .destructive, title: LocalizedStrings.TableViewRowActions.Delete) { [weak self] (action, indexPath) in
                 _ = self?.deleteAnswerCell(at: indexPath)
             }
             return [deleteAction, editAction]

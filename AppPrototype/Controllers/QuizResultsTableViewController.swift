@@ -48,7 +48,7 @@ class QuizResultsTableViewController: UITableViewController {
             let quizResult = quizResults[indexPath.row]
             fetchProfileImage(resultCell: resultCell, quizResult: quizResult)
             resultCell.userNameLabel.text = quizResult.senderName
-            resultCell.dateLabel.text = quizResult.date.shortString
+            resultCell.dateLabel.text = quizResult.date.shortStringLocalized
             resultCell.resultLabel.text = createResultString(for: quizResult, in: quiz)
         }
 
@@ -91,30 +91,12 @@ class QuizResultsTableViewController: UITableViewController {
 
     private func fetchProfileImage(resultCell cell: QuizResultTableViewCell, quizResult: QuizResult) {
         if let profileImageUrl = users.filter({ $0.userId == quizResult.senderId }).first?.profileImageURL, let url = URL(string: profileImageUrl) {
-            let urlString = url.absoluteString
-            if urlString.hasPrefix("gs://") {
-                let imageStorageRef = Storage.storage().reference(forURL: urlString)
-                imageStorageRef.downloadURL { url, error in
-                    if url != nil {
-                        GeneralUtils.fetchImage(from: url!) { image, error in
-                            DispatchQueue.main.async {
-                                if image != nil && error == nil {
-                                    cell.profileImageView.image = image
-                                } else {
-                                    self.setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                GeneralUtils.fetchImage(from: url) { image, error in
-                    DispatchQueue.main.async {
-                        if image != nil && error == nil {
-                            cell.profileImageView.image = image
-                        } else {
-                            self.setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
-                        }
+            GeneralUtils.fetchImage(from: url) { image, error in
+                DispatchQueue.main.async {
+                    if image != nil && error == nil {
+                        cell.profileImageView.image = image
+                    } else {
+                        self.setPlaceholderProfileImage(resultCell: cell, quizResult: quizResult)
                     }
                 }
             }

@@ -47,8 +47,12 @@
 		7CB636B920D6A65D00583578 /* QuizAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636B820D6A65D00583578 /* QuizAnswer.swift */; };
 		7CB636BB20D6CA9400583578 /* QuestionTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636BA20D6CA9400583578 /* QuestionTitleTableViewCell.swift */; };
 		7CB636BD20D6CACC00583578 /* NewQuizAnswerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB636BC20D6CACC00583578 /* NewQuizAnswerTableViewCell.swift */; };
+		7CC491C22104DD270039B11C /* NotificationSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC491C12104DD270039B11C /* NotificationSettingsTableViewController.swift */; };
+		7CC491C42104E1690039B11C /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC491C32104E1690039B11C /* UserDefaultsKeys.swift */; };
 		7CC9E6F520F8E5CF00F9E94E /* ChannelDetailsPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC9E6F420F8E5CF00F9E94E /* ChannelDetailsPopoverViewController.swift */; };
 		7CC9E6F720FAACE500F9E94E /* UserQuizesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC9E6F620FAACE500F9E94E /* UserQuizesTableViewController.swift */; };
+		7CCB2550210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCB254F210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift */; };
+		7CCB255221021F1B004DDAA4 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCB255121021F1B004DDAA4 /* FileBrowserViewController.swift */; };
 		7CD86A6420C4641800A37C1D /* GeneralUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD86A6320C4641800A37C1D /* GeneralUtils.swift */; };
 		7CE6BC0A20D59A1900764E91 /* PhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */; };
 		7CE6BC0C20D5A38000764E91 /* ChannelMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE6BC0B20D5A38000764E91 /* ChannelMenuTableViewController.swift */; };
@@ -132,8 +136,12 @@
 		7CB636B820D6A65D00583578 /* QuizAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAnswer.swift; sourceTree = "<group>"; };
 		7CB636BA20D6CA9400583578 /* QuestionTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionTitleTableViewCell.swift; sourceTree = "<group>"; };
 		7CB636BC20D6CACC00583578 /* NewQuizAnswerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQuizAnswerTableViewCell.swift; sourceTree = "<group>"; };
+		7CC491C12104DD270039B11C /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
+		7CC491C32104E1690039B11C /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		7CC9E6F420F8E5CF00F9E94E /* ChannelDetailsPopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelDetailsPopoverViewController.swift; sourceTree = "<group>"; };
 		7CC9E6F620FAACE500F9E94E /* UserQuizesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserQuizesTableViewController.swift; sourceTree = "<group>"; };
+		7CCB254F210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserOwnedChannelsTableViewController.swift; sourceTree = "<group>"; };
+		7CCB255121021F1B004DDAA4 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		7CD86A6320C4641800A37C1D /* GeneralUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralUtils.swift; sourceTree = "<group>"; };
 		7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewer.swift; sourceTree = "<group>"; };
 		7CE6BC0B20D5A38000764E91 /* ChannelMenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelMenuTableViewController.swift; sourceTree = "<group>"; };
@@ -277,7 +285,10 @@
 				7C9B7A6720E419D9000BD723 /* QuizSessionTableViewController.swift */,
 				7C91C70F20E9685800EEA7A7 /* QuizResultsTableViewController.swift */,
 				7C4CBCAE20F271E000B43B39 /* SettingsTableViewController.swift */,
+				7CC491C12104DD270039B11C /* NotificationSettingsTableViewController.swift */,
 				7CC9E6F620FAACE500F9E94E /* UserQuizesTableViewController.swift */,
+				7CCB254F210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift */,
+				7CCB255121021F1B004DDAA4 /* FileBrowserViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -315,6 +326,7 @@
 				7C0B9E1F20C36EEF00F90353 /* Alerts.swift */,
 				7CD86A6320C4641800A37C1D /* GeneralUtils.swift */,
 				7CE6BC0920D59A1900764E91 /* PhotoViewer.swift */,
+				7CC491C32104E1690039B11C /* UserDefaultsKeys.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -412,6 +424,9 @@
 						CreatedOnToolsVersion = 9.3;
 						SystemCapabilities = {
 							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
 								enabled = 1;
 							};
 						};
@@ -519,6 +534,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
@@ -546,6 +562,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
@@ -607,6 +624,7 @@
 				7CA2249E20B09C7800052F74 /* LoginViewController.swift in Sources */,
 				7C91C71220E9698900EEA7A7 /* QuizResultTableViewCell.swift in Sources */,
 				7CA224AF20B1B54100052F74 /* JoinChannelViewController.swift in Sources */,
+				7CCB2550210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift in Sources */,
 				7CA224A920B0C56700052F74 /* Channel.swift in Sources */,
 				7C4CBCAF20F271E000B43B39 /* SettingsTableViewController.swift in Sources */,
 				7C9B7A6820E419D9000BD723 /* QuizSessionTableViewController.swift in Sources */,
@@ -623,14 +641,17 @@
 				7C91C71020E9685800EEA7A7 /* QuizResultsTableViewController.swift in Sources */,
 				7CB636BD20D6CACC00583578 /* NewQuizAnswerTableViewCell.swift in Sources */,
 				7CB636B320D6997900583578 /* QuizCreatorMainTableViewController.swift in Sources */,
+				7CC491C22104DD270039B11C /* NotificationSettingsTableViewController.swift in Sources */,
 				7CE6BC0A20D59A1900764E91 /* PhotoViewer.swift in Sources */,
 				7C0B4D7F20EFD1D300D24AE5 /* ChannelInvitationNotification.swift in Sources */,
 				7C0B4D7D20EFCFE900D24AE5 /* Notification.swift in Sources */,
 				7CC9E6F720FAACE500F9E94E /* UserQuizesTableViewController.swift in Sources */,
 				7CA224A320B09D7000052F74 /* ChatViewController.swift in Sources */,
+				7CC491C42104E1690039B11C /* UserDefaultsKeys.swift in Sources */,
 				7CB636B120D6870700583578 /* QuizCreatorQuestionsTableViewController.swift in Sources */,
 				7C91C70520E8F1B600EEA7A7 /* UserInvitationsTableViewController.swift in Sources */,
 				7CB636BB20D6CA9400583578 /* QuestionTitleTableViewCell.swift in Sources */,
+				7CCB255221021F1B004DDAA4 /* FileBrowserViewController.swift in Sources */,
 				7C91C70A20E9050700EEA7A7 /* UserImageCollectionViewCell.swift in Sources */,
 				7CA224A020B09CCB00052F74 /* UserChannelsTableViewController.swift in Sources */,
 				7C9B7A6A20E42039000BD723 /* QuizAnswerTableViewCell.swift in Sources */,
@@ -835,7 +856,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NR9LZ3ALZE;
 				INFOPLIST_FILE = AppPrototype/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -856,7 +877,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NR9LZ3ALZE;
 				INFOPLIST_FILE = AppPrototype/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -17,7 +17,8 @@ class UserChannelsTableViewController: UITableViewController {
         didSet {
             profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
             profileImageView.layer.masksToBounds = true
-            fetchProfileImage()
+            self.navigationItem.titleView = profileImageView
+//            fetchProfileImage()
         }
     }
     
@@ -49,7 +50,9 @@ class UserChannelsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.title = ""
         tabBarController?.tabBar.isHidden = false
+        fetchProfileImage()
     }
     
     deinit {
@@ -92,17 +95,18 @@ class UserChannelsTableViewController: UITableViewController {
     @IBAction func creationDone(bySegue: UIStoryboardSegue) {
     }
     
+    @objc private func touchProfileImage(_ recognizer: UITapGestureRecognizer) {
+        self.tabBarController?.selectedIndex = 3
+    }
+    
     private func observeChannels() -> DatabaseHandle {
         return allChannelsReference.observe(.childAdded) { [weak self] snapshot in
-            if let channelData = snapshot.value as? [String: Any] {
-                if let title = channelData["title"] as? String, let ownerId = channelData["ownerId"] as? String, let description = channelData["description"] as? String, let isPrivate = channelData["isPrivate"] as? Bool, !title.isEmpty {
-                    var channel = Channel(id: snapshot.key, title: title, ownerId: ownerId, description: description, isPrivate: isPrivate)
-                    if let userIds = channelData["userIds"] as? [String] {
-                        channel.userIds = userIds
-                    }
-                    self?.allChannels.append(channel)
-                    self?.tableView.reloadData()
+            if let channelContent = snapshot.value as? [String: Any], var channel = Channel.createForm(dataSnapshot: snapshot) {
+                if let userIds = channelContent["userIds"] as? [String] {
+                    channel.userIds = userIds
                 }
+                self?.allChannels.append(channel)
+                self?.tableView.reloadData()
             }
         }
     }
@@ -157,30 +161,12 @@ class UserChannelsTableViewController: UITableViewController {
 
     private func fetchProfileImage() {
         if let url = Auth.auth().currentUser?.photoURL {
-            let urlString = url.absoluteString
-            if urlString.hasPrefix("gs://") {
-                let imageStorageRef = Storage.storage().reference(forURL: urlString)
-                imageStorageRef.downloadURL { url, error in
-                    if url != nil {
-                        GeneralUtils.fetchImage(from: url!) { image, error in
-                            DispatchQueue.main.async {
-                                if image != nil && error == nil {
-                                    self.profileImageView.image = image
-                                } else {
-                                    self.setPlaceholderProfileImage()
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                GeneralUtils.fetchImage(from: url) { image, error in
-                    DispatchQueue.main.async {
-                        if image != nil && error == nil {
-                            self.profileImageView.image = image
-                        } else {
-                            self.setPlaceholderProfileImage()
-                        }
+            GeneralUtils.fetchImage(from: url) { image, error in
+                DispatchQueue.main.async {
+                    if image != nil && error == nil {
+                        self.profileImageView.image = image
+                    } else {
+                        self.setPlaceholderProfileImage()
                     }
                 }
             }

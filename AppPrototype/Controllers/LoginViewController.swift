@@ -52,10 +52,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         emailTextField.delegate = self
         passwordTextField.delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
-//        GIDSignIn.sharedInstance().signIn()
-//        GIDSignIn.sharedInstance().signOut()
-        emailTextField.text = "oleg_gnashuk@i.ua"
-        passwordTextField.text = "O1eg@Stefan"
         usersHandle = observeUsers()
         fixFbButtonAppearance()
     }
@@ -177,7 +173,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     
     func authUI(_ authUI: FUIAuth, didSignInWith authDataResult: AuthDataResult?, error: Error?) {
         if let error = error {
-            presentLoginFailedAlert(error)
+            if !error.localizedDescription.contains("FUIAuthErrorDomain error 1.") {
+                presentLoginFailedAlert(error)
+            }
             return
         }
         saveNewUserInFirebase(authDataResult: authDataResult)

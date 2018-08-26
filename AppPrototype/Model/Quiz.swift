@@ -47,7 +47,7 @@ class Quiz: CustomStringConvertible {
     }
     
     static func createFrom(dataSnapshot: DataSnapshot) -> Quiz? {
-        if let quizContent = dataSnapshot.value as? [String: Any] {
+        if let quizContent = parseQuizContent(dataSnapshot: dataSnapshot) {
             if let title = quizContent["title"] as? String, let typeString = quizContent["type"] as? String, let timeLimitString = quizContent["timeLimit"] as? String {
                 if let questions = quizContent["questions"] as? [String: Any], let type = QuizType.create(rawValue: typeString), let timeLimit = TimeLimit.create(rawValue: timeLimitString) {
                     let quiz = Quiz(title: title, type: type, timeLimit: timeLimit)
@@ -68,6 +68,15 @@ class Quiz: CustomStringConvertible {
                     return quiz
                 }
             }
+        }
+        return nil
+    }
+    
+    private static func parseQuizContent(dataSnapshot: DataSnapshot) -> [String: Any]? {
+        if let quizContent = dataSnapshot.value as? [String: Any] {
+            return quizContent
+        } else if let map = dataSnapshot.value as? [String: Any], let quizContent = map.first?.value as? [String: Any] {
+            return quizContent
         }
         return nil
     }
@@ -96,10 +105,10 @@ enum TimeLimit: CustomStringConvertible {
     static func create(rawValue: String) -> TimeLimit? {
         switch rawValue {
         case "none":
-            return .none
+            return TimeLimit.none
         default:
             if let minutes = Int(rawValue) {
-                return .minutes(minutes)
+                return TimeLimit.minutes(minutes)
             }
             return nil
         }

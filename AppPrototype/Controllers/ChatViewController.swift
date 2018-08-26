@@ -16,7 +16,7 @@ import NYTPhotoViewer
 import MobileCoreServices
 import Alamofire
 
-class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
+class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
@@ -153,7 +153,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
     }
     
     private func appendMessage(senderId id: String, senderName: String, date: Date?, text: String) {
-        if let message = JSQMessage(senderId: id, senderDisplayName: senderName, date: date, text: text) {
+        if let message = JSQMessage(senderId: id, senderDisplayName: senderName, date: date, text: text.decrypted) {
             messages.append(message)
             messages.sort { $0.date < $1.date }
         }
@@ -295,7 +295,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
             let messageValue: [String: Any] = [
                 "senderId": senderId,
                 "senderName": senderDisplayName,
-                "text": text,
+                "text": text.encrypted,
                 "date": Date().longString
             ]
             
@@ -381,7 +381,7 @@ class ChatViewController: JSQMessagesViewController, URLSessionDelegate, UIImage
                 let alert = UIAlertController(title: LocalizedStrings.AlertTitles.DownloadFile, message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.DownloadFile, fileName), preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { action in
                     let fileStorageReference = Storage.storage().reference(forURL: url.absoluteString)
-                    let loadingAlert = Alerts.createLoadingAlert(withCenterIn: self.view, title: "Downloading", message: "Please wait...", delegate: nil, cancelButtonTitle: "Hide")
+                    let loadingAlert = Alerts.createLoadingAlert(withCenterIn: self.view, title: "Downloading", message: "Please wait...", delegate: nil, cancelButtonTitle: LocalizedStrings.AlertActions.Hide)
                     loadingAlert.show()
                     fileStorageReference.downloadURL { downloadUrl, error in
                         if let error = error {
@@ -603,20 +603,29 @@ extension ChatViewController {
         return getUniqueName(fileName: name, counter: 0)
     }
     
-    private func getFileSize(fileUrl url: URL) throws -> String {
+    private func getFileSize(fileUrl url: URL) throws -> FileSize {
         let fileAttribute: [FileAttributeKey : Any] = try FileManager.default.attributesOfItem(atPath: url.path)
         var fileSizeValue: UInt64 = 0
         let byteCountFormatter: ByteCountFormatter = ByteCountFormatter()
         if let fileNumberSize: NSNumber = fileAttribute[FileAttributeKey.size] as? NSNumber {
             fileSizeValue = UInt64(truncating: fileNumberSize)
             byteCountFormatter.countStyle = ByteCountFormatter.CountStyle.file
-            if fileSizeValue / 1000 > 0 {
-                byteCountFormatter.allowedUnits = fileSizeValue / 1000_000 > 0 ? .useMB : .useKB
+            if fileSizeValue < 50_000_000 {
+                if fileSizeValue / 1000 > 0 {
+                    byteCountFormatter.allowedUnits = fileSizeValue / 1000_000 > 0 ? .useMB : .useKB
+                } else {
+                    byteCountFormatter.allowedUnits = ByteCountFormatter.Units.useBytes
+                }
             } else {
-                byteCountFormatter.allowedUnits = ByteCountFormatter.Units.useBytes
+                return FileSize.overLimit
             }
         }
-        return byteCountFormatter.string(fromByteCount: Int64(fileSizeValue))
+        return FileSize.some(byteCountFormatter.string(fromByteCount: Int64(fileSizeValue)))
+    }
+    
+    enum FileSize {
+        case some(String)
+        case overLimit
     }
 }
 
@@ -633,28 +642,33 @@ extension ChatViewController: UIDocumentPickerDelegate, UIDocumentInteractionCon
                 if tempUrl != nil {
                     let stringUrl = url.absoluteString
                     let fileName = self.getUniqueFileName(fileName: stringUrl.lastPathComponent)
-                
-                    try self.saveFileLocally(from: tempUrl!, fileName: fileName)
-                    
-                    let newRef = self.messagesReference.childByAutoId()
-
                     let fileSize = try self.getFileSize(fileUrl: tempUrl!)
-                    let filePath = "\(self.senderId!)/\(fileName)"
-                    let fileFirebasePath = "\(FirebaseReferences.storageUrl)/\(filePath)"
-                    DispatchQueue.main.async {
-                        if let fileFirebaseUrl = URL(string: fileFirebasePath), let mediaItem = self.createFileMedia(fileUrl: fileFirebaseUrl, fileSize: fileSize, senderId: self.senderId) {
-                            self.userSentMediaByMessageId[newRef.key] = mediaItem
-                            self.appendFileMessage(senderId: self.senderId, senderName: self.senderDisplayName, date: Date(), mediaItem: mediaItem)
-                            
-                            self.storageReference.child(filePath).putFile(from: url, metadata: nil) { metadata, error in
-                                if let error = error {
-                                    let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
-                                    self.present(alert, animated: true)
-                                    return
+                    switch fileSize {
+                    case .some(let sizeString):
+                        try self.saveFileLocally(from: tempUrl!, fileName: fileName)
+                        
+                        let newRef = self.messagesReference.childByAutoId()
+
+                        let filePath = "\(self.senderId!)/\(fileName)"
+                        let fileFirebasePath = "\(FirebaseReferences.storageUrl)/\(filePath)"
+                        DispatchQueue.main.async {
+                            if let fileFirebaseUrl = URL(string: fileFirebasePath), let mediaItem = self.createFileMedia(fileUrl: fileFirebaseUrl, fileSize: sizeString, senderId: self.senderId) {
+                                self.userSentMediaByMessageId[newRef.key] = mediaItem
+                                self.appendFileMessage(senderId: self.senderId, senderName: self.senderDisplayName, date: Date(), mediaItem: mediaItem)
+                                
+                                self.storageReference.child(filePath).putFile(from: url, metadata: nil) { metadata, error in
+                                    if let error = error {
+                                        let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.Error, message: error.localizedDescription)
+                                        self.present(alert, animated: true)
+                                        return
+                                    }
+                                    self.saveFileMessage(fileUrl: fileFirebasePath, fileSize: sizeString, reference: newRef)
                                 }
-                                self.saveFileMessage(fileUrl: fileFirebasePath, fileSize: fileSize, reference: newRef)
                             }
                         }
+                    case .overLimit:
+                        let alert = Alerts.createSingleActionAlert(title: "File not Sent", message: "File exceeds maximum size limit - 50 MB.")
+                        self.present(alert, animated: true)
                     }
                 }
             } catch let error {

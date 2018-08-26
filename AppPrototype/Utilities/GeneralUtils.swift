@@ -9,8 +9,11 @@
 import Foundation
 import UIKit
 import FirebaseStorage
+import CryptoSwift
 
 class GeneralUtils {
+    static let aes = try! AES(key: "ddC2M15lkVbQDfakocftNMQdd0HloLyr", iv: "yqLOHUioG3QjkuvI")
+    
     static let imageFetchHandler: (URL, @escaping(UIImage?, Error?) -> ()) -> Void = { url, completion in
         let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60)
         if let response = URLCache.shared.cachedResponse(for: request) {
@@ -167,6 +170,22 @@ extension String {
     
     var deletingPathExtension: String {
         return self.nsString.deletingPathExtension
+    }
+    
+    var encrypted: String {
+        let cipher = try! GeneralUtils.aes.encrypt(Array(self.utf8))
+        let data = Data(cipher)
+        return data.base64EncodedString()
+    }
+    
+    var decrypted: String {
+        if let data = Data(base64Encoded: self) {
+            let decrypted = try! GeneralUtils.aes.decrypt([UInt8](data))
+            let decryptedData = Data(decrypted)
+            return String(bytes: decryptedData.bytes, encoding: .utf8)!
+        } else {
+            return self
+        }
     }
 }
 

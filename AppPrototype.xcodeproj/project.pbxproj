@@ -21,7 +21,6 @@
 		7C72072C20D704B60091D6E6 /* CollapsibleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C72072B20D704B60091D6E6 /* CollapsibleTableViewHeader.swift */; };
 		7C91C70520E8F1B600EEA7A7 /* UserInvitationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70420E8F1B600EEA7A7 /* UserInvitationsTableViewController.swift */; };
 		7C91C70A20E9050700EEA7A7 /* UserImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70920E9050700EEA7A7 /* UserImageCollectionViewCell.swift */; };
-		7C91C70E20E934F900EEA7A7 /* ATGoogleDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70D20E934F900EEA7A7 /* ATGoogleDrive.swift */; };
 		7C91C71020E9685800EEA7A7 /* QuizResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70F20E9685800EEA7A7 /* QuizResultsTableViewController.swift */; };
 		7C91C71220E9698900EEA7A7 /* QuizResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C71120E9698900EEA7A7 /* QuizResultTableViewCell.swift */; };
 		7C9B7A6820E419D9000BD723 /* QuizSessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9B7A6720E419D9000BD723 /* QuizSessionTableViewController.swift */; };
@@ -104,7 +103,6 @@
 		7C72072B20D704B60091D6E6 /* CollapsibleTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleTableViewHeader.swift; sourceTree = "<group>"; };
 		7C91C70420E8F1B600EEA7A7 /* UserInvitationsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInvitationsTableViewController.swift; sourceTree = "<group>"; };
 		7C91C70920E9050700EEA7A7 /* UserImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserImageCollectionViewCell.swift; sourceTree = "<group>"; };
-		7C91C70D20E934F900EEA7A7 /* ATGoogleDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ATGoogleDrive.swift; sourceTree = "<group>"; };
 		7C91C70F20E9685800EEA7A7 /* QuizResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultsTableViewController.swift; sourceTree = "<group>"; };
 		7C91C71120E9698900EEA7A7 /* QuizResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultTableViewCell.swift; sourceTree = "<group>"; };
 		7C9B7A6720E419D9000BD723 /* QuizSessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizSessionTableViewController.swift; sourceTree = "<group>"; };
@@ -321,7 +319,6 @@
 		7CA224AD20B0D02D00052F74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				7C91C70D20E934F900EEA7A7 /* ATGoogleDrive.swift */,
 				7CA224AB20B0CF1D00052F74 /* FirebaseReferences.swift */,
 				7C0B9E1F20C36EEF00F90353 /* Alerts.swift */,
 				7CD86A6320C4641800A37C1D /* GeneralUtils.swift */,
@@ -632,7 +629,6 @@
 				7CA224AC20B0CF1D00052F74 /* FirebaseReferences.swift in Sources */,
 				7C3F480620B1E2D400416A91 /* User.swift in Sources */,
 				7C72072C20D704B60091D6E6 /* CollapsibleTableViewHeader.swift in Sources */,
-				7C91C70E20E934F900EEA7A7 /* ATGoogleDrive.swift in Sources */,
 				7CE6BC0C20D5A38000764E91 /* ChannelMenuTableViewController.swift in Sources */,
 				7C0B9E2020C36EEF00F90353 /* Alerts.swift in Sources */,
 				7CA2246E20B0952900052F74 /* AppDelegate.swift in Sources */,

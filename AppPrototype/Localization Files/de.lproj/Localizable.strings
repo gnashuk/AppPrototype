@@ -38,6 +38,7 @@
 "Download File" = "Download Datei";
 "Account Deletion" = "Löschung des Kontos";
 "Confirm Removal" = "Bestätigung der Entfernung";
+"Confirm Change" = "Änderung bestätigen";
 
 // Alert Messages
 "Please wait..." = "Warten Sie mal...";
@@ -67,6 +68,7 @@
 "Do you want to download file %s?" = "Möchten Sie die Datei herunterladen %s?";
 "Do you want to delete this user account?" = "Möchten Sie dieses Benutzerkonto löschen?";
 "Are you sure you want to permanently remove user account?" = "Sind Sie sicher, dass Sie das Benutzerkonto dauerhaft entfernen möchten?";
+"Are you sure you want to save changes?" = "Sind Sie sicher, dass Sie Änderungen speichern möchten?";
 
 // Alert Actions
 "OK" = "in Ordnung";

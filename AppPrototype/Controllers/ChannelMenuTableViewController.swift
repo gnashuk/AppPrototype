@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ChannelMenuTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     var menuBarButton: UIBarButtonItem?
     var ownerOptions: Bool = false
     var channel: Channel?
+    
+    private let currentUser = Auth.auth().currentUser!
+    private lazy var usersReference = FirebaseReferences.usersReference
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +69,7 @@ class ChannelMenuTableViewController: UITableViewController, UIPopoverPresentati
         if ownerOptions {
             switch indexPath.row {
             case 0:
-                break
+                performSegue(withIdentifier: "Show Channel Details", sender: nil)
             case 1:
                 performSegue(withIdentifier: "Show Quiz Creator", sender: nil)
                 presentingViewController?.popoverPresentationController?.sourceView?.isHidden = true
@@ -75,7 +79,7 @@ class ChannelMenuTableViewController: UITableViewController, UIPopoverPresentati
         } else {
             switch indexPath.row {
             case 0:
-                break
+                performSegue(withIdentifier: "Show Channel Details", sender: nil)
             default:
                 break
             }
@@ -86,45 +90,32 @@ class ChannelMenuTableViewController: UITableViewController, UIPopoverPresentati
         return UITableViewAutomaticDimension
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Show Quiz Creator" {
             if let destination = segue.destination.contents as? QuizCreatorMainTableViewController {
                 destination.channel = channel
+            }
+        } else if segue.identifier == "Show Channel Details" {
+            if let destination = segue.destination.contents as? ChannelDetailsTableViewController {
+                destination.channel = channel
+                if ownerOptions {
+                    destination.ownerDisplayName = currentUser.displayName
+                    destination.ownerProfileImageURL = currentUser.photoURL
+                } else {
+                    let userQuery = usersReference.child(channel!.ownerId).queryOrderedByKey()
+                    userQuery.observe(.value) { snapshot in
+                        if let userContent = snapshot.value as? [String: Any] {
+                            if let userName = userContent["userName"] as? String {
+                                destination.ownerDisplayName = userName
+                            }
+                            if let imageUrlString = userContent["profileImageURL"] as? String {
+                                if let imageUrl = URL(string: imageUrlString) {
+                                    destination.ownerProfileImageURL = imageUrl
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

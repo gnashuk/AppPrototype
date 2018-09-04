@@ -8,7 +8,7 @@
 
 import FirebaseDatabase
 
-struct Channel {
+class Channel {
     var id: String
     var title: String
     var ownerId: String

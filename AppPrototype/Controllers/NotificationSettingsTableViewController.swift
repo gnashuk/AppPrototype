@@ -14,6 +14,7 @@ class NotificationSettingsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = LocalizedStrings.NavigationBarItemTitles.NotificationSettings
         invitationSwitch.isOn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.ChannelInvitations)
         quizSwitch.isOn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.QuizPosted)
     }

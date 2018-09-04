@@ -41,7 +41,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     private var mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
     
     deinit {
-        print("LoginViewController deinit")
         if let handle = usersHandle {
             usersReference.removeObserver(withHandle: handle)
         }

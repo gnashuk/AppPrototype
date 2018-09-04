@@ -78,7 +78,7 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.prefersLargeTitles = true
         timerPicker.delegate = self
         timerPicker.dataSource = self
@@ -134,6 +134,7 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
                 destination.quiz = quiz
                 destination.channel = channel
                 destination.backDelegate = self
+                destination.title = quiz?.title
             }
         }
     }

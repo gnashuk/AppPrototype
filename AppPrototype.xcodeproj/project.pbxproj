@@ -15,6 +15,7 @@
 		7C3F480620B1E2D400416A91 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3F480520B1E2D400416A91 /* User.swift */; };
 		7C46203C20FD24870011307A /* LocalizedStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C46203B20FD24870011307A /* LocalizedStrings.swift */; };
 		7C46203D20FE7B320011307A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C46203F20FE7B320011307A /* Localizable.strings */; };
+		7C4B62E32136E8560096F905 /* ChannelDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4B62E22136E8560096F905 /* ChannelDetailsTableViewController.swift */; };
 		7C4CBCAF20F271E000B43B39 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4CBCAE20F271E000B43B39 /* SettingsTableViewController.swift */; };
 		7C635FA920E03F3400E4E0F9 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C635FA820E03F3400E4E0F9 /* NotificationsTableViewController.swift */; };
 		7C72072A20D700A60091D6E6 /* CollapsibleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C72072920D700A60091D6E6 /* CollapsibleTableViewHeader.xib */; };
@@ -97,6 +98,7 @@
 		7C46204720FE7D2B0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		7C46204820FE7D2D0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		7C46204920FE7D2E0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7C4B62E22136E8560096F905 /* ChannelDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelDetailsTableViewController.swift; sourceTree = "<group>"; };
 		7C4CBCAE20F271E000B43B39 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		7C635FA820E03F3400E4E0F9 /* NotificationsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsTableViewController.swift; sourceTree = "<group>"; };
 		7C72072920D700A60091D6E6 /* CollapsibleTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollapsibleTableViewHeader.xib; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				7CC9E6F620FAACE500F9E94E /* UserQuizesTableViewController.swift */,
 				7CCB254F210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift */,
 				7CCB255121021F1B004DDAA4 /* FileBrowserViewController.swift */,
+				7C4B62E22136E8560096F905 /* ChannelDetailsTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -649,6 +652,7 @@
 				7CB636BB20D6CA9400583578 /* QuestionTitleTableViewCell.swift in Sources */,
 				7CCB255221021F1B004DDAA4 /* FileBrowserViewController.swift in Sources */,
 				7C91C70A20E9050700EEA7A7 /* UserImageCollectionViewCell.swift in Sources */,
+				7C4B62E32136E8560096F905 /* ChannelDetailsTableViewController.swift in Sources */,
 				7CA224A020B09CCB00052F74 /* UserChannelsTableViewController.swift in Sources */,
 				7C9B7A6A20E42039000BD723 /* QuizAnswerTableViewCell.swift in Sources */,
 				7C46203C20FD24870011307A /* LocalizedStrings.swift in Sources */,

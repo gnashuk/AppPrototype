@@ -42,6 +42,7 @@ struct LocalizedStrings {
         static let DownloadFile = NSLocalizedString("Download File", comment: "Download remote file")
         static let AccountDeletion = NSLocalizedString("Account Deletion", comment: "Removal of user account.")
         static let ConfirmRemoval = NSLocalizedString("Confirm Removal", comment: "Approve removal.")
+        static let ConfirmChange = NSLocalizedString("Confirm Change", comment: "Approve change.")
     }
     
     struct AlertMessages {
@@ -57,21 +58,22 @@ struct LocalizedStrings {
         static let DuplicateQuestions = NSLocalizedString("Quiz contains duplicated question titles.", comment: "Quiz contains duplicated question titles.")
         static let MissingAnswers = NSLocalizedString("Some questions don't have any answers.", comment: "Some questions don't have any answers.")
         static let MissingCorrectAnswers = NSLocalizedString("Some questions don't have any answers marked as correct.", comment: "Some questions don't have any answers marked as correct.")
-        static let ConfirmSubscription = NSLocalizedString("Do you want to join the channel %s?", comment: "Do you want to join the channel?")
+        static let ConfirmSubscription = NSLocalizedString("Do you want to join the channel %@?", comment: "Do you want to join the channel?")
         static let NonUniqueChannelTitle = NSLocalizedString("Channel with such title already exists.", comment: "Channel with such title already exists.")
         static let EmptyChannelTitle = NSLocalizedString("Please provide a channel title.", comment: "Please provide a channel title.")
-        static let BeginQuiz = NSLocalizedString("Do you want to start quiz %s now?", comment: "Do you want to start quiz now?")
+        static let BeginQuiz = NSLocalizedString("Do you want to start quiz %@ now?", comment: "Do you want to start quiz now?")
         static let ClearAll = NSLocalizedString("Are you sure you want to delete all notifications?", comment: "Are you sure you want to delete all notifications?")
         static let FinishQuiz = NSLocalizedString("Are you sure you want to complete the quiz?", comment: "Are you sure you want to complete the quiz?")
         static let RemoveProfileImage = NSLocalizedString("Profile image was succesfully deleted.", comment: "Profile image was succesfully deleted.")
-        static let NameChangeSaved = NSLocalizedString("User display name was successfuly changed to %s.", comment: "User display name was successfuly changed to a new one.")
+        static let NameChangeSaved = NSLocalizedString("User display name was successfuly changed to %@.", comment: "User display name was successfuly changed to a new one.")
         static let ImageChangeSaved = NSLocalizedString("User profile image was successfuly changed.", comment: "User profile image was successfuly changed.")
         static let EmptyNameField = NSLocalizedString("User name field can't be empty.", comment: "User name field can't be empty.")
         static let DuplicateAnswer = NSLocalizedString("The answer repeats an existing.", comment: "The answer repeats an existing.")
         static let QuizOver = NSLocalizedString("Time is up. Your current progress will be submitted automatically.", comment: "Time is up. Your current progress will be submitted automatically.")
-        static let DownloadFile = NSLocalizedString("Do you want to download file %s?", comment: "Do you want to download file?")
+        static let DownloadFile = NSLocalizedString("Do you want to download file %@?", comment: "Do you want to download file?")
         static let AccountDeletion = NSLocalizedString("Do you want to delete this user account?", comment: "Do you want to delete this user account?")
         static let ConfirmRemoval = NSLocalizedString("Are you sure you want to permanently remove user account?", comment: "Are you sure you want to permanently remove user account?")
+        static let ConfirmChange = NSLocalizedString("Are you sure you want to save changes?", comment: "Are you sure you want to save changes?")
     }
     
     struct AlertActions {
@@ -92,6 +94,7 @@ struct LocalizedStrings {
     
     struct NavigationBarItemTitles {
         static let Back = NSLocalizedString("Back", comment: "Back; return")
+        static let NotificationSettings = NSLocalizedString("Notification Settrings", comment: "Settings for notifications on current device.")
     }
     
     struct TabBarItemTitles {

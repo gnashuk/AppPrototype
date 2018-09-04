@@ -18,7 +18,6 @@ class UserChannelsTableViewController: UITableViewController {
             profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
             profileImageView.layer.masksToBounds = true
             self.navigationItem.titleView = profileImageView
-//            fetchProfileImage()
         }
     }
     
@@ -101,7 +100,7 @@ class UserChannelsTableViewController: UITableViewController {
     
     private func observeChannels() -> DatabaseHandle {
         return allChannelsReference.observe(.childAdded) { [weak self] snapshot in
-            if let channelContent = snapshot.value as? [String: Any], var channel = Channel.createForm(dataSnapshot: snapshot) {
+            if let channelContent = snapshot.value as? [String: Any], let channel = Channel.createForm(dataSnapshot: snapshot) {
                 if let userIds = channelContent["userIds"] as? [String] {
                     channel.userIds = userIds
                 }
@@ -125,7 +124,7 @@ class UserChannelsTableViewController: UITableViewController {
     
     private func observeProfileImageChange() -> DatabaseHandle {
         return usersReference.child(userId).child("profileImageURL").observe(.value) { [weak self] snapshot in
-//            self?.fetchProfileImage()
+            self?.fetchProfileImage()
         }
     }
     

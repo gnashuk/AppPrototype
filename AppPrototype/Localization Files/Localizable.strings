@@ -1,0 +1,105 @@
+/* 
+  Localizable.strings
+  AppPrototype
+
+  Created by Oleg Gnashuk on 7/16/18.
+  Copyright © 2018 Oleg Gnashuk. All rights reserved.
+*/
+
+// Alert Titles
+"Working" = "Working";
+"Empty Login Field" = "Empty Login Field";
+"Account Password Reset" = "Account Password Reset";
+"Error" = "Error";
+"Message Sent" = "Message Sent";
+"Login Failed" = "Login Failed";
+"Logout Failed" = "Logout Failed";
+"Duplicate Title" = "Duplicate Title";
+"Insufficient Question Count" = "Insufficient Question Count";
+"Save Progress" = "Save Progress";
+"Finish Creation" = "Finish Creation";
+"Missing Titles" = "Missing Titles";
+"Duplicate Questions" = "Duplicate Questions";
+"Missing Answers" = "Missing Answers";
+"Missing Corrert Answers" = "Missing Corrert Answers";
+"Confirm Subscription" = "Confirm Subscription";
+"Non-unique Channel Title" = "Non-unique Channel Title";
+"Empty Channel Title" = "Empty Channel Title";
+"Begin Quiz" = "Begin Quiz";
+"Clear All" = "Clear All";
+"Finish Quiz" = "Finish Quiz";
+"Remove Profile Image" = "Remove Profile Image";
+"Error Occured" = "Error Occured";
+"Change Saved" = "Change Saved";
+"Empty Name Field" = "Empty Name Field";
+"Log Out Error" = "Log Out Error";
+"Duplicate Answer" = "Duplicate Answer";
+
+// Alert Messages
+"Please wait..." = "Please wait...";
+"Email and password fields can't be empty." = "Email and password fields can't be empty.";
+"Enter the email associated with account." = "Enter the email associated with account.";
+"Password reset link was sent to the specified email." = "Password reset link was sent to the specified email.";
+"Quiz with selected title already exists in user's repository." = "Quiz with selected title already exists in user's repository.";
+"To create a quiz add at least one question." = "To create a quiz add at least one question.";
+"Do you want to keep the draft?" = "Do you want to keep the draft?";
+"Choose the action." = "Choose the action.";
+"Please provide all question titles." = "Please provide all question titles.";
+"Quiz contains duplicated question titles." = "Quiz contains duplicated question titles.";
+"Some questions don't have any answers." = "Some questions don't have any answers.";
+"Some questions don't have any answers marked as correct." = "Some questions don't have any answers marked as correct.";
+"Do you want to join the channel %s?" = "Do you want to join the channel %s?";
+"Channel with such title already exists." = "Channel with such title already exists.";
+"Please provide a channel title." = "Please provide a channel title.";
+"Do you want to start quiz %s now?" = "Do you want to start quiz %s now?";
+"Are you sure you want to delete all notifications?" = "Are you sure you want to delete all notifications?";
+"Are you sure you want to complete the quiz?" = "Are you sure you want to complete the quiz?";
+"Profile image was succesfully deleted." = "Profile image was succesfully deleted.";
+"User display name was successfuly changed to %s." = "User display name was successfuly changed to %s.";
+"User profile image was successfuly changed." = "User profile image was successfuly changed.";
+"User name field can't be empty." = "User name field can't be empty.";
+"The answer repeats an existing." = "The answer repeats an existing.";
+
+// Alert Actions
+"OK" = "OK";
+"Hide" = "Hide";
+"Cancel" = "Cancel";
+"Keep" = "Keep";
+"Discard" = "Discard";
+"Save" = "Save";
+"Save and Post" = "Save and Post";
+"Confirm" = "Confirm";
+"Camera" = "Camera";
+"Photo Library" = "Photo Library";
+"View Image" = "View Image";
+"Remove Image" = "Remove Image";
+
+// Navigation Bar Item Titles
+"Back" = "Back"
+
+// Tab Bar Item Titles
+"Chats" = "Chats";
+"Alerts" = "Alerts";
+"Settings" = "Settings";
+
+// Label Texts
+"Manage Channel" = "Manage Channel";
+"Create Quiz" = "Create Quiz";
+"Show Channel Info" = "Show Channel Info";
+"Question Count: %d" = "Question Count: %d";
+"Question #%d" = "Question #%d";
+"Channel Invitation" = "Channel Invitation";
+"Quiz Available" = "Quiz Available";
+"Responses count: %d" = "Responses count: %d";
+
+// Picker View Data Items
+"1 minute" = "1 minute";
+"%d minutes" = "%d minutes";
+"none" = "none";
+
+// Table View Row Actions
+"Edit" = "Edit";
+"Delete" = "Delete";
+
+// Search Bar Text
+"Search Channels" = "Search Channels";

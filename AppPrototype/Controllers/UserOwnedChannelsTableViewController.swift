@@ -52,7 +52,7 @@ class UserOwnedChannelsTableViewController: UITableViewController {
         let userOwnedChannelsQuery = channelsReference.queryOrdered(byChild: "ownerId").queryEqual(toValue: user.uid)
         
         return userOwnedChannelsQuery.observe(.childAdded) { [weak self] snapshot in
-            if let channelContent = snapshot.value as? [String: Any], var channel = Channel.createForm(dataSnapshot: snapshot) {
+            if let channelContent = snapshot.value as? [String: Any], let channel = Channel.createForm(dataSnapshot: snapshot) {
                 if let userIds = channelContent["userIds"] as? [String] {
                     channel.userIds = userIds
                 }

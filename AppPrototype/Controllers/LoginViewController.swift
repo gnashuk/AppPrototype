@@ -185,6 +185,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
     }
     
     private func presentChannelsViewControler(userDisplayName: String?) {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.registerForPushNotifications()
+        }
         if let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController,
            let userChannelsTVC = mainStoryboard.instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
            let channelsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,

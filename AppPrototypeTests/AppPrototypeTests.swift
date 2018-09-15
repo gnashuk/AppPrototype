@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import AppPrototype
+//@testable import AppPrototype
 
 class AppPrototypeTests: XCTestCase {
     

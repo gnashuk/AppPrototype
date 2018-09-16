@@ -148,19 +148,11 @@ class NotificationsTableViewController: UITableViewController {
         return notificationsReference.observe(.childAdded) { snapshot in
             if let notificationContent = snapshot.value as? [String: String] {
                 if let dateString = notificationContent["date"], let date = dateString.convertToShortDate() {
-                    var notificationsOnThisDate: (date: Date, notifications: [Notification]) = (date, [])
-                    if let existingPair = self.notificationsByDates.filter({ self.datesEqualWithDayGranularity(date1: date, date2: $0.date) }).first {
-                        notificationsOnThisDate = existingPair
-                    }
-                    if let invitationNotification = ChannelInvitationNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.ChannelInvitations) {
-                        notificationsOnThisDate.notifications.insert(invitationNotification, at: 0)
-                    } else if let quizNotification = QuizNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.QuizPosted) {
-                        notificationsOnThisDate.notifications.insert(quizNotification, at: 0)
-                    }
                     
-                    if self.notificationsByDates.filter({ self.datesEqualWithDayGranularity(date1: date, date2: $0.date) }).isEmpty {
-                        self.notificationsByDates.append(notificationsOnThisDate)
-                        self.notificationsByDates.sort { $0.date > $1.date }
+                    if let invitationNotification = ChannelInvitationNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.ChannelInvitations) {
+                        self.sort(invitationNotification, with: date)
+                    } else if let quizNotification = QuizNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.QuizPosted) {
+                        self.sort(quizNotification, with: date)
                     }
                     self.tableView.reloadData()
                 }
@@ -187,6 +179,18 @@ class NotificationsTableViewController: UITableViewController {
         })
         alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
         present(alert, animated: true)
+    }
+    
+    private func sort(_ notification: Notification, with date: Date) {
+        var notificationsOnThisDate: (date: Date, notifications: [Notification]) = (date, [])
+        if let existingPair = self.notificationsByDates.filter({ self.datesEqualWithDayGranularity(date1: date, date2: $0.date) }).first {
+            notificationsOnThisDate = existingPair
+        }
+        notificationsOnThisDate.notifications.insert(notification, at: 0)
+        if self.notificationsByDates.filter({ self.datesEqualWithDayGranularity(date1: date, date2: $0.date) }).isEmpty {
+            self.notificationsByDates.append(notificationsOnThisDate)
+            self.notificationsByDates.sort { $0.date > $1.date }
+        }
     }
     
     private func datesEqualWithDayGranularity(date1: Date, date2: Date) -> Bool {

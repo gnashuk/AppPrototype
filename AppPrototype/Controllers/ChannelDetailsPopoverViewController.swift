@@ -10,6 +10,10 @@ import UIKit
 import FirebaseDatabase
 import FirebaseStorage
 
+/*
+ * 04/25/2020: DEPRECATED
+ * Functionality provided by JoinChannelTableViewController
+ */
 class ChannelDetailsPopoverViewController: UIViewController {
     
     @IBOutlet weak var topLevelView: UIStackView!
@@ -87,15 +91,4 @@ class ChannelDetailsPopoverViewController: UIViewController {
         let image = GeneralUtils.createLabeledImage(width: 40, height: 40, text: initials, fontSize: 24, labelBackgroundColor: .lightGray, labelTextColor: .white)
         self.profileImageView.image = image
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

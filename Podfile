@@ -14,6 +14,7 @@ target 'AppPrototype' do
     pod 'GoogleAPIClientForREST/Drive', '~> 1.2.1'
     pod 'GoogleSignIn', '~> 4.1.1'
     pod 'Alamofire', '~> 4.7'
+    pod 'UIEmptyState', '~> 4.0.1'
 end
 
 post_install do |installer|

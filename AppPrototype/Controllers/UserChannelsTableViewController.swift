@@ -10,8 +10,9 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import UIEmptyState
 
-class UserChannelsTableViewController: UITableViewController {
+class UserChannelsTableViewController: UIEmptyStateTableViewController {
     
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
@@ -82,13 +83,51 @@ class UserChannelsTableViewController: UITableViewController {
             cell.detailTextLabel?.text = channelOwner.userName
         }
         
-
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = userChannels[indexPath.row]
         performSegue(withIdentifier: "Show Chat", sender: channel)
+    }
+    
+    override var emptyStateTitle: NSAttributedString {
+        let headingAttributes = [NSAttributedStringKey.foregroundColor: UIColor.gray,NSAttributedStringKey.font: UIFont.systemFont(ofSize: 22)]
+        let descriptionAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black,
+                                     NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18),
+                                     NSAttributedStringKey.baselineOffset: -5] as [NSAttributedStringKey : Any]
+
+        let heading = NSMutableAttributedString(string: "You have no subscriptions\n", attributes: headingAttributes)
+        let description = NSMutableAttributedString(string: "Press \"＋\" to join or create a channel", attributes: descriptionAttributes)
+
+        let combination = NSMutableAttributedString()
+
+        combination.append(heading)
+        combination.append(description)
+        
+        return combination
+    }
+    
+    override var emptyStateButtonTitle: NSAttributedString? {
+        let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white,
+                     NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]
+        return NSAttributedString(string: "Join Channel", attributes: attrs)
+    }
+    
+    override var emptyStateButtonSize: CGSize? {
+        return CGSize(width: 120, height: 40)
+    }
+    
+    override func emptyStateViewWillShow(view: UIView) {
+        guard let emptyView = view as? UIEmptyStateView else { return }
+        emptyView.button.layer.cornerRadius = 5
+        emptyView.button.layer.borderWidth = 1
+        emptyView.button.layer.borderColor = UIColor.appThemeColor.cgColor
+        emptyView.button.layer.backgroundColor = UIColor.appThemeColor.cgColor
+    }
+    
+    override func emptyStatebuttonWasTapped(button: UIButton) {
+        performSegue(withIdentifier: "Join Group", sender: nil)
     }
     
     @IBAction func creationDone(bySegue: UIStoryboardSegue) {
@@ -106,6 +145,7 @@ class UserChannelsTableViewController: UITableViewController {
                 }
                 self?.allChannels.append(channel)
                 self?.tableView.reloadData()
+                self?.reloadEmptyState()
             }
         }
     }
@@ -132,7 +172,7 @@ class UserChannelsTableViewController: UITableViewController {
         return usersReference.child(userId).child("channelIds").observe(.childAdded) { [weak self] snapshot in
             if let channelIds = snapshot.value as? String {
                 self?.userChannelIds.append(channelIds)
-                self?.tableView.reloadData()
+                self?.reloadDataWithEmptyState()
             }
         }
     }

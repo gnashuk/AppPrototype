@@ -62,6 +62,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = GeneralUtils.navBarAppearance
+            self.navigationController?.navigationBar.standardAppearance = navBarAppearance
+            self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        }
         usersHandle = observeUsers()
     }
     
@@ -121,7 +126,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate, U
                             self?.present(alert, animated: true)
                         } else {
                             let user = Auth.auth().currentUser!
-                            self?.usersReference.child("userName").setValue(user.displayName)
+                            self?.usersReference.child(user.uid).child("userName").setValue(user.displayName)
                             self?.firebaseUser = user
                             let alert = Alerts.createSingleActionAlert(title: LocalizedStrings.AlertTitles.ChangeSaved, message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.NameChangeSaved, user.displayName!))
                             self?.present(alert, animated: true)

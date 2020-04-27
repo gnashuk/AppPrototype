@@ -31,9 +31,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
         authUI?.delegate = self
         let providers: [FUIAuthProvider] = [
             FUIGoogleAuth(),
-            FUIFacebookAuth(),
-            FUITwitterAuth()
-            ]
+            FUIFacebookAuth()
+        ]
         authUI?.providers = providers
         return authUI
     }()
@@ -189,25 +188,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FUIAuthDelegat
             appDelegate.registerForPushNotifications()
         }
         if let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "Tab VC") as? UITabBarController,
-           let userChannelsTVC = mainStoryboard.instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
-           let channelsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
-           let notificationsVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
-           let notificationsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController,
-           let filesVC = mainStoryboard.instantiateViewController(withIdentifier: "Files VC") as? FileBrowserViewController,
-           let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings VC") as? SettingsTableViewController,
-           let settingsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings Navigation VC") as? UINavigationController {
-                userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
-                notificationsVC.tabBarItem = UITabBarItem(title: "Alerts", image: UIImage(named: "bell"), tag: 1)
-                filesVC.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "file"), tag: 2)
-                settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named: "settings"), tag: 3)
-                tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC, filesVC, settingsNavigationVC], animated: true)
+            let userChannelsTVC = mainStoryboard.instantiateViewController(withIdentifier: "User Channels VC") as? UserChannelsTableViewController,
+            let channelsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Channels Navigation VC") as? UINavigationController,
+            let notificationsVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications VC") as? NotificationsTableViewController,
+            let notificationsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Notifications Navigation VC") as? UINavigationController,
+            let filesVC = mainStoryboard.instantiateViewController(withIdentifier: "Files VC") as? FileBrowserViewController,
+            let settingsVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings VC") as? SettingsTableViewController,
+            let settingsNavigationVC = mainStoryboard.instantiateViewController(withIdentifier: "Settings Navigation VC") as? UINavigationController {
+            userChannelsTVC.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 0)
+            notificationsVC.tabBarItem = UITabBarItem(title: "Alerts", image: UIImage(named: "bell"), tag: 1)
+            filesVC.tabBarItem = UITabBarItem(title: "Files", image: UIImage(named: "file"), tag: 2)
+            settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(named: "settings"), tag: 3)
+            tabBarController.setViewControllers([channelsNavigationVC, notificationsNavigationVC, filesVC, settingsNavigationVC], animated: true)
             
-                userChannelsTVC.senderName = emailTextField?.text
-                userChannelsTVC.senderName = userDisplayName
-                channelsNavigationVC.viewControllers = [userChannelsTVC]
-                notificationsNavigationVC.viewControllers = [notificationsVC]
-                settingsNavigationVC.viewControllers = [settingsVC]
-                present(tabBarController, animated: true, completion: nil)
+            userChannelsTVC.senderName = emailTextField?.text
+            userChannelsTVC.senderName = userDisplayName
+            channelsNavigationVC.viewControllers = [userChannelsTVC]
+            notificationsNavigationVC.viewControllers = [notificationsVC]
+            settingsNavigationVC.viewControllers = [settingsVC]
+            
+            tabBarController.modalPresentationStyle = .fullScreen
+            present(tabBarController, animated: true, completion: nil)
         }
     }
     

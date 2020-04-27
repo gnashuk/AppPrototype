@@ -1,0 +1,231 @@
+
+/* Class = "UITextView"; text = "Description (Optional)"; ObjectID = "0Y9-1A-o8A"; */
+"0Y9-1A-o8A.text" = "Description (Optional)";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "2ha-Od-fvD"; */
+"2ha-Od-fvD.text" = "Label";
+
+/* Class = "UITableViewSection"; headerTitle = "In-App Notifications"; ObjectID = "2zl-wd-huL"; */
+"2zl-wd-huL.headerTitle" = "In-App Notifications";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3ob-Z0-JwJ"; */
+"3ob-Z0-JwJ.text" = "Label";
+
+/* Class = "UITextField"; placeholder = "Username"; ObjectID = "4xT-lW-K04"; */
+"4xT-lW-K04.placeholder" = "Username";
+
+/* Class = "UILabel"; text = "Receive notifications when a new quiz is posted in one of the user's channels"; ObjectID = "5cg-4G-rtX"; */
+"5cg-4G-rtX.text" = "Receive notifications when a new quiz is posted in one of the user's channels";
+
+/* Class = "UINavigationItem"; title = "Invite Users"; ObjectID = "6Vd-ZW-Yg7"; */
+"6Vd-ZW-Yg7.title" = "Invite Users";
+
+/* Class = "UILabel"; text = "Choose the definition of Information Theory"; ObjectID = "8VA-Bq-YWv"; */
+"8VA-Bq-YWv.text" = "Choose the definition of Information Theory";
+
+/* Class = "UILabel"; text = "User Owned Channels"; ObjectID = "8hB-WU-cVR"; */
+"8hB-WU-cVR.text" = "User Owned Channels";
+
+/* Class = "UITableViewSection"; headerTitle = "Properties"; ObjectID = "8wk-Pg-2pf"; */
+"8wk-Pg-2pf.headerTitle" = "Properties";
+
+/* Class = "UILabel"; text = "Username"; ObjectID = "9gB-Bb-1bt"; */
+"9gB-Bb-1bt.text" = "Username";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "9ik-Q8-T5S"; */
+"9ik-Q8-T5S.text" = "Label";
+
+/* Class = "UILabel"; text = "New Quizes"; ObjectID = "9l8-PQ-qh4"; */
+"9l8-PQ-qh4.text" = "New Quizes";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "ADa-rV-p2V"; */
+"ADa-rV-p2V.text" = "Date";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "Anr-8O-u1k"; */
+"Anr-8O-u1k.text" = "Subtitle";
+
+/* Class = "UIBarButtonItem"; title = "Cancel"; ObjectID = "B4f-De-k8L"; */
+"B4f-De-k8L.title" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Log in"; ObjectID = "BHA-HE-ctw"; */
+"BHA-HE-ctw.normalTitle" = "Log in";
+
+/* Class = "UILabel"; text = "User Quizes"; ObjectID = "CNv-bp-UbB"; */
+"CNv-bp-UbB.text" = "User Quizes";
+
+/* Class = "UITabBarItem"; title = "Chats"; ObjectID = "D9S-iy-mSO"; */
+"D9S-iy-mSO.title" = "Chats";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Dg1-SS-IUy"; */
+"Dg1-SS-IUy.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Ewn-QA-ajc"; */
+"Ewn-QA-ajc.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "FD2-1Y-O1G"; */
+"FD2-1Y-O1G.text" = "Title";
+
+/* Class = "UIButton"; normalTitle = "Invite Users"; ObjectID = "H32-kj-O35"; */
+"H32-kj-O35.normalTitle" = "Invite Users";
+
+/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "Iy5-0m-A8n"; */
+"Iy5-0m-A8n.normalTitle" = "Next";
+
+/* Class = "UILabel"; text = "Make private"; ObjectID = "J6T-8N-LKG"; */
+"J6T-8N-LKG.text" = "Make private";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "Jly-1a-udd"; */
+"Jly-1a-udd.placeholder" = "Password";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "KKm-Tb-lmW"; */
+"KKm-Tb-lmW.title" = "Back";
+
+/* Class = "UILabel"; text = "Owner"; ObjectID = "Mbo-X3-LIW"; */
+"Mbo-X3-LIW.text" = "Owner";
+
+/* Class = "UILabel"; text = "Notifications"; ObjectID = "Mcx-Cq-hZS"; */
+"Mcx-Cq-hZS.text" = "Notifications";
+
+/* Class = "UITextField"; placeholder = "TItle"; ObjectID = "MmE-io-jp0"; */
+"MmE-io-jp0.placeholder" = "TItle";
+
+/* Class = "UIBarButtonItem"; title = "Create"; ObjectID = "NEF-tl-yHi"; */
+"NEF-tl-yHi.title" = "Create";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "NH8-4c-lp1"; */
+"NH8-4c-lp1.text" = "Title";
+
+/* Class = "UITableViewSection"; headerTitle = "Completion Timer"; ObjectID = "OpT-Rt-1b2"; */
+"OpT-Rt-1b2.headerTitle" = "Completion Timer";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Pzs-0M-kOE"; */
+"Pzs-0M-kOE.text" = "Label";
+
+/* Class = "UILabel"; text = "15/20"; ObjectID = "Se4-CN-ODj"; */
+"Se4-CN-ODj.text" = "15/20";
+
+/* Class = "UINavigationItem"; title = "Create Channel"; ObjectID = "T8o-Xq-Rcy"; */
+"T8o-Xq-Rcy.title" = "Create Channel";
+
+/* Class = "UISegmentedControl"; T9o-tb-x0T.segmentTitles[0] = "SIngle Choice"; ObjectID = "T9o-tb-x0T"; */
+"T9o-tb-x0T.segmentTitles[0]" = "SIngle Choice";
+
+/* Class = "UISegmentedControl"; T9o-tb-x0T.segmentTitles[1] = "Multiple Choice"; ObjectID = "T9o-tb-x0T"; */
+"T9o-tb-x0T.segmentTitles[1]" = "Multiple Choice";
+
+/* Class = "UILabel"; text = "Question Count: 0"; ObjectID = "TGw-MG-rEB"; */
+"TGw-MG-rEB.text" = "Question Count: 0";
+
+/* Class = "UIBarButtonItem"; title = "Save"; ObjectID = "TIT-FQ-0x6"; */
+"TIT-FQ-0x6.title" = "Save";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "VV2-Cu-XcO"; */
+"VV2-Cu-XcO.text" = "Subtitle";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "WgO-SO-cvb"; */
+"WgO-SO-cvb.text" = "Title";
+
+/* Class = "UINavigationItem"; title = "Chats"; ObjectID = "XDd-dl-ewy"; */
+"XDd-dl-ewy.title" = "Chats";
+
+/* Class = "UIBarButtonItem"; title = "Submit"; ObjectID = "YJg-7q-ZIv"; */
+"YJg-7q-ZIv.title" = "Submit";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "YQj-qS-eee"; */
+"YQj-qS-eee.placeholder" = "Email";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Z8P-mn-coq"; */
+"Z8P-mn-coq.text" = "Title";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "ZH1-WL-JAa"; */
+"ZH1-WL-JAa.text" = "Subtitle";
+
+/* Class = "UILabel"; text = "Channel Invitations"; ObjectID = "a5D-Um-h6c"; */
+"a5D-Um-h6c.text" = "Channel Invitations";
+
+/* Class = "UITableViewSection"; headerTitle = "Account"; ObjectID = "csT-6U-oVO"; */
+"csT-6U-oVO.headerTitle" = "Account";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "d6h-Nw-0bc"; */
+"d6h-Nw-0bc.text" = "Title";
+
+/* Class = "UITabBarItem"; title = "Alerts"; ObjectID = "dFL-gL-O23"; */
+"dFL-gL-O23.title" = "Alerts";
+
+/* Class = "UINavigationItem"; title = "Join Group"; ObjectID = "e5U-2G-Pa0"; */
+"e5U-2G-Pa0.title" = "Join Group";
+
+/* Class = "UITableViewSection"; headerTitle = "Title"; ObjectID = "eN8-Xr-rtd"; */
+"eN8-Xr-rtd.headerTitle" = "Title";
+
+/* Class = "UITableViewSection"; headerTitle = "Channel owner"; ObjectID = "eOR-gM-9yk"; */
+"eOR-gM-9yk.headerTitle" = "Channel owner";
+
+/* Class = "UITableViewSection"; headerTitle = "Profile"; ObjectID = "eqp-I8-qL6"; */
+"eqp-I8-qL6.headerTitle" = "Profile";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "ft3-dr-IEs"; */
+"ft3-dr-IEs.text" = "Label";
+
+/* Class = "UILabel"; text = "Sign Out"; ObjectID = "gEM-lb-2eT"; */
+"gEM-lb-2eT.text" = "Sign Out";
+
+/* Class = "UITabBarItem"; title = "Settings"; ObjectID = "gFk-jo-zVV"; */
+"gFk-jo-zVV.title" = "Settings";
+
+/* Class = "UITableViewSection"; headerTitle = "Description"; ObjectID = "gPk-Rq-7Oe"; */
+"gPk-Rq-7Oe.headerTitle" = "Description";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "gVL-jA-pWV"; */
+"gVL-jA-pWV.text" = "Subtitle";
+
+/* Class = "UIButton"; normalTitle = "Forgot password?"; ObjectID = "h5m-uK-9eB"; */
+"h5m-uK-9eB.normalTitle" = "Forgot password?";
+
+/* Class = "UITextField"; placeholder = "Quiz Title"; ObjectID = "ifW-iC-zD6"; */
+"ifW-iC-zD6.placeholder" = "Quiz Title";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "kA8-UO-jXS"; */
+"kA8-UO-jXS.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "mVE-1B-GiS"; */
+"mVE-1B-GiS.text" = "Title";
+
+/* Class = "UILabel"; text = "Delete Account"; ObjectID = "muz-Or-XMY"; */
+"muz-Or-XMY.text" = "Delete Account";
+
+/* Class = "UILabel"; text = "Receive notifications when user gets invitation to join a channel"; ObjectID = "p1k-bs-bY8"; */
+"p1k-bs-bY8.text" = "Receive notifications when user gets invitation to join a channel";
+
+/* Class = "UILabel"; text = "00:01:00"; ObjectID = "q22-k7-ZJz"; */
+"q22-k7-ZJz.text" = "00:01:00";
+
+/* Class = "UITabBarItem"; title = "Files"; ObjectID = "q8K-eP-zXh"; */
+"q8K-eP-zXh.title" = "Files";
+
+/* Class = "UINavigationItem"; title = "Notifications"; ObjectID = "sEx-A1-8Yk"; */
+"sEx-A1-8Yk.title" = "Notifications";
+
+/* Class = "UITextView"; text = "No description"; ObjectID = "slT-CE-Oy4"; */
+"slT-CE-Oy4.text" = "No description";
+
+/* Class = "UIBarButtonItem"; title = "Next"; ObjectID = "ts3-SE-7ig"; */
+"ts3-SE-7ig.title" = "Next";
+
+/* Class = "UIBarButtonItem"; title = "Done"; ObjectID = "u7Y-Ke-6bK"; */
+"u7Y-Ke-6bK.title" = "Done";
+
+/* Class = "UIButton"; normalTitle = "Sign up"; ObjectID = "uTa-BM-hKZ"; */
+"uTa-BM-hKZ.normalTitle" = "Sign up";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "wgh-nO-pzZ"; */
+"wgh-nO-pzZ.title" = "Item";
+
+/* Class = "UINavigationItem"; title = "New Quiz"; ObjectID = "x9H-OG-gBa"; */
+"x9H-OG-gBa.title" = "New Quiz";
+
+/* Class = "UINavigationItem"; title = "Settings"; ObjectID = "yY1-Am-iid"; */
+"yY1-Am-iid.title" = "Settings";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "zOw-gC-SWN"; */
+"zOw-gC-SWN.text" = "Detail";

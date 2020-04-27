@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class JoinChannelTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class JoinChannelTableViewController: UIEmptyStateTableViewController, UIPopoverPresentationControllerDelegate {
     
     var allChannels = [Channel]()
     var userChannelIds = [String]()
@@ -39,6 +39,11 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: UIColor.white]
         definesPresentationContext = true
         tabBarController?.tabBar.isHidden = true
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = GeneralUtils.navBarAppearance
+            self.navigationController?.navigationBar.standardAppearance = navBarAppearance
+            self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        }
     }
     
     @IBAction func cancelChannelCreation(bySegue: UIStoryboardSegue) {
@@ -59,12 +64,7 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Channel", for: indexPath)
         
-        let channel: Channel
-        if filteringChannels {
-            channel = filteredChannels[indexPath.row]
-        } else {
-            channel = availableChannels[indexPath.row]
-        }
+        let channel = findChannelInTableView(by: indexPath)
         cell.textLabel?.text = channel.title
         if let channelOwner = users.filter({ $0.userId == channel.ownerId }).first {
             cell.detailTextLabel?.text = channelOwner.userName
@@ -75,53 +75,12 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
-        let channel: Channel
-        if filteringChannels {
-            channel = filteredChannels[indexPath.row]
-        } else {
-            channel = availableChannels[indexPath.row]
-        }
-        let alert = UIAlertController(
-            title: LocalizedStrings.AlertTitles.ConfirmSubscription,
-            message: String.localizedStringWithFormat(LocalizedStrings.AlertMessages.ConfirmSubscription, channel.title),
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { [weak self] action in
-            self?.userChannelIds.append(channel.id)
-            self?.usersReference.child((self?.userId)!).child("channelIds").setValue(self?.userChannelIds)
-            
-            if let userId = self?.userId {
-                var userIds = channel.userIds ?? []
-                userIds.append(userId)
-                self?.channelsReference.child(channel.id).child("userIds").setValue(userIds)
-            }
-            self?.performSegue(withIdentifier: "Subscription Done", sender: nil)
-        })
-        alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Cancel, style: .cancel))
-        present(alert, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
+        let channel = findChannelInTableView(by: indexPath)
+        performSegue(withIdentifier: "Show Channel Info", sender: channel)
     }
     
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let channel: Channel
-        if filteringChannels {
-            channel = filteredChannels[indexPath.row]
-        } else {
-            channel = availableChannels[indexPath.row]
-        }
-        
-        if let channelDetailsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Channel Details VC") as? ChannelDetailsPopoverViewController {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                let accessoryButton = findDisclosureButton(in: cell)
-                channelDetailsVC.modalPresentationStyle = .popover
-                channelDetailsVC.popoverPresentationController?.delegate = self
-                channelDetailsVC.popoverPresentationController?.sourceView = accessoryButton
-                channelDetailsVC.popoverPresentationController?.sourceRect = accessoryButton!.frame
-                
-                channelDetailsVC.channel = channel
-                present(channelDetailsVC, animated: true)
-            }
-        }
+    override var emptyStateTitleString: String {
+        return "No available channels"
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -130,7 +89,7 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
     
     private func filterChannelsFor(_ searchText: String) {
         filteredChannels = availableChannels.filter({ $0.title.lowercased().contains(searchText.lowercased()) })
-        tableView.reloadData()
+        self.reloadDataWithEmptyState()
     }
     
     private var searchBarIsEmpty: Bool {
@@ -139,6 +98,13 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
     
     private var filteringChannels: Bool {
         return searchController.isActive && !searchBarIsEmpty
+    }
+    
+    private func findChannelInTableView(by indexPath: IndexPath) -> Channel {
+        return filteringChannels
+            ? filteredChannels[indexPath.row]
+            : availableChannels[indexPath.row]
+
     }
     
     private func findDisclosureButton(in view: UIView) -> UIButton? {
@@ -164,6 +130,11 @@ class JoinChannelTableViewController: UITableViewController, UIPopoverPresentati
             if let destination = segue.destination.contents as? CreateChannelViewController {
                 destination.channels = allChannels
             }
+        case "Show Channel Info":
+            if let destination = segue.destination.contents as? ChannelInfoTableViewController, let channel = sender as? Channel {
+                destination.channel = channel
+                destination.userChannelIds = userChannelIds
+            }
         default: break
         }
     }
@@ -176,6 +147,4 @@ extension JoinChannelTableViewController: UISearchResultsUpdating {
             filterChannelsFor(searchText)
         }
     }
-    
-    
 }

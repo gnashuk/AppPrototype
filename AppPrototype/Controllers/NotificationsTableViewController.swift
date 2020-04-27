@@ -10,7 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class NotificationsTableViewController: UITableViewController {
+class NotificationsTableViewController: UIEmptyStateTableViewController {
     
     var notificationsByDates = [(date: Date, notifications: [Notification])]()
     
@@ -30,6 +30,11 @@ class NotificationsTableViewController: UITableViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = GeneralUtils.navBarAppearance
+            self.navigationController?.navigationBar.standardAppearance = navBarAppearance
+            self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        }
         notificationsHandle = observeUserNotifications()
     }
 
@@ -135,6 +140,10 @@ class NotificationsTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override var emptyStateTitleString: String {
+        return "No notifications"
+    }
+    
     private func removeNotification(at indexPath: IndexPath) {
         if self.notificationsByDates[indexPath.section].notifications.count > 1 {
             self.notificationsByDates[indexPath.section].notifications.remove(at: indexPath.row)
@@ -154,7 +163,7 @@ class NotificationsTableViewController: UITableViewController {
                     } else if let quizNotification = QuizNotification.createFrom(dataSnapshot: snapshot), UserDefaults.standard.bool(forKey: UserDefaultsKeys.Settings.QuizPosted) {
                         self.sort(quizNotification, with: date)
                     }
-                    self.tableView.reloadData()
+                    self.reloadDataWithEmptyState()
                 }
             }
         }

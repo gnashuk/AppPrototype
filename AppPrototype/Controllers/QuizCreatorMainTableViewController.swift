@@ -80,6 +80,11 @@ class QuizCreatorMainTableViewController: UITableViewController, UIPickerViewDel
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        if #available(iOS 13.0, *) {
+            let navBarAppearance = GeneralUtils.navBarAppearance
+            self.navigationController?.navigationBar.standardAppearance = navBarAppearance
+            self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        }
         timerPicker.delegate = self
         timerPicker.dataSource = self
         quizTitleTextField.delegate = self

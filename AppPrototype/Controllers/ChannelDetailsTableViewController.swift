@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseAuth
 
-class ChannelDetailsTableViewController: UITableViewController {
+class ChannelDetailsTableViewController: UITableViewController, ChannelDetailsRightBarItemHandler {
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -34,6 +34,14 @@ class ChannelDetailsTableViewController: UITableViewController {
         super.viewDidLoad()
         titleTextField.text = channel?.title
         descriptionTextView.text = channel?.description
+        initializeBarItem()
+    }
+
+    @IBAction func didPressSave(_ sender: UIBarButtonItem) {
+        handleBarButtonPress()
+    }
+    
+    func initializeBarItem() {
         if channel!.ownerId != currentUser.uid {
             titleTextField.isUserInteractionEnabled = false
             descriptionTextView.isUserInteractionEnabled = false
@@ -42,8 +50,8 @@ class ChannelDetailsTableViewController: UITableViewController {
         userDisplayNameLabel.text = ownerDisplayName
         fetchProfileImage()
     }
-
-    @IBAction func didPressSave(_ sender: UIBarButtonItem) {
+    
+    func handleBarButtonPress() {
         if let titleText = titleTextField.text, !titleText.isEmpty {
             let alert = UIAlertController(title: LocalizedStrings.AlertTitles.ConfirmChange, message: LocalizedStrings.AlertMessages.ConfirmChange, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: LocalizedStrings.AlertActions.Confirm, style: .default) { action in
@@ -64,7 +72,7 @@ class ChannelDetailsTableViewController: UITableViewController {
         }
     }
 
-    private func fetchProfileImage() {
+    func fetchProfileImage() {
         if let url = ownerProfileImageURL {
             GeneralUtils.fetchImage(from: url) { image, error in
                 DispatchQueue.main.async {
@@ -87,4 +95,9 @@ class ChannelDetailsTableViewController: UITableViewController {
             self.userProfileImageView.image = image
         }
     }
+}
+
+protocol ChannelDetailsRightBarItemHandler {
+    func initializeBarItem()
+    func handleBarButtonPress()
 }

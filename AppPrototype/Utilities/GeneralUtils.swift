@@ -93,6 +93,18 @@ class GeneralUtils {
             attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: fontSize)]
         )
     }
+    
+    @available(iOS 13.0, *)
+    static var navBarAppearance: UINavigationBarAppearance {
+        get {
+            let navBarAppearance = UINavigationBarAppearance()
+            navBarAppearance.configureWithOpaqueBackground()
+            navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+            navBarAppearance.backgroundColor = UIColor.appThemeColor
+            return navBarAppearance
+        }
+    }
 }
 
 extension URLSessionConfiguration {
@@ -105,7 +117,7 @@ extension URLSessionConfiguration {
 }
 
 extension Date {
-    static let LongFormat = "EEE MMM dd, HH:mm"
+    static let LongFormat = "yyyy EEE MMM dd, HH:mm"
     static let ShortFormat = "MMM dd, yyyy"
     
     var longString: String {
@@ -186,6 +198,12 @@ extension String {
         } else {
             return self
         }
+    }
+}
+
+extension UIColor {
+    class var appThemeColor: UIColor {
+        return UIColor(red: 150/255, green: 14/255, blue: 0/255, alpha: 1)
     }
 }
 

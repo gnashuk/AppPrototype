@@ -10,7 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class UserOwnedChannelsTableViewController: UITableViewController {
+class UserOwnedChannelsTableViewController: UIEmptyStateTableViewController {
     
     var channels = [Channel]()
     
@@ -27,6 +27,7 @@ class UserOwnedChannelsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = LocalizedStrings.NavigationBarItemTitles.Channels
         channelsHandle = observeUserChannels()
     }
 
@@ -48,6 +49,10 @@ class UserOwnedChannelsTableViewController: UITableViewController {
         return cell
     }
     
+    override var emptyStateTitleString: String {
+        return "You do not own any channels"
+    }
+    
     private func observeUserChannels() -> DatabaseHandle {
         let userOwnedChannelsQuery = channelsReference.queryOrdered(byChild: "ownerId").queryEqual(toValue: user.uid)
         
@@ -57,7 +62,7 @@ class UserOwnedChannelsTableViewController: UITableViewController {
                     channel.userIds = userIds
                 }
                 self?.channels.append(channel)
-                self?.tableView.reloadData()
+                self?.reloadDataWithEmptyState()
             }
         }
     }

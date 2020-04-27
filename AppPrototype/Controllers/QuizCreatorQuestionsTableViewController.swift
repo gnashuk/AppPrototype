@@ -208,7 +208,7 @@ class QuizCreatorQuestionsTableViewController: UITableViewController, Collapsibl
     }
     
     func toggleSection(_ header: CollapsibleTableViewHeader, section: Int) {
-        if var questions = quiz?.questions {
+        if let questions = quiz?.questions {
             let collapsed = !questions[section].collapsed
       
             questions[section].collapsed = collapsed

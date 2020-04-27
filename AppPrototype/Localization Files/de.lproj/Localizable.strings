@@ -86,6 +86,10 @@
 
 // Navigation Bar Item Titles
 "Back" = "Zurück";
+"Notifications" = "Benachrichtingungen";
+"Channels" = "Kanal";
+"Quizes" = "Quizen";
+"Join" = "Beitreten";
 
 // Tab Bar Item Titles
 "Chats" = "Chats";

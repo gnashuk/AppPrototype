@@ -56,7 +56,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     private let storageReference = FirebaseReferences.storageReference
     
     private let fileManager = FileManager.default
-    private lazy var documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    private lazy var documentsDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     
     let documentInteractionController = UIDocumentInteractionController()
     
@@ -181,7 +181,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     private func saveImageMessage(imageUrl url: String, reference: DatabaseReference) {
-        let messageValue = [
+        let messageValue: [String: Any] = [
             "senderId": senderId!,
             "imageURL": url,
             "senderName": senderDisplayName,
@@ -195,7 +195,7 @@ class ChatViewController: JSQMessagesViewController, UIImagePickerControllerDele
     }
     
     private func saveFileMessage(fileUrl url: String, fileSize: String, reference: DatabaseReference) {
-        let messageValue = [
+        let messageValue: [String: Any] = [
             "senderId": senderId!,
             "fileUrl": url,
             "fileSize": fileSize,

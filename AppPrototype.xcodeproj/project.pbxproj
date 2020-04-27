@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,10 +26,16 @@
 		7C91C70A20E9050700EEA7A7 /* UserImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70920E9050700EEA7A7 /* UserImageCollectionViewCell.swift */; };
 		7C91C71020E9685800EEA7A7 /* QuizResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C70F20E9685800EEA7A7 /* QuizResultsTableViewController.swift */; };
 		7C91C71220E9698900EEA7A7 /* QuizResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C91C71120E9698900EEA7A7 /* QuizResultTableViewCell.swift */; };
+		7C98E1C62454A09E00363F94 /* ChannelInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C98E1C52454A09E00363F94 /* ChannelInfoTableViewController.swift */; };
+		7C98E1CC2455B55900363F94 /* AppStore-screenshot3.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C98E1C82455B55600363F94 /* AppStore-screenshot3.png */; };
+		7C98E1CD2455B55900363F94 /* AppStore-screenshot4.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C98E1C92455B55700363F94 /* AppStore-screenshot4.png */; };
+		7C98E1CE2455B55900363F94 /* AppStore-screenshot1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C98E1CA2455B55800363F94 /* AppStore-screenshot1.png */; };
+		7C98E1CF2455B55900363F94 /* AppStore-screenshot2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C98E1CB2455B55900363F94 /* AppStore-screenshot2.png */; };
+		7C98E1D12456049E00363F94 /* UIEmptyStateTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C98E1D02456049E00363F94 /* UIEmptyStateTableViewController.swift */; };
+		7C98E32E2456D57000363F94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C98E32C2456D57000363F94 /* Main.storyboard */; };
 		7C9B7A6820E419D9000BD723 /* QuizSessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9B7A6720E419D9000BD723 /* QuizSessionTableViewController.swift */; };
 		7C9B7A6A20E42039000BD723 /* QuizAnswerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9B7A6920E42039000BD723 /* QuizAnswerTableViewCell.swift */; };
 		7CA2246E20B0952900052F74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2246D20B0952900052F74 /* AppDelegate.swift */; };
-		7CA2247320B0952900052F74 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247120B0952900052F74 /* Main.storyboard */; };
 		7CA2247520B0952B00052F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247420B0952B00052F74 /* Assets.xcassets */; };
 		7CA2247820B0952B00052F74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CA2247620B0952B00052F74 /* LaunchScreen.storyboard */; };
 		7CA2248320B0952B00052F74 /* AppPrototypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2248220B0952B00052F74 /* AppPrototypeTests.swift */; };
@@ -91,13 +97,10 @@
 		7C46203B20FD24870011307A /* LocalizedStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStrings.swift; sourceTree = "<group>"; };
 		7C46203E20FE7B320011307A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C46204020FE7B490011307A /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7C46204120FE7C6A0011307A /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
 		7C46204220FE7C6B0011307A /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		7C46204320FE7C6C0011307A /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7C46204420FE7CA60011307A /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 		7C46204520FE7CA80011307A /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		7C46204620FE7CA90011307A /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7C46204720FE7D2B0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		7C46204820FE7D2D0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		7C46204920FE7D2E0011307A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C4B62E22136E8560096F905 /* ChannelDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelDetailsTableViewController.swift; sourceTree = "<group>"; };
@@ -111,11 +114,21 @@
 		7C91C70920E9050700EEA7A7 /* UserImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		7C91C70F20E9685800EEA7A7 /* QuizResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultsTableViewController.swift; sourceTree = "<group>"; };
 		7C91C71120E9698900EEA7A7 /* QuizResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultTableViewCell.swift; sourceTree = "<group>"; };
+		7C98E1C52454A09E00363F94 /* ChannelInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelInfoTableViewController.swift; sourceTree = "<group>"; };
+		7C98E1C82455B55600363F94 /* AppStore-screenshot3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppStore-screenshot3.png"; sourceTree = "<group>"; };
+		7C98E1C92455B55700363F94 /* AppStore-screenshot4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppStore-screenshot4.png"; sourceTree = "<group>"; };
+		7C98E1CA2455B55800363F94 /* AppStore-screenshot1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppStore-screenshot1.png"; sourceTree = "<group>"; };
+		7C98E1CB2455B55900363F94 /* AppStore-screenshot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppStore-screenshot2.png"; sourceTree = "<group>"; };
+		7C98E1D02456049E00363F94 /* UIEmptyStateTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEmptyStateTableViewController.swift; sourceTree = "<group>"; };
+		7C98E32D2456D57000363F94 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7C98E3332456D67400363F94 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		7C98E3342456D68400363F94 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		7C98E3352456D68800363F94 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
+		7C98E3362456D68A00363F94 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 		7C9B7A6720E419D9000BD723 /* QuizSessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizSessionTableViewController.swift; sourceTree = "<group>"; };
 		7C9B7A6920E42039000BD723 /* QuizAnswerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizAnswerTableViewCell.swift; sourceTree = "<group>"; };
 		7CA2246A20B0952900052F74 /* AppPrototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppPrototype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA2246D20B0952900052F74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7CA2247220B0952900052F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7CA2247420B0952B00052F74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7CA2247720B0952B00052F74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7CA2247920B0952B00052F74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -198,6 +211,7 @@
 		7C4B62F1214192C50096F905 /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
+				7C98E1C72455B51A00363F94 /* AppStore */,
 				7C4B62F2214193120096F905 /* screenshot1.png */,
 				7C4B62F4214193400096F905 /* screenshot2.png */,
 			);
@@ -219,6 +233,17 @@
 				7C91C70920E9050700EEA7A7 /* UserImageCollectionViewCell.swift */,
 			);
 			path = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		7C98E1C72455B51A00363F94 /* AppStore */ = {
+			isa = PBXGroup;
+			children = (
+				7C98E1CA2455B55800363F94 /* AppStore-screenshot1.png */,
+				7C98E1CB2455B55900363F94 /* AppStore-screenshot2.png */,
+				7C98E1C82455B55600363F94 /* AppStore-screenshot3.png */,
+				7C98E1C92455B55700363F94 /* AppStore-screenshot4.png */,
+			);
+			path = AppStore;
 			sourceTree = "<group>";
 		};
 		7CA2246120B0952900052F74 = {
@@ -247,7 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				7C0B9E1E20C082C700F90353 /* AppPrototype.entitlements */,
-				7CA2247120B0952900052F74 /* Main.storyboard */,
+				7C98E32C2456D57000363F94 /* Main.storyboard */,
 				7CA2246D20B0952900052F74 /* AppDelegate.swift */,
 				7CA2249B20B0965500052F74 /* Controllers */,
 				7CB636BE20D6CCDB00583578 /* Table View Cells */,
@@ -304,6 +329,8 @@
 				7CCB254F210215F0004DDAA4 /* UserOwnedChannelsTableViewController.swift */,
 				7CCB255121021F1B004DDAA4 /* FileBrowserViewController.swift */,
 				7C4B62E22136E8560096F905 /* ChannelDetailsTableViewController.swift */,
+				7C98E1C52454A09E00363F94 /* ChannelInfoTableViewController.swift */,
+				7C98E1D02456049E00363F94 /* UIEmptyStateTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -489,10 +516,14 @@
 				7CA2247820B0952B00052F74 /* LaunchScreen.storyboard in Resources */,
 				7C46203D20FE7B320011307A /* Localizable.strings in Resources */,
 				7C4B62F5214193400096F905 /* screenshot2.png in Resources */,
+				7C98E32E2456D57000363F94 /* Main.storyboard in Resources */,
+				7C98E1CC2455B55900363F94 /* AppStore-screenshot3.png in Resources */,
 				7CA224A720B0A15900052F74 /* GoogleService-Info.plist in Resources */,
 				7CA2247520B0952B00052F74 /* Assets.xcassets in Resources */,
+				7C98E1CF2455B55900363F94 /* AppStore-screenshot2.png in Resources */,
+				7C98E1CD2455B55900363F94 /* AppStore-screenshot4.png in Resources */,
 				7C72072A20D700A60091D6E6 /* CollapsibleTableViewHeader.xib in Resources */,
-				7CA2247320B0952900052F74 /* Main.storyboard in Resources */,
+				7C98E1CE2455B55900363F94 /* AppStore-screenshot1.png in Resources */,
 				7C4B62F3214193120096F905 /* screenshot1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -519,31 +550,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseFacebookAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseTwitterAuthUI.bundle",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterShareExtensionUIResources.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseFacebookAuthUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebasePhoneAuthUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseTwitterAuthUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterShareExtensionUIResources.bundle",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6E4A2E7C38032877FA0A7096 /* [CP] Embed Pods Frameworks */ = {
@@ -551,65 +567,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
-				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
-				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
-				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FLAnimatedImage/FLAnimatedImage.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/JSQMessagesViewController/JSQMessagesViewController.framework",
-				"${BUILT_PRODUCTS_DIR}/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework",
-				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLAnimatedImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQMessagesViewController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQSystemSoundPlayer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppPrototype/Pods-AppPrototype-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E4184D6317092FA34821F239 /* [CP] Check Pods Manifest.lock */ = {
@@ -656,10 +623,12 @@
 				7CA2246E20B0952900052F74 /* AppDelegate.swift in Sources */,
 				7C0B4D8120EFD46700D24AE5 /* QuizNotification.swift in Sources */,
 				7C0B4D7B20E96B7E00D24AE5 /* QuizResult.swift in Sources */,
+				7C98E1C62454A09E00363F94 /* ChannelInfoTableViewController.swift in Sources */,
 				7C91C71020E9685800EEA7A7 /* QuizResultsTableViewController.swift in Sources */,
 				7CB636BD20D6CACC00583578 /* NewQuizAnswerTableViewCell.swift in Sources */,
 				7CB636B320D6997900583578 /* QuizCreatorMainTableViewController.swift in Sources */,
 				7CC491C22104DD270039B11C /* NotificationSettingsTableViewController.swift in Sources */,
+				7C98E1D12456049E00363F94 /* UIEmptyStateTableViewController.swift in Sources */,
 				7CE6BC0A20D59A1900764E91 /* PhotoViewer.swift in Sources */,
 				7C0B4D7F20EFD1D300D24AE5 /* ChannelInvitationNotification.swift in Sources */,
 				7C0B4D7D20EFCFE900D24AE5 /* Notification.swift in Sources */,
@@ -725,13 +694,14 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		7CA2247120B0952900052F74 /* Main.storyboard */ = {
+		7C98E32C2456D57000363F94 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				7CA2247220B0952900052F74 /* Base */,
-				7C46204120FE7C6A0011307A /* pl */,
-				7C46204420FE7CA60011307A /* uk */,
-				7C46204720FE7D2B0011307A /* de */,
+				7C98E32D2456D57000363F94 /* Base */,
+				7C98E3332456D67400363F94 /* en */,
+				7C98E3342456D68400363F94 /* de */,
+				7C98E3352456D68800363F94 /* pl */,
+				7C98E3362456D68A00363F94 /* uk */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -880,10 +850,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg.Gannimede;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -901,10 +871,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gnashuk.oleg.Gannimede;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

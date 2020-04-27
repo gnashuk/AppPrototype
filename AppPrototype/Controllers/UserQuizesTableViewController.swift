@@ -9,8 +9,9 @@
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
+import UIEmptyState
 
-class UserQuizesTableViewController: UITableViewController {
+class UserQuizesTableViewController: UIEmptyStateTableViewController {
     
     var users = [User]()
     
@@ -23,6 +24,7 @@ class UserQuizesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = LocalizedStrings.NavigationBarItemTitles.Quizes
         quizesHandle = observeQuizResults()
     }
 
@@ -50,6 +52,10 @@ class UserQuizesTableViewController: UITableViewController {
         performSegue(withIdentifier: "Show Quiz Results", sender: quiz)
     }
     
+    override var emptyStateTitleString: String {
+        return "You have not created any quizes"
+    }
+    
     private func observeQuizResults() -> DatabaseHandle {
         return userQuizesReference.observe(.childAdded) { [weak self] snapshot in
             if let quizContent = snapshot.value as? [String: Any], let quiz = Quiz.createFrom(dataSnapshot: snapshot) {
@@ -63,7 +69,7 @@ class UserQuizesTableViewController: UITableViewController {
                     }
                 }
                 self?.quizes.append(quiz)
-                self?.tableView.reloadData()
+                self?.reloadDataWithEmptyState()
             }
         }
     }

@@ -9,7 +9,7 @@
 import Foundation
 import NYTPhotoViewer
 
-class PhotoProvider: NYTPhotoViewerDataSource {
+class PhotoProvider: NSObject, NYTPhotoViewerDataSource {
     private let photo: Photo
     
     lazy var photoViewer: NYTPhotosViewController = {

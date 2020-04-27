@@ -94,7 +94,10 @@ struct LocalizedStrings {
     
     struct NavigationBarItemTitles {
         static let Back = NSLocalizedString("Back", comment: "Back; return")
-        static let NotificationSettings = NSLocalizedString("Notification Settrings", comment: "Settings for notifications on current device.")
+        static let NotificationSettings = NSLocalizedString("Notifications", comment: "Settings for notifications on current device.")
+        static let Channels = NSLocalizedString("Channels", comment: "User owned channels in settings.")
+        static let Quizes = NSLocalizedString("Quizes", comment: "User created quizes in settings.")
+        static let Join = NSLocalizedString("Join", comment: "Join navigation bar button title.")
     }
     
     struct TabBarItemTitles {
@@ -145,7 +148,4 @@ struct LocalizedStrings {
         static let Quiz = NSLocalizedString("Quiz ", comment: "Test.")
         static let WasAddedIn = NSLocalizedString(" was added in ", comment: "Something was added in.")
     }
-/*
-
-*/
 }
